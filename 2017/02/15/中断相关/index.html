@@ -13,7 +13,7 @@
     
     
     
-    <title>深入理解中断（一） | lbx&#39;s blog</title>
+    <title>深入理解中断（一） | Benxi&#39;s blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="theme-color" content="#3F51B5">
@@ -25,7 +25,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="深入理解中断（一）">
 <meta property="og:url" content="http://sec-lbx.tk/2017/02/15/中断相关/index.html">
-<meta property="og:site_name" content="lbx&#39;s blog">
+<meta property="og:site_name" content="Benxi&#39;s blog">
 <meta property="og:description" content="什么是中断？中断是能够打断CPU指令序列的事件，它是在CPU内外，由硬件产生的电信号。CPU接收到中断后，就会向OS反映这个信号，从而由OS就会对新到来的数据进行处理。不同的事件，其对应的中断不同，而OS则是通过中断号(也即IRQ线)来找到对应的处理方法。不同体系中，中断可能是固定好的，也可能是动态分配的。中断产生后，首先会告诉中断控制器。中断控制器负责收集所有中断源的中断，它能够控制中断源的优先">
 <meta property="og:image" content="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/IDT%E9%97%A8.gif?raw=true">
 <meta property="og:image" content="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/%E6%AE%B5%E5%AF%BB%E5%9D%80.png?raw=true">
@@ -48,7 +48,7 @@
 <meta name="twitter:description" content="什么是中断？中断是能够打断CPU指令序列的事件，它是在CPU内外，由硬件产生的电信号。CPU接收到中断后，就会向OS反映这个信号，从而由OS就会对新到来的数据进行处理。不同的事件，其对应的中断不同，而OS则是通过中断号(也即IRQ线)来找到对应的处理方法。不同体系中，中断可能是固定好的，也可能是动态分配的。中断产生后，首先会告诉中断控制器。中断控制器负责收集所有中断源的中断，它能够控制中断源的优先">
 <meta name="twitter:image" content="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/IDT%E9%97%A8.gif?raw=true">
     
-        <link rel="alternate" type="application/atom+xml" title="lbx&#39;s blog" href="/atom.xml">
+        <link rel="alternate" type="application/atom+xml" title="Benxi&#39;s blog" href="/atom.xml">
     
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
@@ -122,7 +122,7 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="搜尋">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
@@ -316,7 +316,7 @@
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/02/15/中断相关/&title=《深入理解中断（一）》 — lbx's blog&pic=http://sec-lbx.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/02/15/中断相关/&title=《深入理解中断（一）》 — Benxi's blog&pic=http://sec-lbx.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -326,7 +326,7 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/02/15/中断相关/&title=《深入理解中断（一）》 — lbx's blog&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/02/15/中断相关/&title=《深入理解中断（一）》 — Benxi's blog&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -336,7 +336,7 @@
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《深入理解中断（一）》 — lbx's blog&url=http://sec-lbx.tk/2017/02/15/中断相关/&via=http://sec-lbx.tk" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《深入理解中断（一）》 — Benxi's blog&url=http://sec-lbx.tk/2017/02/15/中断相关/&via=http://sec-lbx.tk" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
@@ -421,7 +421,7 @@
             
                 <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
             
-            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+            <span>本部落格係採用<a rel="license" href="https://creativecommons.org/licenses/by/4.0/deed.zh_TW">創用 CC 姓名標示 4.0 國際 授權條款授權</a></span>
         </p>
     </div>
     <div class="bottom">
@@ -443,7 +443,7 @@
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/02/15/中断相关/&title=《深入理解中断（一）》 — lbx's blog&pic=http://sec-lbx.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/02/15/中断相关/&title=《深入理解中断（一）》 — Benxi's blog&pic=http://sec-lbx.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -453,7 +453,7 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/02/15/中断相关/&title=《深入理解中断（一）》 — lbx's blog&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/02/15/中断相关/&title=《深入理解中断（一）》 — Benxi's blog&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -463,7 +463,7 @@
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《深入理解中断（一）》 — lbx's blog&url=http://sec-lbx.tk/2017/02/15/中断相关/&via=http://sec-lbx.tk" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《深入理解中断（一）》 — Benxi's blog&url=http://sec-lbx.tk/2017/02/15/中断相关/&via=http://sec-lbx.tk" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>

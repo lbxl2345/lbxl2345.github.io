@@ -13,7 +13,7 @@
     
     
     
-    <title>I/O体系结构 | lbx&#39;s blog</title>
+    <title>I/O体系结构 | Benxi&#39;s blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="theme-color" content="#3F51B5">
@@ -25,14 +25,14 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="I&#x2F;O体系结构">
 <meta property="og:url" content="http://sec-lbx.tk/2016/05/05/I:O体系结构/index.html">
-<meta property="og:site_name" content="lbx&#39;s blog">
+<meta property="og:site_name" content="Benxi&#39;s blog">
 <meta property="og:description" content="驱动程序操作系统对设备以及文件系统的抽象可以分为两层。第一层是在物理介质上的抽象，用“记录块”去抽象磁道、扇区；第二层则将记录块抽象成为文件系统。linux将设备分为块设备和字符设备两大类。块设备是以记录块或扇区为单位，成块进行输入/输出的设备，称为“字符设备”，例如磁盘。字符设备是以字符为单位，逐个进行输入/输出的设备，例如键盘。要使一项设备在系统中可见的，首先要在文件系统中有一个代表它的文件节">
 <meta property="og:updated_time" content="2017-07-28T09:04:47.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="I&#x2F;O体系结构">
 <meta name="twitter:description" content="驱动程序操作系统对设备以及文件系统的抽象可以分为两层。第一层是在物理介质上的抽象，用“记录块”去抽象磁道、扇区；第二层则将记录块抽象成为文件系统。linux将设备分为块设备和字符设备两大类。块设备是以记录块或扇区为单位，成块进行输入/输出的设备，称为“字符设备”，例如磁盘。字符设备是以字符为单位，逐个进行输入/输出的设备，例如键盘。要使一项设备在系统中可见的，首先要在文件系统中有一个代表它的文件节">
     
-        <link rel="alternate" type="application/atom+xml" title="lbx&#39;s blog" href="/atom.xml">
+        <link rel="alternate" type="application/atom+xml" title="Benxi&#39;s blog" href="/atom.xml">
     
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
@@ -106,7 +106,7 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="搜尋">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
@@ -212,7 +212,7 @@
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2016/05/05/I:O体系结构/&title=《I/O体系结构》 — lbx's blog&pic=http://sec-lbx.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2016/05/05/I:O体系结构/&title=《I/O体系结构》 — Benxi's blog&pic=http://sec-lbx.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -222,7 +222,7 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2016/05/05/I:O体系结构/&title=《I/O体系结构》 — lbx's blog&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2016/05/05/I:O体系结构/&title=《I/O体系结构》 — Benxi's blog&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -232,7 +232,7 @@
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《I/O体系结构》 — lbx's blog&url=http://sec-lbx.tk/2016/05/05/I:O体系结构/&via=http://sec-lbx.tk" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《I/O体系结构》 — Benxi's blog&url=http://sec-lbx.tk/2016/05/05/I:O体系结构/&via=http://sec-lbx.tk" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
@@ -317,7 +317,7 @@
             
                 <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
             
-            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+            <span>本部落格係採用<a rel="license" href="https://creativecommons.org/licenses/by/4.0/deed.zh_TW">創用 CC 姓名標示 4.0 國際 授權條款授權</a></span>
         </p>
     </div>
     <div class="bottom">
@@ -339,7 +339,7 @@
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2016/05/05/I:O体系结构/&title=《I/O体系结构》 — lbx's blog&pic=http://sec-lbx.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2016/05/05/I:O体系结构/&title=《I/O体系结构》 — Benxi's blog&pic=http://sec-lbx.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -349,7 +349,7 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2016/05/05/I:O体系结构/&title=《I/O体系结构》 — lbx's blog&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2016/05/05/I:O体系结构/&title=《I/O体系结构》 — Benxi's blog&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -359,7 +359,7 @@
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《I/O体系结构》 — lbx's blog&url=http://sec-lbx.tk/2016/05/05/I:O体系结构/&via=http://sec-lbx.tk" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《I/O体系结构》 — Benxi's blog&url=http://sec-lbx.tk/2016/05/05/I:O体系结构/&via=http://sec-lbx.tk" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>

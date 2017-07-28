@@ -13,7 +13,7 @@
     
     
     
-    <title>深入理解内核同步 | lbx&#39;s blog</title>
+    <title>深入理解内核同步 | Benxi&#39;s blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="theme-color" content="#3F51B5">
@@ -25,14 +25,14 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="深入理解内核同步">
 <meta property="og:url" content="http://sec-lbx.tk/2017/03/15/深入理解内核同步/index.html">
-<meta property="og:site_name" content="lbx&#39;s blog">
+<meta property="og:site_name" content="Benxi&#39;s blog">
 <meta property="og:description" content="内核同步对于内核，其实有一个很形象的理解：我们可以把内核理解成一个服务器，它为自身和用户提供各种服务。因此它必须要保证每项服务在处理时，不会互相造成影响，也就是解决“并发”的问题。自身的请求，也即中断；客户的请求，也即用户态的系统调用或异常。内核的同步，就是对内核中的任务进行调度，使它们按照正确的方式运行。   内核抢占这里，“内核抢占”指的是进程A在内核态运行时，被具有更高优先级的进程B取代，也">
 <meta property="og:updated_time" content="2017-07-28T09:04:47.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入理解内核同步">
 <meta name="twitter:description" content="内核同步对于内核，其实有一个很形象的理解：我们可以把内核理解成一个服务器，它为自身和用户提供各种服务。因此它必须要保证每项服务在处理时，不会互相造成影响，也就是解决“并发”的问题。自身的请求，也即中断；客户的请求，也即用户态的系统调用或异常。内核的同步，就是对内核中的任务进行调度，使它们按照正确的方式运行。   内核抢占这里，“内核抢占”指的是进程A在内核态运行时，被具有更高优先级的进程B取代，也">
     
-        <link rel="alternate" type="application/atom+xml" title="lbx&#39;s blog" href="/atom.xml">
+        <link rel="alternate" type="application/atom+xml" title="Benxi&#39;s blog" href="/atom.xml">
     
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
@@ -106,7 +106,7 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="搜尋">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
@@ -328,7 +328,7 @@ asm_volatile_goto(LOCK_PREFIX &quot;   decl %0\n&quot;
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/03/15/深入理解内核同步/&title=《深入理解内核同步》 — lbx's blog&pic=http://sec-lbx.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/03/15/深入理解内核同步/&title=《深入理解内核同步》 — Benxi's blog&pic=http://sec-lbx.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -338,7 +338,7 @@ asm_volatile_goto(LOCK_PREFIX &quot;   decl %0\n&quot;
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/03/15/深入理解内核同步/&title=《深入理解内核同步》 — lbx's blog&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/03/15/深入理解内核同步/&title=《深入理解内核同步》 — Benxi's blog&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -348,7 +348,7 @@ asm_volatile_goto(LOCK_PREFIX &quot;   decl %0\n&quot;
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《深入理解内核同步》 — lbx's blog&url=http://sec-lbx.tk/2017/03/15/深入理解内核同步/&via=http://sec-lbx.tk" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《深入理解内核同步》 — Benxi's blog&url=http://sec-lbx.tk/2017/03/15/深入理解内核同步/&via=http://sec-lbx.tk" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
@@ -433,7 +433,7 @@ asm_volatile_goto(LOCK_PREFIX &quot;   decl %0\n&quot;
             
                 <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
             
-            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+            <span>本部落格係採用<a rel="license" href="https://creativecommons.org/licenses/by/4.0/deed.zh_TW">創用 CC 姓名標示 4.0 國際 授權條款授權</a></span>
         </p>
     </div>
     <div class="bottom">
@@ -455,7 +455,7 @@ asm_volatile_goto(LOCK_PREFIX &quot;   decl %0\n&quot;
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/03/15/深入理解内核同步/&title=《深入理解内核同步》 — lbx's blog&pic=http://sec-lbx.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/03/15/深入理解内核同步/&title=《深入理解内核同步》 — Benxi's blog&pic=http://sec-lbx.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -465,7 +465,7 @@ asm_volatile_goto(LOCK_PREFIX &quot;   decl %0\n&quot;
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/03/15/深入理解内核同步/&title=《深入理解内核同步》 — lbx's blog&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/03/15/深入理解内核同步/&title=《深入理解内核同步》 — Benxi's blog&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -475,7 +475,7 @@ asm_volatile_goto(LOCK_PREFIX &quot;   decl %0\n&quot;
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《深入理解内核同步》 — lbx's blog&url=http://sec-lbx.tk/2017/03/15/深入理解内核同步/&via=http://sec-lbx.tk" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《深入理解内核同步》 — Benxi's blog&url=http://sec-lbx.tk/2017/03/15/深入理解内核同步/&via=http://sec-lbx.tk" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>

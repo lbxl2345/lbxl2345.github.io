@@ -13,7 +13,7 @@
     
     
     
-    <title>深入理解I/O体系结构（一） | lbx&#39;s blog</title>
+    <title>深入理解I/O体系结构（一） | Benxi&#39;s blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="theme-color" content="#3F51B5">
@@ -25,7 +25,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="深入理解I&#x2F;O体系结构（一）">
 <meta property="og:url" content="http://sec-lbx.tk/2017/04/10/深入理解I:O体系结构（一）/index.html">
-<meta property="og:site_name" content="lbx&#39;s blog">
+<meta property="og:site_name" content="Benxi&#39;s blog">
 <meta property="og:description" content="I/O体系结构虚拟文件系统利用底层函数，调用每个设备的操作，那么这些操作是如何在设备上执行的，操作系统又是如何知道设备的操作是什么的呢？这些是由操作系统决定的。我们知道，操作系统的工作，是依赖于数据通路的，它们让信息得以在CPU、RAM、I/O设备之间传递。这些数据通路称为总线。这就包括数据总线（PCI、ISA、EISA、SCSI等）、地址总线、控制总线。I/O总线，指的就是用于CPU和I/O设备">
 <meta property="og:image" content="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E7%A3%81%E7%9B%98IO/IO%E7%BB%93%E6%9E%84.png?raw=true =600x400">
 <meta property="og:image" content="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E7%A3%81%E7%9B%98IO/kobjmap.jpg?raw=true">
@@ -35,7 +35,7 @@
 <meta name="twitter:description" content="I/O体系结构虚拟文件系统利用底层函数，调用每个设备的操作，那么这些操作是如何在设备上执行的，操作系统又是如何知道设备的操作是什么的呢？这些是由操作系统决定的。我们知道，操作系统的工作，是依赖于数据通路的，它们让信息得以在CPU、RAM、I/O设备之间传递。这些数据通路称为总线。这就包括数据总线（PCI、ISA、EISA、SCSI等）、地址总线、控制总线。I/O总线，指的就是用于CPU和I/O设备">
 <meta name="twitter:image" content="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E7%A3%81%E7%9B%98IO/IO%E7%BB%93%E6%9E%84.png?raw=true =600x400">
     
-        <link rel="alternate" type="application/atom+xml" title="lbx&#39;s blog" href="/atom.xml">
+        <link rel="alternate" type="application/atom+xml" title="Benxi&#39;s blog" href="/atom.xml">
     
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
@@ -109,7 +109,7 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="搜尋">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
@@ -414,7 +414,7 @@ unsigned int count;
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/04/10/深入理解I:O体系结构（一）/&title=《深入理解I/O体系结构（一）》 — lbx's blog&pic=http://sec-lbx.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/04/10/深入理解I:O体系结构（一）/&title=《深入理解I/O体系结构（一）》 — Benxi's blog&pic=http://sec-lbx.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -424,7 +424,7 @@ unsigned int count;
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/04/10/深入理解I:O体系结构（一）/&title=《深入理解I/O体系结构（一）》 — lbx's blog&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/04/10/深入理解I:O体系结构（一）/&title=《深入理解I/O体系结构（一）》 — Benxi's blog&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -434,7 +434,7 @@ unsigned int count;
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《深入理解I/O体系结构（一）》 — lbx's blog&url=http://sec-lbx.tk/2017/04/10/深入理解I:O体系结构（一）/&via=http://sec-lbx.tk" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《深入理解I/O体系结构（一）》 — Benxi's blog&url=http://sec-lbx.tk/2017/04/10/深入理解I:O体系结构（一）/&via=http://sec-lbx.tk" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
@@ -519,7 +519,7 @@ unsigned int count;
             
                 <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
             
-            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+            <span>本部落格係採用<a rel="license" href="https://creativecommons.org/licenses/by/4.0/deed.zh_TW">創用 CC 姓名標示 4.0 國際 授權條款授權</a></span>
         </p>
     </div>
     <div class="bottom">
@@ -541,7 +541,7 @@ unsigned int count;
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/04/10/深入理解I:O体系结构（一）/&title=《深入理解I/O体系结构（一）》 — lbx's blog&pic=http://sec-lbx.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/04/10/深入理解I:O体系结构（一）/&title=《深入理解I/O体系结构（一）》 — Benxi's blog&pic=http://sec-lbx.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -551,7 +551,7 @@ unsigned int count;
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/04/10/深入理解I:O体系结构（一）/&title=《深入理解I/O体系结构（一）》 — lbx's blog&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/04/10/深入理解I:O体系结构（一）/&title=《深入理解I/O体系结构（一）》 — Benxi's blog&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -561,7 +561,7 @@ unsigned int count;
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《深入理解I/O体系结构（一）》 — lbx's blog&url=http://sec-lbx.tk/2017/04/10/深入理解I:O体系结构（一）/&via=http://sec-lbx.tk" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《深入理解I/O体系结构（一）》 — Benxi's blog&url=http://sec-lbx.tk/2017/04/10/深入理解I:O体系结构（一）/&via=http://sec-lbx.tk" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>

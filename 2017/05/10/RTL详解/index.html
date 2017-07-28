@@ -13,7 +13,7 @@
     
     
     
-    <title>RTL，指令和运算，识别特定指令 | lbx&#39;s blog</title>
+    <title>RTL，指令和运算，识别特定指令 | Benxi&#39;s blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="theme-color" content="#3F51B5">
@@ -25,14 +25,14 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="RTL，指令和运算，识别特定指令">
 <meta property="og:url" content="http://sec-lbx.tk/2017/05/10/RTL详解/index.html">
-<meta property="og:site_name" content="lbx&#39;s blog">
+<meta property="og:site_name" content="Benxi&#39;s blog">
 <meta property="og:description" content="运算RTL中的运算，采用一种很直观、简单的方式来进行描述。通常，表达式都会借助于m mode。运算包含有算术、比较、向量操作、Bit域、类型转换等。   Side Effect 表达式之前所说的表达式代码，通常表示的是值，而非某种行为。但机器指令，只有在对机器的状态产生了改变时，才会有意义；因此对于这些对寄存器、执行状态产生影响的过程，是有对应的表达式的，被称为side effect表达式。一条指">
 <meta property="og:updated_time" content="2017-07-28T09:04:47.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RTL，指令和运算，识别特定指令">
 <meta name="twitter:description" content="运算RTL中的运算，采用一种很直观、简单的方式来进行描述。通常，表达式都会借助于m mode。运算包含有算术、比较、向量操作、Bit域、类型转换等。   Side Effect 表达式之前所说的表达式代码，通常表示的是值，而非某种行为。但机器指令，只有在对机器的状态产生了改变时，才会有意义；因此对于这些对寄存器、执行状态产生影响的过程，是有对应的表达式的，被称为side effect表达式。一条指">
     
-        <link rel="alternate" type="application/atom+xml" title="lbx&#39;s blog" href="/atom.xml">
+        <link rel="alternate" type="application/atom+xml" title="Benxi&#39;s blog" href="/atom.xml">
     
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
@@ -106,7 +106,7 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="搜尋">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
@@ -254,7 +254,7 @@
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/05/10/RTL详解/&title=《RTL，指令和运算，识别特定指令》 — lbx's blog&pic=http://sec-lbx.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/05/10/RTL详解/&title=《RTL，指令和运算，识别特定指令》 — Benxi's blog&pic=http://sec-lbx.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -264,7 +264,7 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/05/10/RTL详解/&title=《RTL，指令和运算，识别特定指令》 — lbx's blog&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/05/10/RTL详解/&title=《RTL，指令和运算，识别特定指令》 — Benxi's blog&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -274,7 +274,7 @@
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《RTL，指令和运算，识别特定指令》 — lbx's blog&url=http://sec-lbx.tk/2017/05/10/RTL详解/&via=http://sec-lbx.tk" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《RTL，指令和运算，识别特定指令》 — Benxi's blog&url=http://sec-lbx.tk/2017/05/10/RTL详解/&via=http://sec-lbx.tk" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
@@ -359,7 +359,7 @@
             
                 <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
             
-            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+            <span>本部落格係採用<a rel="license" href="https://creativecommons.org/licenses/by/4.0/deed.zh_TW">創用 CC 姓名標示 4.0 國際 授權條款授權</a></span>
         </p>
     </div>
     <div class="bottom">
@@ -381,7 +381,7 @@
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/05/10/RTL详解/&title=《RTL，指令和运算，识别特定指令》 — lbx's blog&pic=http://sec-lbx.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/05/10/RTL详解/&title=《RTL，指令和运算，识别特定指令》 — Benxi's blog&pic=http://sec-lbx.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -391,7 +391,7 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/05/10/RTL详解/&title=《RTL，指令和运算，识别特定指令》 — lbx's blog&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/05/10/RTL详解/&title=《RTL，指令和运算，识别特定指令》 — Benxi's blog&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -401,7 +401,7 @@
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《RTL，指令和运算，识别特定指令》 — lbx's blog&url=http://sec-lbx.tk/2017/05/10/RTL详解/&via=http://sec-lbx.tk" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《RTL，指令和运算，识别特定指令》 — Benxi's blog&url=http://sec-lbx.tk/2017/05/10/RTL详解/&via=http://sec-lbx.tk" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>

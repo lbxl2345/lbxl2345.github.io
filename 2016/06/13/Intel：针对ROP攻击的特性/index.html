@@ -13,7 +13,7 @@
     
     
     
-    <title>Intel:针对ROP攻击的新硬件特性 | lbx&#39;s blog</title>
+    <title>Intel:针对ROP攻击的新硬件特性 | Benxi&#39;s blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="theme-color" content="#3F51B5">
@@ -25,14 +25,14 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="Intel:针对ROP攻击的新硬件特性">
 <meta property="og:url" content="http://sec-lbx.tk/2016/06/13/Intel：针对ROP攻击的特性/index.html">
-<meta property="og:site_name" content="lbx&#39;s blog">
+<meta property="og:site_name" content="Benxi&#39;s blog">
 <meta property="og:description" content="1 针对ROP/JOP/COP的intel特性ROP/JOP/COP攻击通常有两个特性：第一是包含执行特权命令的代码片段，至少包含一条控制流转移指令，其转移目的由返回stack或者寄存器中的目标地址决定；第二是它们将控制流指令(RET，CALL，JMP)的地址修改到新的目标地址。intel提供Shadow Stack和Indirect branch tracking两种功能，来防御这一类攻击。Sh">
 <meta property="og:updated_time" content="2017-07-28T09:04:47.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Intel:针对ROP攻击的新硬件特性">
 <meta name="twitter:description" content="1 针对ROP/JOP/COP的intel特性ROP/JOP/COP攻击通常有两个特性：第一是包含执行特权命令的代码片段，至少包含一条控制流转移指令，其转移目的由返回stack或者寄存器中的目标地址决定；第二是它们将控制流指令(RET，CALL，JMP)的地址修改到新的目标地址。intel提供Shadow Stack和Indirect branch tracking两种功能，来防御这一类攻击。Sh">
     
-        <link rel="alternate" type="application/atom+xml" title="lbx&#39;s blog" href="/atom.xml">
+        <link rel="alternate" type="application/atom+xml" title="Benxi&#39;s blog" href="/atom.xml">
     
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
@@ -106,7 +106,7 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="搜尋">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
@@ -241,7 +241,7 @@
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2016/06/13/Intel：针对ROP攻击的特性/&title=《Intel:针对ROP攻击的新硬件特性》 — lbx's blog&pic=http://sec-lbx.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2016/06/13/Intel：针对ROP攻击的特性/&title=《Intel:针对ROP攻击的新硬件特性》 — Benxi's blog&pic=http://sec-lbx.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -251,7 +251,7 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2016/06/13/Intel：针对ROP攻击的特性/&title=《Intel:针对ROP攻击的新硬件特性》 — lbx's blog&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2016/06/13/Intel：针对ROP攻击的特性/&title=《Intel:针对ROP攻击的新硬件特性》 — Benxi's blog&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -261,7 +261,7 @@
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Intel:针对ROP攻击的新硬件特性》 — lbx's blog&url=http://sec-lbx.tk/2016/06/13/Intel：针对ROP攻击的特性/&via=http://sec-lbx.tk" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Intel:针对ROP攻击的新硬件特性》 — Benxi's blog&url=http://sec-lbx.tk/2016/06/13/Intel：针对ROP攻击的特性/&via=http://sec-lbx.tk" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
@@ -346,7 +346,7 @@
             
                 <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
             
-            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+            <span>本部落格係採用<a rel="license" href="https://creativecommons.org/licenses/by/4.0/deed.zh_TW">創用 CC 姓名標示 4.0 國際 授權條款授權</a></span>
         </p>
     </div>
     <div class="bottom">
@@ -368,7 +368,7 @@
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2016/06/13/Intel：针对ROP攻击的特性/&title=《Intel:针对ROP攻击的新硬件特性》 — lbx's blog&pic=http://sec-lbx.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2016/06/13/Intel：针对ROP攻击的特性/&title=《Intel:针对ROP攻击的新硬件特性》 — Benxi's blog&pic=http://sec-lbx.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -378,7 +378,7 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2016/06/13/Intel：针对ROP攻击的特性/&title=《Intel:针对ROP攻击的新硬件特性》 — lbx's blog&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2016/06/13/Intel：针对ROP攻击的特性/&title=《Intel:针对ROP攻击的新硬件特性》 — Benxi's blog&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -388,7 +388,7 @@
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Intel:针对ROP攻击的新硬件特性》 — lbx's blog&url=http://sec-lbx.tk/2016/06/13/Intel：针对ROP攻击的特性/&via=http://sec-lbx.tk" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Intel:针对ROP攻击的新硬件特性》 — Benxi's blog&url=http://sec-lbx.tk/2016/06/13/Intel：针对ROP攻击的特性/&via=http://sec-lbx.tk" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>

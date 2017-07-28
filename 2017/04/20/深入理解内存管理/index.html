@@ -13,7 +13,7 @@
     
     
     
-    <title>深入理解内存管理 | lbx&#39;s blog</title>
+    <title>深入理解内存管理 | Benxi&#39;s blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="theme-color" content="#3F51B5">
@@ -25,7 +25,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="深入理解内存管理">
 <meta property="og:url" content="http://sec-lbx.tk/2017/04/20/深入理解内存管理/index.html">
-<meta property="og:site_name" content="lbx&#39;s blog">
+<meta property="og:site_name" content="Benxi&#39;s blog">
 <meta property="og:description" content="页框管理与伙伴系统这里的内存管理，指的是内核如何分配（为自己）动态内存。linux把页框作为一个管理的基本单位，用数据结构page对其进行描述。而所有的page则放在一个mem_map数组当中，进行管理。但计算机存在着一些限制，因此linux把内存划分为了几个管理区，包括ZONE_DMA、ZONE_NORMAL、ZONE_HIGHMEM等；而对页框的分配和释放，也是按照分区来进行管理的：在每个分区">
 <meta property="og:image" content="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/%E9%A1%B5%E6%A1%86%E5%88%86%E9%85%8D.jpg?raw=true">
 <meta property="og:image" content="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/slab%E5%88%86%E9%85%8D%E5%99%A8.png?raw=true =500x400">
@@ -36,7 +36,7 @@
 <meta name="twitter:description" content="页框管理与伙伴系统这里的内存管理，指的是内核如何分配（为自己）动态内存。linux把页框作为一个管理的基本单位，用数据结构page对其进行描述。而所有的page则放在一个mem_map数组当中，进行管理。但计算机存在着一些限制，因此linux把内存划分为了几个管理区，包括ZONE_DMA、ZONE_NORMAL、ZONE_HIGHMEM等；而对页框的分配和释放，也是按照分区来进行管理的：在每个分区">
 <meta name="twitter:image" content="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/%E9%A1%B5%E6%A1%86%E5%88%86%E9%85%8D.jpg?raw=true">
     
-        <link rel="alternate" type="application/atom+xml" title="lbx&#39;s blog" href="/atom.xml">
+        <link rel="alternate" type="application/atom+xml" title="Benxi&#39;s blog" href="/atom.xml">
     
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
@@ -110,7 +110,7 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="搜尋">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
@@ -245,7 +245,7 @@ struct list_head full;
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/04/20/深入理解内存管理/&title=《深入理解内存管理》 — lbx's blog&pic=http://sec-lbx.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/04/20/深入理解内存管理/&title=《深入理解内存管理》 — Benxi's blog&pic=http://sec-lbx.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -255,7 +255,7 @@ struct list_head full;
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/04/20/深入理解内存管理/&title=《深入理解内存管理》 — lbx's blog&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/04/20/深入理解内存管理/&title=《深入理解内存管理》 — Benxi's blog&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -265,7 +265,7 @@ struct list_head full;
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《深入理解内存管理》 — lbx's blog&url=http://sec-lbx.tk/2017/04/20/深入理解内存管理/&via=http://sec-lbx.tk" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《深入理解内存管理》 — Benxi's blog&url=http://sec-lbx.tk/2017/04/20/深入理解内存管理/&via=http://sec-lbx.tk" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
@@ -350,7 +350,7 @@ struct list_head full;
             
                 <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
             
-            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+            <span>本部落格係採用<a rel="license" href="https://creativecommons.org/licenses/by/4.0/deed.zh_TW">創用 CC 姓名標示 4.0 國際 授權條款授權</a></span>
         </p>
     </div>
     <div class="bottom">
@@ -372,7 +372,7 @@ struct list_head full;
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/04/20/深入理解内存管理/&title=《深入理解内存管理》 — lbx's blog&pic=http://sec-lbx.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/04/20/深入理解内存管理/&title=《深入理解内存管理》 — Benxi's blog&pic=http://sec-lbx.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -382,7 +382,7 @@ struct list_head full;
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/04/20/深入理解内存管理/&title=《深入理解内存管理》 — lbx's blog&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/04/20/深入理解内存管理/&title=《深入理解内存管理》 — Benxi's blog&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -392,7 +392,7 @@ struct list_head full;
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《深入理解内存管理》 — lbx's blog&url=http://sec-lbx.tk/2017/04/20/深入理解内存管理/&via=http://sec-lbx.tk" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《深入理解内存管理》 — Benxi's blog&url=http://sec-lbx.tk/2017/04/20/深入理解内存管理/&via=http://sec-lbx.tk" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>

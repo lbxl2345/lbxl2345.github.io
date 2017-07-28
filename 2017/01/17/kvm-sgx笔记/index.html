@@ -13,7 +13,7 @@
     
     
     
-    <title>SGX虚拟化相关 | lbx&#39;s blog</title>
+    <title>SGX虚拟化相关 | Benxi&#39;s blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="theme-color" content="#3F51B5">
@@ -25,14 +25,14 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="SGX虚拟化相关">
 <meta property="og:url" content="http://sec-lbx.tk/2017/01/17/kvm-sgx笔记/index.html">
-<meta property="og:site_name" content="lbx&#39;s blog">
+<meta property="og:site_name" content="Benxi&#39;s blog">
 <meta property="og:description" content="KVM-SGX虚拟机中的epc，使用sgx_vm_epc_buffer结构来管理的。其数据结构如下：     struct sgx_vm_epc_buffer {     struct list_head buf_list;     struct list_head page_list;     unsigned int nr_pages;     unsigned long userspace_">
 <meta property="og:updated_time" content="2017-07-28T09:04:47.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SGX虚拟化相关">
 <meta name="twitter:description" content="KVM-SGX虚拟机中的epc，使用sgx_vm_epc_buffer结构来管理的。其数据结构如下：     struct sgx_vm_epc_buffer {     struct list_head buf_list;     struct list_head page_list;     unsigned int nr_pages;     unsigned long userspace_">
     
-        <link rel="alternate" type="application/atom+xml" title="lbx&#39;s blog" href="/atom.xml">
+        <link rel="alternate" type="application/atom+xml" title="Benxi&#39;s blog" href="/atom.xml">
     
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
@@ -106,7 +106,7 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="搜尋">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
@@ -228,7 +228,7 @@ vmx_handle_exit是对exit的具体处理。利用VM_EXIT_REASON的bit 27，可�
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/01/17/kvm-sgx笔记/&title=《SGX虚拟化相关》 — lbx's blog&pic=http://sec-lbx.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/01/17/kvm-sgx笔记/&title=《SGX虚拟化相关》 — Benxi's blog&pic=http://sec-lbx.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -238,7 +238,7 @@ vmx_handle_exit是对exit的具体处理。利用VM_EXIT_REASON的bit 27，可�
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/01/17/kvm-sgx笔记/&title=《SGX虚拟化相关》 — lbx's blog&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/01/17/kvm-sgx笔记/&title=《SGX虚拟化相关》 — Benxi's blog&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -248,7 +248,7 @@ vmx_handle_exit是对exit的具体处理。利用VM_EXIT_REASON的bit 27，可�
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《SGX虚拟化相关》 — lbx's blog&url=http://sec-lbx.tk/2017/01/17/kvm-sgx笔记/&via=http://sec-lbx.tk" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《SGX虚拟化相关》 — Benxi's blog&url=http://sec-lbx.tk/2017/01/17/kvm-sgx笔记/&via=http://sec-lbx.tk" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
@@ -333,7 +333,7 @@ vmx_handle_exit是对exit的具体处理。利用VM_EXIT_REASON的bit 27，可�
             
                 <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
             
-            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+            <span>本部落格係採用<a rel="license" href="https://creativecommons.org/licenses/by/4.0/deed.zh_TW">創用 CC 姓名標示 4.0 國際 授權條款授權</a></span>
         </p>
     </div>
     <div class="bottom">
@@ -355,7 +355,7 @@ vmx_handle_exit是对exit的具体处理。利用VM_EXIT_REASON的bit 27，可�
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/01/17/kvm-sgx笔记/&title=《SGX虚拟化相关》 — lbx's blog&pic=http://sec-lbx.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/01/17/kvm-sgx笔记/&title=《SGX虚拟化相关》 — Benxi's blog&pic=http://sec-lbx.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -365,7 +365,7 @@ vmx_handle_exit是对exit的具体处理。利用VM_EXIT_REASON的bit 27，可�
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/01/17/kvm-sgx笔记/&title=《SGX虚拟化相关》 — lbx's blog&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/01/17/kvm-sgx笔记/&title=《SGX虚拟化相关》 — Benxi's blog&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -375,7 +375,7 @@ vmx_handle_exit是对exit的具体处理。利用VM_EXIT_REASON的bit 27，可�
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《SGX虚拟化相关》 — lbx's blog&url=http://sec-lbx.tk/2017/01/17/kvm-sgx笔记/&via=http://sec-lbx.tk" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《SGX虚拟化相关》 — Benxi's blog&url=http://sec-lbx.tk/2017/01/17/kvm-sgx笔记/&via=http://sec-lbx.tk" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
