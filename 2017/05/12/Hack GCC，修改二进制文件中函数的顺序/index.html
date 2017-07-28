@@ -19,9 +19,9 @@
     <meta name="theme-color" content="#3F51B5">
     
     
-    <meta name="keywords" content="编译安全,GCC">
+    <meta name="keywords" content="GCC,编译安全">
     <meta name="description" content="GCC的函数输出直观的来看，在cgraphunit.c当中，expand_all_functions()被用来输出所有需要输出的函数。这里，它首先进行了一次拓扑排序，在ipa_reverse_postorder()中完成。这样做的好处是，当一个函数被输出时，它所调用的所有函数都已经被输出了。这个函数还会先把内联的情况给处理掉。在expand_all_functions()中，随后在允许函数重排列的">
-<meta name="keywords" content="编译安全,GCC">
+<meta name="keywords" content="GCC,编译安全">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hack GCC，改变函数的顺序">
 <meta property="og:url" content="http://sec-lbx.tk/2017/05/12/Hack GCC，修改二进制文件中函数的顺序/index.html">
@@ -194,6 +194,8 @@ else{
     <div class="content">
         
 
+        
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2017/05/12/Hack GCC，修改二进制文件中函数的顺序/" target="_blank" rel="external">http://sec-lbx.tk/2017/05/12/Hack GCC，修改二进制文件中函数的顺序/</a>
         
     </div>
     <footer>
