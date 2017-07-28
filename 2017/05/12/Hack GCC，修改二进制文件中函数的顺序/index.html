@@ -19,9 +19,9 @@
     <meta name="theme-color" content="#3F51B5">
     
     
-    <meta name="keywords" content="GCC,编译安全">
+    <meta name="keywords" content="编译安全,GCC">
     <meta name="description" content="GCC的函数输出直观的来看，在cgraphunit.c当中，expand_all_functions()被用来输出所有需要输出的函数。这里，它首先进行了一次拓扑排序，在ipa_reverse_postorder()中完成。这样做的好处是，当一个函数被输出时，它所调用的所有函数都已经被输出了。这个函数还会先把内联的情况给处理掉。在expand_all_functions()中，随后在允许函数重排列的">
-<meta name="keywords" content="GCC,编译安全">
+<meta name="keywords" content="编译安全,GCC">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hack GCC，改变函数的顺序">
 <meta property="og:url" content="http://sec-lbx.tk/2017/05/12/Hack GCC，修改二进制文件中函数的顺序/index.html">
@@ -47,7 +47,7 @@
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
         <i class="icon icon-lg icon-close"></i>
     </a>
-    <div class="brand-wrap" style="background-image:url(/img/back.jpg)">
+    <div class="brand-wrap" style="background-image:url(/)">
       <div class="brand">
         <a href="/" class="avatar waves-effect waves-circle waves-light">
           <img src="/img/avatar.jpg">
@@ -437,10 +437,10 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
     var OriginTitile = document.title, titleTime;
     document.addEventListener('visibilitychange', function() {
         if (document.hidden) {
-            document.title = '死鬼去哪里了！';
+            document.title = '';
             clearTimeout(titleTime);
         } else {
-            document.title = '(つェ⊂)咦!又好了!';
+            document.title = '';
             titleTime = setTimeout(function() {
                 document.title = OriginTitile;
             },2000);

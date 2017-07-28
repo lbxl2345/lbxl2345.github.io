@@ -19,9 +19,9 @@
     <meta name="theme-color" content="#3F51B5">
     
     
-    <meta name="keywords" content="GCC,编译安全">
+    <meta name="keywords" content="编译安全,GCC">
     <meta name="description" content="运算RTL中的运算，采用一种很直观、简单的方式来进行描述。通常，表达式都会借助于m mode。运算包含有算术、比较、向量操作、Bit域、类型转换等。   Side Effect 表达式之前所说的表达式代码，通常表示的是值，而非某种行为。但机器指令，只有在对机器的状态产生了改变时，才会有意义；因此对于这些对寄存器、执行状态产生影响的过程，是有对应的表达式的，被称为side effect表达式。一条指">
-<meta name="keywords" content="GCC,编译安全">
+<meta name="keywords" content="编译安全,GCC">
 <meta property="og:type" content="article">
 <meta property="og:title" content="RTL，指令和运算，识别特定指令">
 <meta property="og:url" content="http://sec-lbx.tk/2017/05/10/RTL详解/index.html">
@@ -47,7 +47,7 @@
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
         <i class="icon icon-lg icon-close"></i>
     </a>
-    <div class="brand-wrap" style="background-image:url(/img/back.jpg)">
+    <div class="brand-wrap" style="background-image:url(/)">
       <div class="brand">
         <a href="/" class="avatar waves-effect waves-circle waves-light">
           <img src="/img/avatar.jpg">
@@ -472,10 +472,10 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
     var OriginTitile = document.title, titleTime;
     document.addEventListener('visibilitychange', function() {
         if (document.hidden) {
-            document.title = '死鬼去哪里了！';
+            document.title = '';
             clearTimeout(titleTime);
         } else {
-            document.title = '(つェ⊂)咦!又好了!';
+            document.title = '';
             titleTime = setTimeout(function() {
                 document.title = OriginTitile;
             },2000);

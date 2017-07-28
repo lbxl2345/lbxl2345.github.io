@@ -19,9 +19,9 @@
     <meta name="theme-color" content="#3F51B5">
     
     
-    <meta name="keywords" content="GCC,编译安全">
+    <meta name="keywords" content="编译安全,GCC">
     <meta name="description" content="前端：AST/GENERICAST:用tree来表示函数。其中，tree实际上是一个指针，它能够指向许多种类型的tree_node，这些tree_node定义在tree-core.h当中，就不一一赘述了。只需要明白，GCC当中最重要的数据就够就是tree，如果你想要添加一种tree_node，也可以在tree.def里面添加。   tree-core.h中定义了两种数据结构，用来直接表示tree节">
-<meta name="keywords" content="GCC,编译安全">
+<meta name="keywords" content="编译安全,GCC">
 <meta property="og:type" content="article">
 <meta property="og:title" content="GCC，Overview">
 <meta property="og:url" content="http://sec-lbx.tk/2017/05/01/GCC overview/index.html">
@@ -47,7 +47,7 @@
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
         <i class="icon icon-lg icon-close"></i>
     </a>
-    <div class="brand-wrap" style="background-image:url(/img/back.jpg)">
+    <div class="brand-wrap" style="background-image:url(/)">
       <div class="brand">
         <a href="/" class="avatar waves-effect waves-circle waves-light">
           <img src="/img/avatar.jpg">
@@ -423,10 +423,10 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
     var OriginTitile = document.title, titleTime;
     document.addEventListener('visibilitychange', function() {
         if (document.hidden) {
-            document.title = '死鬼去哪里了！';
+            document.title = '';
             clearTimeout(titleTime);
         } else {
-            document.title = '(つェ⊂)咦!又好了!';
+            document.title = '';
             titleTime = setTimeout(function() {
                 document.title = OriginTitile;
             },2000);

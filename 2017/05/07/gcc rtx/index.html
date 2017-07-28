@@ -19,9 +19,9 @@
     <meta name="theme-color" content="#3F51B5">
     
     
-    <meta name="keywords" content="GCC,编译安全">
+    <meta name="keywords" content="编译安全,GCC">
     <meta name="description" content="RTXrtx(RTL expression)，也即一个RTL的表达式。在coretypes.h中，其被定义为struct rtx_def *rtx，也即一个指向rtx_def的指针。那么rtx_def是一个什么结构呢？它同样定义在rtl.h当中： struct GTY((chain_next (&amp;quot;RTX_NEXT (&amp;amp;%h)&amp;quot;),     chain_prev (&amp;qu">
-<meta name="keywords" content="GCC,编译安全">
+<meta name="keywords" content="编译安全,GCC">
 <meta property="og:type" content="article">
 <meta property="og:title" content="RTL，类型和操作数">
 <meta property="og:url" content="http://sec-lbx.tk/2017/05/07/gcc rtx/index.html">
@@ -47,7 +47,7 @@
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
         <i class="icon icon-lg icon-close"></i>
     </a>
-    <div class="brand-wrap" style="background-image:url(/img/back.jpg)">
+    <div class="brand-wrap" style="background-image:url(/)">
       <div class="brand">
         <a href="/" class="avatar waves-effect waves-circle waves-light">
           <img src="/img/avatar.jpg">
@@ -463,10 +463,10 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
     var OriginTitile = document.title, titleTime;
     document.addEventListener('visibilitychange', function() {
         if (document.hidden) {
-            document.title = '死鬼去哪里了！';
+            document.title = '';
             clearTimeout(titleTime);
         } else {
-            document.title = '(つェ⊂)咦!又好了!';
+            document.title = '';
             titleTime = setTimeout(function() {
                 document.title = OriginTitile;
             },2000);
