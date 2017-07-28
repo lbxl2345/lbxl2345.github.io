@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>GCC插件：注册、编译和使用 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="GCC插件:注册、编译、和使用GCC 4.5版本后，为用户提供了接口，允许用户去编写额外的代码优化过程、改造代码形式、对代码进行分析。在GCC中，插件是以共享库的形式工作的。在安装好GCC之后，如果想编写插件，首先可以确定API的位置： gcc -print-file-name=plugin 在gcc-plugin.h中，提供了以下的结构：struct plugin_name_args包含了GCC">
+<meta name="keywords" content="编译安全,GCC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GCC插件：注册、编译和使用">
+<meta property="og:url" content="http://yoursite.com/2017/05/05/GCC插件编写/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="GCC插件:注册、编译、和使用GCC 4.5版本后，为用户提供了接口，允许用户去编写额外的代码优化过程、改造代码形式、对代码进行分析。在GCC中，插件是以共享库的形式工作的。在安装好GCC之后，如果想编写插件，首先可以确定API的位置： gcc -print-file-name=plugin 在gcc-plugin.h中，提供了以下的结构：struct plugin_name_args包含了GCC">
+<meta property="og:updated_time" content="2017-07-28T09:04:47.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="GCC插件：注册、编译和使用">
+<meta name="twitter:description" content="GCC插件:注册、编译、和使用GCC 4.5版本后，为用户提供了接口，允许用户去编写额外的代码优化过程、改造代码形式、对代码进行分析。在GCC中，插件是以共享库的形式工作的。在安装好GCC之后，如果想编写插件，首先可以确定API的位置： gcc -print-file-name=plugin 在gcc-plugin.h中，提供了以下的结构：struct plugin_name_args包含了GCC">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-GCC插件编写" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/05/05/GCC插件编写/" class="article-date">
+  <time datetime="2017-05-05T13:40:00.000Z" itemprop="datePublished">2017-05-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      GCC插件：注册、编译和使用
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="GCC插件-注册、编译、和使用"><a href="#GCC插件-注册、编译、和使用" class="headerlink" title="GCC插件:注册、编译、和使用"></a>GCC插件:注册、编译、和使用</h4><p>GCC 4.5版本后，为用户提供了接口，允许用户去编写额外的<em>代码优化过程</em>、<em>改造代码形式</em>、<em>对代码进行分析</em>。在GCC中，插件是以共享库的形式工作的。在安装好GCC之后，如果想编写插件，首先可以确定API的位置：</p>
+<pre><code>gcc -print-file-name=plugin
+</code></pre><p>在gcc-plugin.h中，提供了以下的结构：<br><code>struct plugin_name_args</code>包含了GCC调用插件所需要的信息，<code>plugin_info</code>是插件的帮助信息，<code>plugin_gcc_version</code>包含了插件支持的GCC版本。  </p>
+<p>对于一个插件，首先要决定它是在编译的那个阶段执行的，并且通过注册回调的方式，在编译的特殊时间段调用这个插件。GCC中的插件可以在GIMPLE、IPA、RTL等阶段工作。插件必须定义一个对应的数据结构，并且将它的信息，传递给插件框架，由它来回调插件的功能。插件所能够完成多功能，被称为”events”，它们定义在plugin.def文件当中。</p>
+<p>每一个gcc插件，都需要有一个初始化模块。对于一个gimple-pass插件，其初始化数据结构为：</p>
+<pre><code>static struct gimple_opt_pass myplugin_pass = 
+{
+    .pass.type = GIMPLE_PASS,
+    .pass.name = &quot;myplugin&quot;, /* For use in the dump file */
+
+    /* Predicate (boolean) function that gets executed before your pass.  If the
+     * return value is &apos;true&apos; your pass gets executed, otherwise, the pass is
+     * skipped.
+     */I
+    .pass.gate = myplugin_gate,  /* always returns true, see full code */
+    .pass.execute = myplugin_exec, /* Your pass handler/callback */
+};
+</code></pre><p>在tree-pass.h中，定义了一系列的数据结构，用来设置编写pass的执行顺序。在gcc/passes.def当中，定义了所有的pass。<br><a href="http://gcc-python-plugin.readthedocs.io/en/latest/tables-of-passes.html" target="_blank" rel="external">http://gcc-python-plugin.readthedocs.io/en/latest/tables-of-passes.html</a>上标注了GCC所有的passes，以及它们的所属的阶段。我注意到，在pass编写中，是这样标注pass的位置的：</p>
+<pre><code>pass.reference_pass_name = &quot;ssa&quot;;
+pass.ref_pass_instance_number = 1;
+pass.pos_op = PASS_POS_INSERT_AFTER;
+</code></pre><p>注释中写道，这个plugin将在GCC完成SSA表现形式之后，调用这个plugin，并且在第一个SSA之后调用。从tree-pass.h中，可以看到这样的定义：</p>
+<pre><code>struct register_pass_info
+{
+    opt_pass *pass;
+    const char* reference_pass_name;/*引用新pass的原有pass的名字*/
+    int ref_pass_instance_number;/*在原有pass后的特定位置插入新pass*/
+    enum pass_positioning_ops pos_ops;/*具体的插入方式，替换，之前，还是之后*/
+}
+</code></pre><p>在pass的init过程中，还需要进行回调的注册，把这个info传递给插件框架。</p>
+<pre><code>register_callback(&quot;myplugin&quot;, PLUGIN_PASS_MANAGER_SETUP, NULL, &amp;pass);
+register_callback(&quot;myplugin&quot;, PLUGIN_INFO, NULL, &amp;myplugin_info);
+</code></pre><p>当然，插件的运行也可以不用通过pass manager来进行hook，而是在某个特定的时间段运行。在<code>gcc/plugins.text</code>中，可以看到plugin_event的定义，它包含了一系列段时间点，于是乎在某些特定的时间点调用插件变得很方便，例如before gimplification, after compilation等。不过，如果想要更精确的设置调用的时机，那便还是要利用pass_manager来进行hook了。  </p>
+<p>插件的编译与一般的共享库编译并无不同。在老版本的GCC中，插件都是用C语言编写的，然而在我看到的版本(4.9.4)中，却一律变成了C++，看来用面向对象的语言来处理还是更为方便。  </p>
+<p>那么在编译好插件之后，就可以在gcc编译时调用它:</p>
+<pre><code>gcc -fplugin=./myplugin.so -c -o test test1.c
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/05/05/GCC插件编写/" data-id="cj5nn6mjx0019o43fkqu1y0qk" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译安全/">编译安全</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/05/07/gcc rtx/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          RTL，类型和操作数
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/05/01/GCC overview/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">GCC，Overview</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GCC/">GCC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/I-O/">I/O</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDA-pro/">IDA pro</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KVM/">KVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ocaml/">Ocaml</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PID-namespace/">PID namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/QEMU/">QEMU</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SGX/">SGX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/binutils/">binutils</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/container/">container</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/intel/">intel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kvm/">kvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux内核/">linux内核</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/llvm/">llvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/">memory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/namespace/">namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/server/">server</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/x64-assembly/">x64 assembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/x86-64/">x86-64</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/二进制/">二进制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内存安全/">内存安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/底层安全/">底层安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/文件系统/">文件系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/浏览器安全/">浏览器安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/爬虫/">爬虫</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/硬件/">硬件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/系统安全/">系统安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译器/">编译器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译安全/">编译安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚函数/">虚函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟化/">虚拟化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/链接器/">链接器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/静态分析/">静态分析</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/GCC/" style="font-size: 17.14px;">GCC</a> <a href="/tags/I-O/" style="font-size: 11.43px;">I/O</a> <a href="/tags/IDA-pro/" style="font-size: 10px;">IDA pro</a> <a href="/tags/KVM/" style="font-size: 10px;">KVM</a> <a href="/tags/Ocaml/" style="font-size: 11.43px;">Ocaml</a> <a href="/tags/PID-namespace/" style="font-size: 10px;">PID namespace</a> <a href="/tags/QEMU/" style="font-size: 10px;">QEMU</a> <a href="/tags/SGX/" style="font-size: 12.86px;">SGX</a> <a href="/tags/binutils/" style="font-size: 10px;">binutils</a> <a href="/tags/chrome/" style="font-size: 10px;">chrome</a> <a href="/tags/container/" style="font-size: 10px;">container</a> <a href="/tags/intel/" style="font-size: 11.43px;">intel</a> <a href="/tags/kvm/" style="font-size: 10px;">kvm</a> <a href="/tags/linux/" style="font-size: 20px;">linux</a> <a href="/tags/linux内核/" style="font-size: 12.86px;">linux内核</a> <a href="/tags/llvm/" style="font-size: 10px;">llvm</a> <a href="/tags/memory/" style="font-size: 10px;">memory</a> <a href="/tags/namespace/" style="font-size: 11.43px;">namespace</a> <a href="/tags/nginx/" style="font-size: 11.43px;">nginx</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/server/" style="font-size: 11.43px;">server</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/x64-assembly/" style="font-size: 11.43px;">x64 assembly</a> <a href="/tags/x86-64/" style="font-size: 10px;">x86-64</a> <a href="/tags/二进制/" style="font-size: 10px;">二进制</a> <a href="/tags/内存安全/" style="font-size: 10px;">内存安全</a> <a href="/tags/底层安全/" style="font-size: 10px;">底层安全</a> <a href="/tags/操作系统/" style="font-size: 18.57px;">操作系统</a> <a href="/tags/文件系统/" style="font-size: 10px;">文件系统</a> <a href="/tags/浏览器安全/" style="font-size: 10px;">浏览器安全</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a> <a href="/tags/硬件/" style="font-size: 10px;">硬件</a> <a href="/tags/系统安全/" style="font-size: 12.86px;">系统安全</a> <a href="/tags/编译器/" style="font-size: 11.43px;">编译器</a> <a href="/tags/编译安全/" style="font-size: 15.71px;">编译安全</a> <a href="/tags/虚函数/" style="font-size: 10px;">虚函数</a> <a href="/tags/虚拟化/" style="font-size: 14.29px;">虚拟化</a> <a href="/tags/链接器/" style="font-size: 10px;">链接器</a> <a href="/tags/静态分析/" style="font-size: 12.86px;">静态分析</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/07/28/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2017/07/15/浅谈GCC编译优化/">浅谈GCC编译优化</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/27/虚函数，原理和攻击方式/">从虚函数的实现，到虚表劫持攻击</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/19/编译链中的一环，静态链接详解/">编译链中的一环，静态链接详解</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/09/Hack gcc：添加新的函数/">Hack GCC，在编译时构造新的函数</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

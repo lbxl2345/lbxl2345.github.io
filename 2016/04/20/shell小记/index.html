@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Shell小记 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="文件管理在某些场景中，需要统计一个文件夹下的所有文件大小，或者对它们排序。例如在一些安全软件中，常常有垃圾清理，文件整理这样的功能。这里做了一道题目，将一个文件夹中包含的所有文件(包含子文件夹下)按照大小进行排序。这里最后我的答案是 find . -type f -exec ls -lh {} \;|sort -k 5 似乎并不是最好的答案。使用shell的话，利用ls是比较好的选择。在ls命令中">
+<meta name="keywords" content="linux,shell">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Shell小记">
+<meta property="og:url" content="http://yoursite.com/2016/04/20/shell小记/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="文件管理在某些场景中，需要统计一个文件夹下的所有文件大小，或者对它们排序。例如在一些安全软件中，常常有垃圾清理，文件整理这样的功能。这里做了一道题目，将一个文件夹中包含的所有文件(包含子文件夹下)按照大小进行排序。这里最后我的答案是 find . -type f -exec ls -lh {} \;|sort -k 5 似乎并不是最好的答案。使用shell的话，利用ls是比较好的选择。在ls命令中">
+<meta property="og:updated_time" content="2017-07-28T09:04:47.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Shell小记">
+<meta name="twitter:description" content="文件管理在某些场景中，需要统计一个文件夹下的所有文件大小，或者对它们排序。例如在一些安全软件中，常常有垃圾清理，文件整理这样的功能。这里做了一道题目，将一个文件夹中包含的所有文件(包含子文件夹下)按照大小进行排序。这里最后我的答案是 find . -type f -exec ls -lh {} \;|sort -k 5 似乎并不是最好的答案。使用shell的话，利用ls是比较好的选择。在ls命令中">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-shell小记" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/04/20/shell小记/" class="article-date">
+  <time datetime="2016-04-20T09:40:00.000Z" itemprop="datePublished">2016-04-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Shell小记
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="文件管理"><a href="#文件管理" class="headerlink" title="文件管理"></a>文件管理</h3><p>在某些场景中，需要统计一个文件夹下的所有文件大小，或者对它们排序。例如在一些安全软件中，常常有垃圾清理，文件整理这样的功能。这里做了一道题目，将一个文件夹中包含的所有文件(包含子文件夹下)按照大小进行排序。<br>这里最后我的答案是</p>
+<pre><code>find . -type f -exec ls -lh {} \;|sort -k 5
+</code></pre><p>似乎并不是最好的答案。<br>使用shell的话，利用ls是比较好的选择。在ls命令中，-S选项能够直接提供文件大小的排序，但问题在于，它不能把所有文件进行排序，只能在每个文件夹下进行排序；而且对于多个文件，ls无法显示文件的路径。所以这里使用了find。find -type能够指定文件的类型，这里指定查询的类型为文件(非目录)。然后sort -k指定了进行排序为第5列。这里exec的使用方法如下：</p>
+<pre><code>-exec &lt;command&gt; {result} \;
+</code></pre><p>花括号{}代表find所查找出来的文件名，它的终止是以;为结束标志的，而这里的\起到了转义字符的作用。<br>除了我所使用的方法，我还参考了一下其他人的答案。有一种利用xargs的:</p>
+<pre><code>find . -type f|xargs ls -lh|sort -k 5
+</code></pre><p>xargs能够把不支持管道传递的参数传递给下一个命令，通常用空白字符作为分隔。</p>
+<h3 id="日志访客数量统计"><a href="#日志访客数量统计" class="headerlink" title="日志访客数量统计"></a>日志访客数量统计</h3><p>在网站的统计中，有时候需要通过日志来计算某一天的访客数量。这里有一个文件，它记录了某一天的访客记录，其中包含了访问时间，其第2项为访客的ID。那么如何确定访客数量呢？我做的答案是</p>
+<pre><code>grep &quot;2015-08-24&quot; log.txt|sort -k 2 -nu|wc -l
+</code></pre><p>wc命令用于统计某个文件中的字结束、字数和行数。其中-l为显示行数的命令。这里首先用grep筛选出2015-8-24的日志内容，然后对第二项进行排序，sort -u去除了重复项。然后用wc -l就统计出了这一天的访客数量。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/04/20/shell小记/" data-id="cj5nn6mlm002to43fitq2idgw" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell/">shell</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/04/21/操作系统寻址/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          操作系统寻址
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/03/22/GCC内联汇编笔记/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">GCC内联汇编笔记</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GCC/">GCC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/I-O/">I/O</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDA-pro/">IDA pro</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KVM/">KVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ocaml/">Ocaml</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PID-namespace/">PID namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/QEMU/">QEMU</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SGX/">SGX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/binutils/">binutils</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/container/">container</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/intel/">intel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kvm/">kvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux内核/">linux内核</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/llvm/">llvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/">memory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/namespace/">namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/server/">server</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/x64-assembly/">x64 assembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/x86-64/">x86-64</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/二进制/">二进制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内存安全/">内存安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/底层安全/">底层安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/文件系统/">文件系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/浏览器安全/">浏览器安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/爬虫/">爬虫</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/硬件/">硬件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/系统安全/">系统安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译器/">编译器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译安全/">编译安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚函数/">虚函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟化/">虚拟化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/链接器/">链接器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/静态分析/">静态分析</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/GCC/" style="font-size: 17.14px;">GCC</a> <a href="/tags/I-O/" style="font-size: 11.43px;">I/O</a> <a href="/tags/IDA-pro/" style="font-size: 10px;">IDA pro</a> <a href="/tags/KVM/" style="font-size: 10px;">KVM</a> <a href="/tags/Ocaml/" style="font-size: 11.43px;">Ocaml</a> <a href="/tags/PID-namespace/" style="font-size: 10px;">PID namespace</a> <a href="/tags/QEMU/" style="font-size: 10px;">QEMU</a> <a href="/tags/SGX/" style="font-size: 12.86px;">SGX</a> <a href="/tags/binutils/" style="font-size: 10px;">binutils</a> <a href="/tags/chrome/" style="font-size: 10px;">chrome</a> <a href="/tags/container/" style="font-size: 10px;">container</a> <a href="/tags/intel/" style="font-size: 11.43px;">intel</a> <a href="/tags/kvm/" style="font-size: 10px;">kvm</a> <a href="/tags/linux/" style="font-size: 20px;">linux</a> <a href="/tags/linux内核/" style="font-size: 12.86px;">linux内核</a> <a href="/tags/llvm/" style="font-size: 10px;">llvm</a> <a href="/tags/memory/" style="font-size: 10px;">memory</a> <a href="/tags/namespace/" style="font-size: 11.43px;">namespace</a> <a href="/tags/nginx/" style="font-size: 11.43px;">nginx</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/server/" style="font-size: 11.43px;">server</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/x64-assembly/" style="font-size: 11.43px;">x64 assembly</a> <a href="/tags/x86-64/" style="font-size: 10px;">x86-64</a> <a href="/tags/二进制/" style="font-size: 10px;">二进制</a> <a href="/tags/内存安全/" style="font-size: 10px;">内存安全</a> <a href="/tags/底层安全/" style="font-size: 10px;">底层安全</a> <a href="/tags/操作系统/" style="font-size: 18.57px;">操作系统</a> <a href="/tags/文件系统/" style="font-size: 10px;">文件系统</a> <a href="/tags/浏览器安全/" style="font-size: 10px;">浏览器安全</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a> <a href="/tags/硬件/" style="font-size: 10px;">硬件</a> <a href="/tags/系统安全/" style="font-size: 12.86px;">系统安全</a> <a href="/tags/编译器/" style="font-size: 11.43px;">编译器</a> <a href="/tags/编译安全/" style="font-size: 15.71px;">编译安全</a> <a href="/tags/虚函数/" style="font-size: 10px;">虚函数</a> <a href="/tags/虚拟化/" style="font-size: 14.29px;">虚拟化</a> <a href="/tags/链接器/" style="font-size: 10px;">链接器</a> <a href="/tags/静态分析/" style="font-size: 12.86px;">静态分析</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/07/28/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2017/07/15/浅谈GCC编译优化/">浅谈GCC编译优化</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/27/虚函数，原理和攻击方式/">从虚函数的实现，到虚表劫持攻击</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/19/编译链中的一环，静态链接详解/">编译链中的一环，静态链接详解</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/09/Hack gcc：添加新的函数/">Hack GCC，在编译时构造新的函数</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

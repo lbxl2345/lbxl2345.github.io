@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>nginx笔记1.md | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="nginx 启动/终止/重载入启动:运行主程序即启动控制: nginx -s [signal] signal:stop, quit, reload, ropen 应用新的配置: nginx -s reload 配置文件nginx包含由配置文件中的directives（simple, block）来控制的模块。包含其他directives的block被称为context。不被任何context包含的">
+<meta name="keywords" content="server,nginx">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nginx笔记1.md">
+<meta property="og:url" content="http://yoursite.com/2016/03/11/nginx笔记1/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="nginx 启动/终止/重载入启动:运行主程序即启动控制: nginx -s [signal] signal:stop, quit, reload, ropen 应用新的配置: nginx -s reload 配置文件nginx包含由配置文件中的directives（simple, block）来控制的模块。包含其他directives的block被称为context。不被任何context包含的">
+<meta property="og:updated_time" content="2017-07-28T09:04:47.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="nginx笔记1.md">
+<meta name="twitter:description" content="nginx 启动/终止/重载入启动:运行主程序即启动控制: nginx -s [signal] signal:stop, quit, reload, ropen 应用新的配置: nginx -s reload 配置文件nginx包含由配置文件中的directives（simple, block）来控制的模块。包含其他directives的block被称为context。不被任何context包含的">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-nginx笔记1" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/03/11/nginx笔记1/" class="article-date">
+  <time datetime="2016-03-11T09:40:00.000Z" itemprop="datePublished">2016-03-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      nginx笔记1.md
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="nginx-启动-终止-重载入"><a href="#nginx-启动-终止-重载入" class="headerlink" title="nginx 启动/终止/重载入"></a>nginx 启动/终止/重载入</h3><p>启动:运行主程序即启动<br>控制:</p>
+<pre><code>nginx -s [signal]
+signal:stop, quit, reload, ropen
+应用新的配置:
+nginx -s reload
+</code></pre><h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><p>nginx包含由配置文件中的<strong>directives</strong>（simple, block）来控制的模块。包含其他directives的block被称为context。不被任何context包含的directives，被称为main context。例如：events和http在main context中，server在http中，location在server中。  </p>
+<p>几个context包括有:<br>通常一个配置文件会包含有数个通过ports和server name区分的<strong>server</strong>。对于一个request，nginx会先确定用哪一个server，然后测试其header中的URI是否与<strong>server</strong>中的<strong>location</strong>中项一致。  </p>
+<pre><code>http{
+    server{
+        location / {
+            root /data/www;
+        }
+        location /imamges/ {
+            root /data;
+        }
+    }
+}
+</code></pre><p><strong>location</strong>指明了用来与URI比对的前缀，对于吻合的请求来说，URI会被添加上<strong>root</strong>中指定的根路径，来形成完整本地文件系统的路径。  </p>
+<h3 id="FastCGI-server"><a href="#FastCGI-server" class="headerlink" title="FastCGI server"></a>FastCGI server</h3><p>nginx能够讲requests导向FastCGI server。FastCGI server能够运行使用不同框架和编程语言（例如PHP）编写的程序。最为基本的的FastCGI server配置方法是使用fastcgi_pass命令，SCRIPT_FILENAME参数指定了脚本文件的名称，QUERY_STRING参数用来传递request parameters。</p>
+<pre><code>server {
+    location / {
+            fastcgi_pass  localhost:9000;
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+            fastcgi_param QUERY_STRING    $query_string;
+        }
+
+        location ~ \.(gif|jpg|png)$ {
+            root /data/images;
+        }
+    }
+</code></pre><h3 id="nginx如何处理request"><a href="#nginx如何处理request" class="headerlink" title="nginx如何处理request"></a>nginx如何处理request</h3><p>nginx首先确定处理request的server，例如配置3个server:</p>
+<pre><code>server {
+listen      80;
+server_name example.org www.example.org;
+...
+}
+
+server {
+listen      80;
+server_name example.net www.example.net;
+...
+}
+
+server {
+listen      80;
+server_name example.com www.example.com;
+...
+}
+</code></pre><p>nginx检测request的<strong>header</strong>域“Host”来确定它应该被指向哪一个server。如果request不吻合任何一个server name，或者不包含header，那么会被导向该端口默认的port。对于没有header的request，可以设置一个空的server来专门drop他们，例如，其中code 444表示关闭connection。</p>
+<pre><code>server{
+    listen 80;
+    server_name &quot;&quot;;
+    return 444;
+}
+</code></pre><p>在多个server监听不同IP地址的情况下，nginx首先会检测request的ip地址和port是否符合server中的listen命令。对于不同的ip，default server可以是不同的。</p>
+<pre><code>server {
+listen      192.168.1.1:80;
+server_name example.org www.example.org;
+...
+}
+
+server {
+listen      192.168.1.1:80;
+server_name example.net www.example.net;
+...
+}
+
+server {
+listen      192.168.1.2:80;
+server_name example.com www.example.com;
+...
+}
+</code></pre><p>那么nginx如何选择处理request的location呢？以一个简单的php网站为例。nginx首先搜索和字符串最长匹配的前缀。在下面的设置中，唯一的前缀位置时”/“，由于它会匹配任何request，所以它会被视为最靠后的选择。然后nginx检查配置文件中，通过正则表达式给出的locations列表。第一次成功匹配就会终止搜索，nginx会使用这个location。nginx只会检查request的URI部分。举例说明:  </p>
+<ul>
+<li>request “/logo.gif”首先匹配了”/“，然后匹配了正则式”.(git|jpg|png)$”，因此它会选择后一个location，通过指令”root /data/www”request会被映射到文件/data/www/logo.gif中。  </li>
+<li>reqeust “/index.php”首先匹配了”/“，然后匹配了正则式”.(php)$”。因此request会被交给监听localhost:9000的FastCGI server。fastcgi_param命令将其脚本名设置”/data/www/index.php”,随后FastCGI server执行这个文件。（$document_root变量和root命令指定的相同，$fastcgi_script_name与request的URI相同，也即/index.php）。  </li>
+<li>request “.about.html”只和前缀location”/“匹配，因此，它只会在这个location中被处理。使用“root /data/www”，request被映射到”data/www/about.html”，然后文件被发送到client。  </li>
+<li>request “/”的处理更为复杂，它只会匹配前缀location”/“，nginx会首先通过index指令来检测时候好存在index文件，如果/data/www/index.html不存在，但/data/www/index.php存在，那么FastCGI server会将其重定位到”index.php”，随后nginx会重新搜索这个location，就像这个request是被用户发送的一样。</li>
+</ul>
+<hr>
+<pre><code>server {
+    listen      80;
+    server_name example.org www.example.org;
+    root        /data/www;
+
+    location / {
+        index   index.html index.php;
+    }
+
+    location ~* \.(gif|jpg|png)$ {
+        expires 30d;
+    }
+
+    location ~ \.php$ {
+        fastcgi_pass  localhost:9000;
+        fastcgi_param SCRIPT_FILENAME
+                      $document_root$fastcgi_script_name;
+        include       fastcgi_params;
+    }
+}
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/03/11/nginx笔记1/" data-id="cj5nn6mlc002ho43fx1xmiw49" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/">nginx</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/server/">server</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/03/14/nginx笔记2/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          nginx笔记2.md
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/02/17/寒假小结/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">寒假小结.md</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GCC/">GCC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/I-O/">I/O</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDA-pro/">IDA pro</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KVM/">KVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ocaml/">Ocaml</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PID-namespace/">PID namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/QEMU/">QEMU</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SGX/">SGX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/binutils/">binutils</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/container/">container</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/intel/">intel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kvm/">kvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux内核/">linux内核</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/llvm/">llvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/">memory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/namespace/">namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/server/">server</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/x64-assembly/">x64 assembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/x86-64/">x86-64</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/二进制/">二进制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内存安全/">内存安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/底层安全/">底层安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/文件系统/">文件系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/浏览器安全/">浏览器安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/爬虫/">爬虫</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/硬件/">硬件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/系统安全/">系统安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译器/">编译器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译安全/">编译安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚函数/">虚函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟化/">虚拟化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/链接器/">链接器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/静态分析/">静态分析</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/GCC/" style="font-size: 17.14px;">GCC</a> <a href="/tags/I-O/" style="font-size: 11.43px;">I/O</a> <a href="/tags/IDA-pro/" style="font-size: 10px;">IDA pro</a> <a href="/tags/KVM/" style="font-size: 10px;">KVM</a> <a href="/tags/Ocaml/" style="font-size: 11.43px;">Ocaml</a> <a href="/tags/PID-namespace/" style="font-size: 10px;">PID namespace</a> <a href="/tags/QEMU/" style="font-size: 10px;">QEMU</a> <a href="/tags/SGX/" style="font-size: 12.86px;">SGX</a> <a href="/tags/binutils/" style="font-size: 10px;">binutils</a> <a href="/tags/chrome/" style="font-size: 10px;">chrome</a> <a href="/tags/container/" style="font-size: 10px;">container</a> <a href="/tags/intel/" style="font-size: 11.43px;">intel</a> <a href="/tags/kvm/" style="font-size: 10px;">kvm</a> <a href="/tags/linux/" style="font-size: 20px;">linux</a> <a href="/tags/linux内核/" style="font-size: 12.86px;">linux内核</a> <a href="/tags/llvm/" style="font-size: 10px;">llvm</a> <a href="/tags/memory/" style="font-size: 10px;">memory</a> <a href="/tags/namespace/" style="font-size: 11.43px;">namespace</a> <a href="/tags/nginx/" style="font-size: 11.43px;">nginx</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/server/" style="font-size: 11.43px;">server</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/x64-assembly/" style="font-size: 11.43px;">x64 assembly</a> <a href="/tags/x86-64/" style="font-size: 10px;">x86-64</a> <a href="/tags/二进制/" style="font-size: 10px;">二进制</a> <a href="/tags/内存安全/" style="font-size: 10px;">内存安全</a> <a href="/tags/底层安全/" style="font-size: 10px;">底层安全</a> <a href="/tags/操作系统/" style="font-size: 18.57px;">操作系统</a> <a href="/tags/文件系统/" style="font-size: 10px;">文件系统</a> <a href="/tags/浏览器安全/" style="font-size: 10px;">浏览器安全</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a> <a href="/tags/硬件/" style="font-size: 10px;">硬件</a> <a href="/tags/系统安全/" style="font-size: 12.86px;">系统安全</a> <a href="/tags/编译器/" style="font-size: 11.43px;">编译器</a> <a href="/tags/编译安全/" style="font-size: 15.71px;">编译安全</a> <a href="/tags/虚函数/" style="font-size: 10px;">虚函数</a> <a href="/tags/虚拟化/" style="font-size: 14.29px;">虚拟化</a> <a href="/tags/链接器/" style="font-size: 10px;">链接器</a> <a href="/tags/静态分析/" style="font-size: 12.86px;">静态分析</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/07/28/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2017/07/15/浅谈GCC编译优化/">浅谈GCC编译优化</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/27/虚函数，原理和攻击方式/">从虚函数的实现，到虚表劫持攻击</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/19/编译链中的一环，静态链接详解/">编译链中的一环，静态链接详解</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/09/Hack gcc：添加新的函数/">Hack GCC，在编译时构造新的函数</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

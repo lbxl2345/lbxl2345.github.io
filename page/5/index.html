@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://yoursite.com/page/5/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hexo">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-爬虫入门" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/05/13/爬虫入门/" class="article-date">
+  <time datetime="2016-05-13T09:40:00.000Z" itemprop="datePublished">2016-05-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/05/13/爬虫入门/">初学爬虫</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h3><p>爬虫，就是伪造一个用户身份，通过URL去访问某个网页，将这个网页上的某些感兴趣的内容，利用正则式的方式提取出来。对于google，baidu的搜索部门，爬虫可以说是核心技术之一。</p>
+<h3 id="python-spider"><a href="#python-spider" class="headerlink" title="python spider"></a>python spider</h3><p>python为实现基本的爬虫，提供了十分方便的模块。通常利用urllib来实现简单的爬虫。首先确定访问的url，然后对这个url生成一个request。request并不仅仅是一个简单的访问请求，它可以采用post，get等方式，来实现数据的提交。</p>
+<pre><code>request = urllib2.Request(url, data, headers)
+response = urllib2.urlopen(request)
+print response.read()
+</code></pre><p>post和get的一个差别在于，get的方式是直接以链接形式访问，链接中包含了所有参数。这里简单写一下爬虫中，post和get的使用。</p>
+<pre><code>values = {&quot;username&quot;: &quot;user&quot;, &quot;password&quot;: &quot;pass&quot;}
+#post
+data = urlencode(values)
+request = urllib2.Request(url, data)
+#get
+url = url + &quot;?&quot; + data
+request = urllib2.Request(url)
+</code></pre><p>某些情况下，需要设置访问的headers，才能对网页进行正常的访问。例如防盗链，服务器有时候会检查headers的referer是不是自己。headers是放在request之中的。除了在初始化的时候赋值，还可以添加headers。</p>
+<pre><code>＃设置headers
+headers = { &apos;User-Agent&apos; : &apos;Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)&apos;,&apos;Referer&apos;:&apos;http://www.zhihu.com/articles&apos; }  
+request = urllib2.Request(url, data, headers)
+request.add_header(&apos;cache-control&apos;, &apos;no-cache&apos;)
+</code></pre><h3 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h3><p>正则表达式是用来提取网页中感兴趣部分的工具。当然，首先自己要对网页源代码有所了解才行。这里列出一个python正则式的匹配规则.<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E7%88%AC%E8%99%AB/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F.png?raw=true"><br>python中自带了re模块，提供了对于正则表达式的支持。其中，最重要的是re.compile方法。</p>
+<pre><code>pattern = re.compile(&apos;string&apos;);
+</code></pre><p>compile提供一个匹配模式pattern。re中提供了其他的方法，可以根据pattern，在目标中进行匹配/操作。  </p>
+<pre><code>re.match(pattern, string[, flags])
+re.search(pattern, string[, flags])
+re.split(pattern, string[, maxsplit])
+re.findall(pattern, string[, flags])
+re.finditer(pattern, string[, flags])
+re.sub(pattern, repl, string[, count])
+re.subn(pattern, repl, string[, count])
+</code></pre><h3 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h3><p>爬虫主要会遇到两种Error，URLError和HTTPError。利用try-except来捕捉相应的异常。</p>
+<pre><code>#URLError
+try:
+    urllib2.urlopen(request)
+except urllib2.URLError, e:
+    print e.reason
+</code></pre><p>HTTPError会对应一些状态码，例如404，400等。HTTPError实例化后会有一个code属性，也就是这个相关的错误号。</p>
+<pre><code>#HTTPError
+try:
+    urllib2.urlopen(rep)
+except urllib2.HTTPError, e:
+    print e.code
+    print e.reason
+</code></pre><p>如果捕获到了HTTPError，还可以加入hasattr，提前对属性进行判断：  </p>
+<pre><code>except urllib2.URLError, e:
+if hasattr(e,&quot;code&quot;):
+    print e.code
+if hasattr(e,&quot;reason&quot;):
+    print e.reason
+</code></pre><h3 id="使用cookie"><a href="#使用cookie" class="headerlink" title="使用cookie"></a>使用cookie</h3><p>某些网站为了辨别用户身份，进行session跟踪，需要储存cookie在用户本地终端上。这样一来，某些网站需要登录后才能访问某个页面，此时就需要利用Urllib2库保存我们登陆的Cookie，然后再抓取其他页面。<br>获取一个URL时，需要使用一个opener。之前使用的urlopen，实际上是opener的一个特殊实例。对于cookie，python也提供了支持的模块，cookielib。使用cookie分为两个部分，首先是把cookie保存到文件，第二是从文件中获取cookie并访问。cookie保存的过程如下：  </p>
+<pre><code>#创建MozillaCookieJar实例对象，保存cookie
+cookie = cookielib.MozillaCookieJar(filename)
+#利用HTTPCookieProcessor创建一个cookie处理器
+handler = urllib2.HTTPCookieProcessor(cookie)
+req = urllib2.Request(&quot;http://www.baidu.com&quot;)
+#利用urllib2的buile_opener创建一个opener
+opener = urllib2.build_opener(handler)
+response = opener.open(req)
+#保存cookie到文件
+cookie.save()
+</code></pre><p>从文件中获取Cookie并访问的过程如下：</p>
+<pre><code>cookie = cookielib.MozillaCookieJar()
+#读取cookie到变量
+cookie.load(&apos;cookie.txt&apos;)
+req = urllib2.Request(&quot;http://www.baidu.com&quot;)
+handler = urllib2.HTTPCookieProcessor(cookie)
+opener =  urllib2.build_opener(handler)
+response = opener.open(req)
+</code></pre><h3 id="小例子"><a href="#小例子" class="headerlink" title="小例子"></a>小例子</h3><p>做了一个小爬虫，用来统计豆瓣电影TOP250名中，前166名的评分总和。这里运用了一些python中的相关知识。  </p>
+<p>import urllib<br>import urllib2<br>import re<br>class DBPC:</p>
+<pre><code>def __init__(self,baseUrl):
+    self.baseURL = baseURL
+
+def getPage(self,pageNum):
+#python中全局变量的声明
+    global count
+    global sum
+    try:
+        url = self.baseURL + &apos;?start=&apos; + str(pageNum * 25) + &apos;&amp;filter=&apos;
+        request = urllib2.Request(url)
+        response = urllib2.urlopen(request)
+        #指定编码格式，并获取内容
+        content = response.read().decode(&apos;utf-8&apos;)
+        #获取规则
+        pattern = re.compile(&apos;&lt;span class=&quot;rating_num&quot; property=&quot;v:average&quot;&gt;(\d\.\d)&lt;/span&gt;&apos;)
+        #利用findall匹配所有
+        items = re.findall(pattern, content)
+        #通过循环逐个得出
+        for item in items:
+            print count ,item
+            count += 1
+            if count &gt; 167:
+                break
+            else:
+                sum += float(item)
+    except urllib2.URLError, e:
+         if hasattr(e,&quot;reason&quot;):
+            print e.reason
+            return None
+
+count = 1
+sum = 0
+baseURL = &apos;https://movie.douban.com/top250&apos;
+dbpc = DBPC(baseURL)
+for i in range(7):
+    dbpc.getPage(i)
+print sum
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/05/13/爬虫入门/" data-id="cj5nn6mm9003xo43fukdtpjpf" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/爬虫/">爬虫</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-virtio" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/05/06/virtio/" class="article-date">
+  <time datetime="2016-05-06T09:40:00.000Z" itemprop="datePublished">2016-05-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/05/06/virtio/">virtio原理研究</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="virtio简介"><a href="#virtio简介" class="headerlink" title="virtio简介"></a>virtio简介</h3><p>virtio是KVM虚拟环境下，针对I/O虚拟化的通用框架。virtio是一个半虚拟化驱动。首先说明一下全虚拟化和半虚拟化的区别。全虚拟化是指guest操作系统运行在物理机器上的hypervisor上，它不知道自己已被虚拟化，不需要任何更改就可以工作。半虚拟化指的是guest操作系统不仅知道它运行在hypervisor上，还包括让guest操作系统更高效与hyperviosr交互的代码(驱动程序)。  </p>
+<h3 id="QEMU模拟I-O"><a href="#QEMU模拟I-O" class="headerlink" title="QEMU模拟I/O"></a>QEMU模拟I/O</h3><p>如果使用QEMU模拟I/O，当guest中的设备驱动程序发起I/O操作请求时，KVM中的I/O操作捕获代码会将这次I/O请求拦截，在经过处理后将这次I/O请求的信息放在I/O共享页，然后通知QEMU程序。QEMU获得I/O操作的具体信息后，交由硬件模拟代码模拟出本次I/O操作，完成后，将结果放回I/O共享页，并通知KVM模块中的I/O操作捕获代码。最后，KVM模块中的捕获代码读取I/O共享页中的操作结果，把结果返回到客户机中。倘若guest通过DMA访问大块I/O时，QEMU不会把操作结果放在I/O共享页中，而是通过内存映射的方式将结果直接写到guest的内存中。  </p>
+<p><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/virtio/qemu.jpg?raw=true" height="50%" width="50%"></p>
+<h3 id="virtio模拟I-O"><a href="#virtio模拟I-O" class="headerlink" title="virtio模拟I/O"></a>virtio模拟I/O</h3><p>下图中，最上面一排(virtio_blk等)是前端驱动，它们是在客户机中存在的驱动程序模块，而后端处理程序是在QEMU中实现的。在前端和后端之间，定义了两层来支持guest和QEMU之间的通信。virtio层是虚拟队列借口，一个前端驱动程序可以使用多个队列。虚拟队列实际上是guest操作系统和hyperviosr的衔接点。而virtio-ring实现了环形缓冲区，它用来保存前端驱动和后端处理程序执行的信息，并且它可以一次性保存前端驱动的多次I/O请求，并且交由后端驱动去批量处理，最后实际调用host中设备驱动实现物理上的I/O操作，这样做就可以实现批量处理，而不是客户机中的每次I/O请求都需要处理一次，从而提高了guest和hypervisor信息交换的效率。 </p>
+<p><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/virtio/virtio.jpg?raw=true" height="50%" width="50%"> </p>
+<h3 id="virtio-blk"><a href="#virtio-blk" class="headerlink" title="virtio_blk"></a>virtio_blk</h3><p>在linux中，对于块设备的访问，通常是用一个I/O队列，来维护一系列的bio数据结构，通常一个请求可能包含多个bio结构。bio是上层内核vfs与下层驱动连接的纽带。<br>virtio_blk结构体中的gendisk结构多request_queue队列接收block层的bio请求，按照request_queue队列默认处理过程，bio请求会在io调度层转化为request，然后进入request_queue队列，最后调用virtblk_request将request转化为vbr结构，最后由QEMU接管处理。<br>QEMU处理过vdr之后，会将它加入到virtio_ring的request队列，并发一个中断给队列，队列的中断响应函数vring_interrupt调用队列的回调函数virtblk_done。<br>最后由request_queue注册的complete函数virtblk_request_done处理，通过blk_mq_end_io通告块设备层IO结束。 </p>
+<p><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/virtio/lifecycle.png?raw=true" height="50%" width="50%">  </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/05/06/virtio/" data-id="cj5nn6mlp002wo43f3lwmc7m7" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/虚拟化/">虚拟化</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-I:O体系结构" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/05/05/I:O体系结构/" class="article-date">
+  <time datetime="2016-05-05T09:40:00.000Z" itemprop="datePublished">2016-05-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/05/05/I:O体系结构/">I/O体系结构</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="驱动程序"><a href="#驱动程序" class="headerlink" title="驱动程序"></a>驱动程序</h3><p>操作系统对设备以及文件系统的抽象可以分为两层。第一层是在物理介质上的抽象，用“记录块”去抽象磁道、扇区；第二层则将记录块抽象成为文件系统。<br>linux将设备分为块设备和字符设备两大类。块设备是以记录块或扇区为单位，成块进行输入/输出的设备，称为“字符设备”，例如磁盘。字符设备是以字符为单位，逐个进行输入/输出的设备，例如键盘。<br>要使一项设备在系统中可见的，首先要在文件系统中有一个代表它的文件节点，它是通过系统调用mknod实现的。但是要对它进行访问，最重要的是在设备驱动层要有该设备的驱动程序。这个驱动程序是通过可安装模块来实现，它在系统运行时动态安装到内核中。而驱动程序要访问设备上的物理电路，需要通过特殊的I/O指令。这部分电路通常是以寄存器的形式出现的，这些指令有out/in等。</p>
+<h3 id="mknod"><a href="#mknod" class="headerlink" title="mknod"></a>mknod</h3><p>mknod能够创造目录之外的所有文件，包括普通文件、特殊文件以及设备文件。但其他文件大多都有专门的系统调用，因此mknod主要用于创建设备文件。<br>mknod会调用vfs_mknod，分配一个inode数据结构，然后对它进行设置，包括设备号以及文件操作表指针。随后将新创建对节点加进所在目录在磁盘上的目录文件中，由于这个inode被设置为脏，因此在内核同步时，会将其内容写到磁盘上的索引节点上(inode对应ext_node)。</p>
+<h3 id="可安装模块"><a href="#可安装模块" class="headerlink" title="可安装模块"></a>可安装模块</h3><p>可安装模块(module)可以根据需要，在不必对内核重新编译的条件下，将可安装模块动态地插入运行中的内核，或者移除已经安装的模块。对于用户来说，通常通过insmod和rmmod来安装拆卸模块。所谓的模块，就是已经编译，但是未经连接的.o文件。<br>insmod所做的事情包括：将模块读入用户空间，查询模块中未知符号的地址，对符号进行连接，在内核中创建一个module数据结构并预订所需内核空间，最后将模块映象装入内核空间，并调用初始化函数。<br>每个已安装模块在内核中都有一个module数据结构，保存模块的有关信息。</p>
+<h3 id="PCI总线"><a href="#PCI总线" class="headerlink" title="PCI总线"></a>PCI总线</h3><p>PCI总线的具体思路是，每个外部设备都通过某种途径高速系统：接口上的存储区间和I/O地址区间，每个区间多大，以及在本地的位置。在系统知道了一共有多少外设，各自有什么样的存储区间后，就统筹的为它们分配地址，建立起区间和总线之间的连接，随后就可以通过这些地址来访问。因此PCI总线需要首先知道配置寄存器的地址，然后通过配置寄存器来分配地址，而配置寄存器都采用相同的地址，在访问时，PCI桥通过附加条件(总线号，设备号，功能号等)进行区分。PCI总线在I/O地址空间保留了几个字节，用来构成两个寄存器(地址寄存器和数据寄存器)，要访问某个设备中的某个配置寄存器时，就在地址寄存器写入目标地址，然后通过数据寄存器读写数据。<br>宿主-PCI桥后是系统的第一条PCI总线，也即主PIC总线。在内核中，每条PCI总线都由一个pci_bus数据结构代表，这些数据结构互相连接在一起，形成PCI总线树，每棵树大根是一个代表着“宿主-PCI”的pci_bus结构。每个pci_bus都维持着两个队列，一个是这条总线上的设备的pci_dev队列，另一个是连接在这条总线上的次层PCI总线的pci_bus队列。<br>在为PCI总线分配了数据结构后，就可以开始扫描，逐个发现连接在该总线上的PCI设备，为其建立起pci_dev数据结构并挂入相应队列。对于PCI-PCI桥这样的设备，还需要逐次递归下去，最后建立起完整的PCI树。然后再为这些设备分配地址空间。  </p>
+<h3 id="块设备的驱动"><a href="#块设备的驱动" class="headerlink" title="块设备的驱动"></a>块设备的驱动</h3><p>块设备是文件系统的物质基础。inode结构中的指针i_fop指向了具体块设备的file_operation数据结构。同时它还包含一个专用于块设备的指针i_bdev，指向代表具体块设备的block_device。每种具体的块设备都有一套具体的操作block_device_operations，这些操作就是由块设备驱动来提供的。对于具体的设备老说，通常都有内置的控制器，完成对块设备的操作。block_device结构中的指针bd_op就指向了块设备block_device_operations对应的fops。<br>例如IDE硬盘多整个访问过程，由上到下就是从抽象到vfs层文件出发，逐层加以具体化，找到相应的数据结构，并把它们联系在一起，层层打通关节：  </p>
+<ol>
+<li>file_operation结构使vfs具体化成为了特定的文件系统或文件类型。  </li>
+<li>block_device数据使代表着抽象意义文件的inode结构具体化成为了块设备。  </li>
+<li>block_device_operations结构使块设备文件操作进一步具体化成为了IDE设备操作。  </li>
+<li>ide_driver_t将笼统的IDE设备具体化为特定种类的IDE设备。  </li>
+<li>ide_driver_t将某种IDE设备的操作具体化成对特定IDE设备的操作。<br>在对文件进行读取时，内核会计算出未读的字节数，并且计算出起始块号，块内位移，以及本次应该读取的块数。<br>在内存中，块设备的缓冲区以内存页和记录块两种形式体现：每个页面都被划分成记录块的形式。<br>在每个块设备来说，都有一个读写请求队列的结构。每当有一个读写操作时，就要找到对应的块设备队列，然后创建一个新的读写请求数据结构，并且将它挂入队列。由于对磁盘的访问是需要寻道的，因此在这个队列中，可以对请求进行优化，这里有两种优化策略，一种是因扇区连续而引起的操作合并，另一种是对操作路线所作的优化或者调度。在队列中有一种电梯调度的机制，通过两次扫描，来帮助新来的操作请求应如何与原有操作请求合并的指导，如果合并成功了，就不需要创建一个新的request数据结构挂入队列了。否则则继续产生一个request队列。那么这里第二次优化来了：这个request如何插入队列中呢？直接放在队列的结尾显然不是最好的选择。这里要对磁盘移动的线路进行优化，将请求插入到合适的位置。<br>在此之后，根据程序控制I/O和DMA两种方式，内核来完成对硬盘的输入/输出。</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/05/05/I:O体系结构/" data-id="cj5nn6mk9001ko43fes49wtrg" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/I-O/">I/O</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-linux文件系统" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/04/28/linux文件系统/" class="article-date">
+  <time datetime="2016-04-28T09:40:00.000Z" itemprop="datePublished">2016-04-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/04/28/linux文件系统/">linux文件系统</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>虚拟文件系统(VFS)是linux的内核软件层，它能够为各种文件系统提供通用的接口，例如linux，unix，windows系统。它是一个位于应用程序和具体文件之间的中间层。VFS引入了一个通用文件模型，它能够表示所有支持的文件系统，它包含有超级块对象、索引节点对象、文件对象、目录项对象。</p>
+<h3 id="超级块对象"><a href="#超级块对象" class="headerlink" title="超级块对象"></a>超级块对象</h3><p>super_block存放已安装文件系统的有关信息，对基于磁盘的文件系统，它通常对应于存放在磁盘上的文件系统控制块。对于一个特定的文件系统，超级块的格式是固定的。每一个文件系统都对应一个超级块，它们都会链接到一个超级块链表，而文件系统中的每个文件在打开时都需要在内存分配一个inode结构它们都要链接到超级块。<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/%E8%B6%85%E7%BA%A7%E5%9D%97.jpg?raw=true" alt="pic"></p>
+<h3 id="索引节点对象"><a href="#索引节点对象" class="headerlink" title="索引节点对象"></a>索引节点对象</h3><p>文件系统处理文件所需要的所有信息，都放在索引节点的数据结构中。对于每个文件来说，索引节点对文件是唯一的,其数据结构是inode。要访问一个文件时，一定要通过它的索引才知道它是什么类型的文件(inode有一个union包含了这个信息)。inode包含了文件的各种信息。它还包含一个dentry结构的队列，可以通过它找到与这个文件相联系的所有dentry结构，指向超级块的指针等。每个索引节点对象也包含在文件系统的双向循环链表中，这个链表的头保存在超级块对象中。同时，inodes也存放在一个散列表中，用来加快对索引对象的搜索。</p>
+<h3 id="文件对象"><a href="#文件对象" class="headerlink" title="文件对象"></a>文件对象</h3><p>文件对象用来描述一个进程怎样与一个打开的文件进行交互，它是在文件被打开的时候创建的，由一个file数据结构来描述。其存放的主要信息是文件指针，即文件中当前的位置。使用中的文件对象，包含在超级块所确立的链表中。其中的f_list字段包含了前一个/后一个对象的指针。</p>
+<h3 id="目录项对象"><a href="#目录项对象" class="headerlink" title="目录项对象"></a>目录项对象</h3><p>VFS把每个目录看作由若干子目录和文件组成的一个普通文件。在目录项被读入内存后，VFS就用一个dentry结构来表示它。对于进程查找路径中的每一个分量，都为其创建一个目录项分量。每个分量都和其对应的索引节点相联系。由于目录项对象可能会经常使用，因此linux使用目录项高速缓存，它包含一个不同状态的目录项对象集合，以及一个用于快速的散列表。</p>
+<h3 id="文件操作函数的调用"><a href="#文件操作函数的调用" class="headerlink" title="文件操作函数的调用"></a>文件操作函数的调用</h3><p>由于每个文件系统都有其自身的文件操作集合，VFS将inode从磁盘装入内存时，会把文件操作的指针存放在数据结构file_operation中(定义在fs.h中)，而该结构的地址存放在索引节点对象的i_fop字段中。进程打开文件时，VFS就用存放在索引节点中的地址初始化新文件对象的f_op字段，使得后续操作能够继续调用这些文件操作函数。f_op是指向文件操作表的指针。事实上除了file_operations,还有dentry_operations和inode_operations，super_operations，但它们通常只在打开文件的过程中使用，不像file_operations结构中那些函数常用。</p>
+<h3 id="进程与文件"><a href="#进程与文件" class="headerlink" title="进程与文件"></a>进程与文件</h3><p>已打开的文件，是属于进程的一项“财产”，归具体的进程所有。在进程的task_struct中，包含两个数据结构.</p>
+<pre><code>struct fs_struct *fs;
+struct files_struct *files;
+</code></pre><p>其中，fs_struct是关于文件系统的信息，它反映的主要是带有全局性的，对具体进程而言的信息，与具体打开的文件关系不大。fs_struct里面包含有一个指针pwd，它总是指向进程的“当前工作目录”，每当进程进入不同目录时，内核就使进程的pwd指向这个目录在内存中的dentry，而root指针则指向进程的根目录(还有一个altroot，指向“替换跟目录”)。files_struct是关于已打开文件的信息，它的主体是一个file结构数组，每打开一个文件后，进程就通过一个fid来访问这个文件，这个fid实际上就是它在file数组中的下标。</p>
+<h3 id="文件系统的安装和拆卸"><a href="#文件系统的安装和拆卸" class="headerlink" title="文件系统的安装和拆卸"></a>文件系统的安装和拆卸</h3><p>每当将一个存储设备安装到现有文件系统中的某个节点时，内核都要为之建立一个vfsmount结构，它既包含了该设备的信息，又包含了有关安装点的信息。因此fs_struct中的pwdmnt总是指向一个vfsmount结构。<br>与传统的Unix内核不同，linuc允许同一个文件系统被安装许多次。对于每个安装操作，内核通过一个vfsmount数据结构来保存安装点和安装标志等信息。这个vfsmount数据结构保存在几个双向循环链表中：父文件系统vfsmount描述符的地址和安装点dentry的地址索引散列表；属于每一命名空间的已安装文件系统描述符形成的双向循环链表；每一个已安装文件系统已安装的文件形成等双向循环链表。  </p>
+<h5 id="安装普通文件系统"><a href="#安装普通文件系统" class="headerlink" title="安装普通文件系统"></a>安装普通文件系统</h5><p>mount系统调用用来安装一个普通文件系统。它的服务例程sys_mount()向下调用了do_mount，并最后由do_kern_mount()函数完成了安装操作的核心。do_kern_mount首先会查找对应的文件系统类型，然后分配一个新的已安装文件系统的描述符mnt，并初始化一个新的超级块(如果get_sb能够在链表中找到对应的超级块对象，说明这个设备被安装了多次，直接返回这个已有超级块的地址)，以及mnt中的一些字段。最后，它会把这个描述符插入到合适的链表中去。在完成这些工作后，该函数将mnt返回。  </p>
+<h5 id="安装根文件系统"><a href="#安装根文件系统" class="headerlink" title="安装根文件系统"></a>安装根文件系统</h5><p>根文件系统的安装与普通文件系统安装是不同的，它是系统初始化的关键部分。它分为两个部分，首先是安装特殊rootfs文件系统，它提供一个作为初始安装点的空目录；随后内核在空目录上安装实际根文件系统。为什么要先安装rootfs？因为它允许内核轻易地改变实际根文件系统，而内核会逐个安装卸载许多个根文件系统。<br>在rootfs安装阶段，do_kern_mount会调用rootfs_get_sb，为其分配特殊的超级块。随后为进程0分配namespace，将其根目录和当前工作目录设置为根文件系统。<br>在实际安装阶段，内核调用mount_root函数，在rootfs初始根文件系统中创建设备文件/dev/root。调用sys_chdr(“root”)改变进程的当前目录，然后移动rootfs上的安装文件系统和安装点。而rootfs也并没有被卸载，只是隐藏在根目录下而已。</p>
+<h5 id="卸载文件系统"><a href="#卸载文件系统" class="headerlink" title="卸载文件系统"></a>卸载文件系统</h5><p>unmount系统调用由来卸载一个文件系统。相应的sys_unmount例程对文件名和一组标志进行处理。首先需要对安装点路径名进行查找，随后调用do_unount，根据标志位进行相应的处理。unmount_tree会卸载文件系统(及其所有子文件系统)。最后，内核会减少相应文件系统根目录的目录项对象和已安装文件系统描述符的引用计数器值。</p>
+<h3 id="路径名查找"><a href="#路径名查找" class="headerlink" title="路径名查找"></a>路径名查找</h3><p>进程识别一个文件时，需要分析路径名，并且把它拆分成一个文件名序列。首先需要区分这个路径是相对路径还是绝对路径。这个可以通过路径名的第一个字符是否是“/”来确定。绝对路径从进程的根目录开始搜索，否则从进程的当前目录开始搜索。<br>在这个过程中，内核会检查依次检查序列中的每一项，找到与它匹配的目录项，以获得相应的索引节点；再读取这个索引节点的目录文件，继续检查下去。但这个过程没有想象的那么简单：每个目录的访问权都需要检查，文件名可能是与任意一个路径名对应的符号链接，符号链接会包括循环，查找可能会延伸到其他的文件系统。<br>路径名查找接受一个文件名指针，一个标志，以及一个nameidata数据结构的地址，这个nameidata存放了查找操作的结果。nameidata中的dentry和mnt分别指向所解析的最后一个路径分量的目录项对象和已安装文件系统对象。</p>
+<h3 id="文件打开-读写"><a href="#文件打开-读写" class="headerlink" title="文件打开/读写"></a>文件打开/读写</h3><p>文件打开和关闭，核心是对一个fd进行操作。这个fd也就是指向文件对象的指针数组task_struct-&gt;files-&gt;fd中分配给新文件的索引。创建一个新的文件对象，然后将它放在fd数组中。<br>文件读写是对于文件自身来说的，因此其相关的信息存储在inode中。linux中，对于文件的读写，实际上是对缓冲区直接进行的，而不是直接在文件上操作。对文件的操作由内核中的线程kflushd来完成，它们相当于一道流水线上的两道工序。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/04/28/linux文件系统/" data-id="cj5nn6mkz0029o43fuxbqpzej" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/文件系统/">文件系统</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-操作系统寻址" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/04/21/操作系统寻址/" class="article-date">
+  <time datetime="2016-04-21T09:40:00.000Z" itemprop="datePublished">2016-04-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/04/21/操作系统寻址/">操作系统寻址</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="x32-x64内存寻址"><a href="#x32-x64内存寻址" class="headerlink" title="x32/x64内存寻址"></a>x32/x64内存寻址</h3><p>逻辑地址&lt;–&gt;线性地址&lt;–&gt;物理地址<br>逻辑地址：段标识符和指定段内相对地址的偏移量<br>线性地址：虚拟地址<br>物理地址：物理硬盘上的地址  </p>
+<p>线性地址到物理地址的转换，采用的是多级映射的方式。其中，32bit采用的是三级映射，而64bit采用的四级映射。根据页的大小，采用的映射模型有所不同。但一般采用4k大小的页面，它使用使用PML4T，PDPT，PDT和PT 四级页转化表结构。<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AF%BB%E5%9D%80/%E5%A4%9A%E7%BA%A7%E6%98%A0%E5%B0%84.jpg?raw=true" alt="x64-addressing"></p>
+<h3 id="映射的全过程"><a href="#映射的全过程" class="headerlink" title="映射的全过程"></a>映射的全过程</h3><p>Intel意图将一个进程的映象分成代码段、数据段和堆栈段，但linux但内核中堆栈段和数据段是不分开的，通常linux内核只使用四种不同的段寄存器数值，其中两种用于内核本身，两种用于所有进程。在segment.h中，有:</p>
+<pre><code>#define __KERNEL_CS            (GDT_ENTRY_KERNEL_CS*8)
+#define __KERNEL_DS            (GDT_ENTRY_KERNEL_DS*8)
+#define __USER_DS            (GDT_ENTRY_DEFAULT_USER_DS*8 + 3)
+#define __USER_CS            (GDT_ENTRY_DEFAULT_USER_CS*8 + 3)
+</code></pre><p>但在linux操作系统中，内核对于段式映射只是应对cpu的检查而已，其本质并没有起到什么作用。在x64位linux中，这个机制则已经取消了。页式映射才是映射的主要部分。每个进程都有自己的PGD，内核为即将运行的程序设置好CR3，MMU的硬件则可以通过CR3取得当前页面目录的指针。<br>对于进程的虚拟内存空间，linux内核中通过vm_area_struct数据结构进行描述。每个进程的虚拟内存空间，是由一连串的vm_area_struct链来描述的(它可能包含一连串的虚拟地址空间)。除了通过vm_next指针串成线性队列之外，还会在区间数量较大时建立一个AVL树，提高搜索的效率。这个结构体中还有一个mm_struct数据结构，它是比vm_area_struct高一层的数据结构。每个进程都有一个唯一的mm_struct结构。在每个进程的task_struct，都有一个指针指向它的mm_struct结构。mm_struct就包含了vm_area_struct的信息(链、AVL树、cache)，进程代码段、数据段的存储位置等。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/04/21/操作系统寻址/" data-id="cj5nn6mlt0036o43fw20ciaf7" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/memory/">memory</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-shell小记" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/04/20/shell小记/" class="article-date">
+  <time datetime="2016-04-20T09:40:00.000Z" itemprop="datePublished">2016-04-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/04/20/shell小记/">Shell小记</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="文件管理"><a href="#文件管理" class="headerlink" title="文件管理"></a>文件管理</h3><p>在某些场景中，需要统计一个文件夹下的所有文件大小，或者对它们排序。例如在一些安全软件中，常常有垃圾清理，文件整理这样的功能。这里做了一道题目，将一个文件夹中包含的所有文件(包含子文件夹下)按照大小进行排序。<br>这里最后我的答案是</p>
+<pre><code>find . -type f -exec ls -lh {} \;|sort -k 5
+</code></pre><p>似乎并不是最好的答案。<br>使用shell的话，利用ls是比较好的选择。在ls命令中，-S选项能够直接提供文件大小的排序，但问题在于，它不能把所有文件进行排序，只能在每个文件夹下进行排序；而且对于多个文件，ls无法显示文件的路径。所以这里使用了find。find -type能够指定文件的类型，这里指定查询的类型为文件(非目录)。然后sort -k指定了进行排序为第5列。这里exec的使用方法如下：</p>
+<pre><code>-exec &lt;command&gt; {result} \;
+</code></pre><p>花括号{}代表find所查找出来的文件名，它的终止是以;为结束标志的，而这里的\起到了转义字符的作用。<br>除了我所使用的方法，我还参考了一下其他人的答案。有一种利用xargs的:</p>
+<pre><code>find . -type f|xargs ls -lh|sort -k 5
+</code></pre><p>xargs能够把不支持管道传递的参数传递给下一个命令，通常用空白字符作为分隔。</p>
+<h3 id="日志访客数量统计"><a href="#日志访客数量统计" class="headerlink" title="日志访客数量统计"></a>日志访客数量统计</h3><p>在网站的统计中，有时候需要通过日志来计算某一天的访客数量。这里有一个文件，它记录了某一天的访客记录，其中包含了访问时间，其第2项为访客的ID。那么如何确定访客数量呢？我做的答案是</p>
+<pre><code>grep &quot;2015-08-24&quot; log.txt|sort -k 2 -nu|wc -l
+</code></pre><p>wc命令用于统计某个文件中的字结束、字数和行数。其中-l为显示行数的命令。这里首先用grep筛选出2015-8-24的日志内容，然后对第二项进行排序，sort -u去除了重复项。然后用wc -l就统计出了这一天的访客数量。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/04/20/shell小记/" data-id="cj5nn6mlm002to43fitq2idgw" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell/">shell</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-GCC内联汇编笔记" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/03/22/GCC内联汇编笔记/" class="article-date">
+  <time datetime="2016-03-22T09:40:00.000Z" itemprop="datePublished">2016-03-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/03/22/GCC内联汇编笔记/">GCC内联汇编笔记</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="GCC汇编语法"><a href="#GCC汇编语法" class="headerlink" title="GCC汇编语法"></a>GCC汇编语法</h3><p>GCC使用的是AT&amp;T语法。一些基本的语法如下:  </p>
+<ol>
+<li>源地址/目的地址语序：Opcode src dst  </li>
+<li>寄存器命名：寄存器添加前缀”%”  </li>
+<li>立即操作数：立即操作数和静态C变量要有前缀”$”  </li>
+<li>操作数大小：内存操作数大小取决于opcode对最后一个字母，例如”b”,”q”等  </li>
+<li>内存操作数：用”()”来进行内存引用  </li>
+<li>偏移量：写在”()”之前  </li>
+</ol>
+<p>tips:经过实验，发现寄存器的使用必须使用%%register，而变量可以使用%val，也就是说%的数量说明了操作数的类型</p>
+<h3 id="拓展内联汇编"><a href="#拓展内联汇编" class="headerlink" title="拓展内联汇编"></a>拓展内联汇编</h3><p>拓展汇编基本格式：</p>
+<pre><code>asm ( assembler template
+ : output operands                  /* optional */
+ : input operands                   /* optional */
+ : list of clobbered registers      /* optional */
+ );
+</code></pre><p>其中，assembler template(汇编模板)即汇编指令。output operands为输出操作数，input为输入操作数。它们之间用冒号间隔开来。最后一部分是用来保护内联汇编中可能被污染的寄存器的。如果没有输出但是有输入操作数，则必须用两个冒号进行说明。多个操作数由逗号分开，而多个指令应由/n/t分隔开来。</p>
+<h3 id="操作数约束"><a href="#操作数约束" class="headerlink" title="操作数约束"></a>操作数约束</h3><p>在汇编程序模板中，操作数通过编号来引用，从0开始，一直到n-1。常见的寄存器操作数约束如下:  </p>
+<table>
+<thead>
+<tr>
+<th>r</th>
+<th>Resigter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>a</td>
+<td>%rax</td>
+</tr>
+<tr>
+<td>b</td>
+<td>%rbx</td>
+</tr>
+<tr>
+<td>c</td>
+<td>%rcx</td>
+</tr>
+<tr>
+<td>d</td>
+<td>%rdx</td>
+</tr>
+<tr>
+<td>S</td>
+<td>%rsi</td>
+</tr>
+<tr>
+<td>D</td>
+<td>%rdi</td>
+</tr>
+</tbody>
+</table>
+<p>其中，输入的格式为”r”(val),输出的格式为”=r”()。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/03/22/GCC内联汇编笔记/" data-id="cj5nn6mjv0018o43flbtboxj7" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/x64-assembly/">x64 assembly</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-x64函数参数的传递" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/03/21/x64函数参数的传递/" class="article-date">
+  <time datetime="2016-03-21T09:40:00.000Z" itemprop="datePublished">2016-03-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/03/21/x64函数参数的传递/">64bit-linux系统函数参数的传递</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="x64寄存器"><a href="#x64寄存器" class="headerlink" title="x64寄存器"></a>x64寄存器</h3><p>x64体系提供了16个通用寄存器，以及16个通用寄存器，以及16个浮点寄存器XMM/YMM寄存器。这些寄存器分为两类： </p>
+<ul>
+<li>易失寄存器：由调用方假想的临时寄存器，并要在调用过程中销毁。</li>
+<li>非易失寄存器：需要在整个函数调用过程中保留其值，一旦使用，必须由调用方保存。</li>
+</ul>
+<p>也就是说，易失寄存器被定义为随时会改变，不用恢复它的初始值。但是如果要嵌入一些汇编语句，还是要对它们进行保护和恢复。而易失寄存器一旦使用，必须由调用方来对它们进行保存。也就是说在任何情况下使用它们，都必须进行保存。  </p>
+<table>
+<thead>
+<tr>
+<th>寄存器</th>
+<th>使用</th>
+<th>是否在调用前保存</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RAX</td>
+<td>临时寄存器传递参数寄存器数量，第一返回值寄存器</td>
+<td>否</td>
+</tr>
+<tr>
+<td>RBX</td>
+<td>被调用者保存寄存器，选择性的基址指针</td>
+<td>是</td>
+</tr>
+<tr>
+<td>RCX</td>
+<td>传递第四个参数</td>
+<td>否</td>
+</tr>
+<tr>
+<td>RDX</td>
+<td>传递第三个参数，第二返回值寄存器</td>
+<td>否</td>
+</tr>
+<tr>
+<td>RSP</td>
+<td>栈指针</td>
+<td>是</td>
+</tr>
+<tr>
+<td>RBP</td>
+<td>被调用者保存寄存器，选择性的栈帧寄存器</td>
+<td>是</td>
+</tr>
+<tr>
+<td>RSI</td>
+<td>传递第二个参数</td>
+<td>否</td>
+</tr>
+<tr>
+<td>RDI</td>
+<td>传递第一个参数</td>
+<td>否</td>
+</tr>
+<tr>
+<td>R8</td>
+<td>传递第五个参数</td>
+<td>否</td>
+</tr>
+<tr>
+<td>R9</td>
+<td>传递第六个参数</td>
+<td>否</td>
+</tr>
+<tr>
+<td>R10</td>
+<td>临时寄存器，用于传递函数的静态链指针</td>
+<td>否</td>
+</tr>
+<tr>
+<td>R11</td>
+<td>临时寄存器</td>
+<td>否</td>
+</tr>
+<tr>
+<td>R12-R15</td>
+<td>被调用者保护寄存器</td>
+<td>是</td>
+</tr>
+<tr>
+<td>xmm0-xmm1</td>
+<td>传递和返回浮点参数</td>
+<td>否</td>
+</tr>
+<tr>
+<td>xmm2-xmm7</td>
+<td>传递浮点参数</td>
+<td>否</td>
+</tr>
+<tr>
+<td>xmm8-xmm15</td>
+<td>临时寄存器</td>
+<td>否</td>
+</tr>
+<tr>
+<td>mmx0-mmx7</td>
+<td>临时寄存器</td>
+<td>否</td>
+</tr>
+<tr>
+<td>st0-st1</td>
+<td>临时寄存器，用来保存long double返回值</td>
+<td>否</td>
+</tr>
+<tr>
+<td>st2-st7</td>
+<td>临时寄存器</td>
+<td>否</td>
+</tr>
+<tr>
+<td>fs</td>
+<td>系统预留(线程特殊寄存器)</td>
+<td>否</td>
+</tr>
+<tr>
+<td>mxcsr</td>
+<td>SSE2控制和状态子寄存器</td>
+<td>部分</td>
+</tr>
+<tr>
+<td>x87 SW</td>
+<td>x87状态字</td>
+<td>否</td>
+</tr>
+<tr>
+<td>x87 CW</td>
+<td>x87控制字</td>
+<td>是</td>
+</tr>
+</tbody>
+</table>
+<h3 id="参数传递"><a href="#参数传递" class="headerlink" title="参数传递"></a>参数传递</h3><p>可以看出，在Linux中，前6个参数都是利用寄存器来进行传递的。那么参数多于6个的情况下，是如何传递的呢？首先<strong>参数按照从左到右的顺序，依次使用寄存器</strong>，在寄存器被使用完后，参数<strong>从右到左依次入栈，使用堆栈进行参数的传递</strong>。此处有一个例子：  </p>
+<pre><code>typedef struct {
+int a, b;
+double d;
+} structparm;
+structparm s;
+int e, f, g, h, i, j, k;
+long double ld;
+double m, n;
+__m256 y;
+extern void func (int e, int f,
+structparm s, int g, int h,
+long double ld, double m,
+__m256 y,
+double n, int i, int j, int k);
+func (e, f, s, g, h, ld, m, y, n, i, j, k);
+</code></pre><p>那么，在这个函数的调用中，寄存器的使用情况如下：  </p>
+<table>
+<thead>
+<tr>
+<th>通用寄存器</th>
+<th>浮点寄存器</th>
+<th>栈帧偏移</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>%rdi:e</td>
+<td>%xmm0:s.d</td>
+<td>0:ld</td>
+</tr>
+<tr>
+<td>%rsi:f</td>
+<td>%xmm1:m</td>
+<td>16:j</td>
+</tr>
+<tr>
+<td>%rdx:s.a,s.b</td>
+<td>%xmm2:y</td>
+<td>24:k</td>
+</tr>
+<tr>
+<td>%rcx:g</td>
+<td>%xmm3:n</td>
+<td></td>
+</tr>
+<tr>
+<td>%r8:h</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>%r9:i</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>此处存在两个疑问:第一、s.a,s.b为什么使用同一个寄存器；第二、ld为什么直接使用了栈帧传递？第一个是在结构体中，s.a，s.b是对齐可合并的，因此可以使用一个寄存器来传递这两个参数（此处存在疑问，是我自己的理解）；第二个是因为long double被归为X87类，这类参数是必须通过内存来传递的。</p>
+<h3 id="Red-zone"><a href="#Red-zone" class="headerlink" title="Red zone"></a>Red zone</h3><p>在linux中，red zone是函数栈帧中，返回地址之下的一片区域，被调用函数可以使用red zone来储存局部变量，来避免对栈指针进行过多的修改。这大概就是在某些函数中，rsp直接被sub某个很大值的原因。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/03/21/x64函数参数的传递/" data-id="cj5nn6mlq002zo43fmekz8wzy" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/x86-64/">x86-64</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-nginx笔记2" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/03/14/nginx笔记2/" class="article-date">
+  <time datetime="2016-03-14T09:40:00.000Z" itemprop="datePublished">2016-03-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/03/14/nginx笔记2/">nginx笔记2.md</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="nginx多站点配置"><a href="#nginx多站点配置" class="headerlink" title="nginx多站点配置"></a>nginx多站点配置</h3><p>nginx提供了一个配置文件:./nginx/cosnf/nginx.conf。在启动时，nginx也只能使用一个配置文件。那么如何把多个站点的配置文件分开呢？对于不同的站点，可以对每个站点分别编写一个conf文件，然后在nginx.conf中，用<strong>include</strong>命令把它们包含起来。通常将其放在两个文件夹下:  </p>
+<pre><code>mkdir ./nginx/sites-available/
+mkdir ./nginx/sites-enabled/
+cp ./nginx/conf/default.conf ./nginx/sites-available/&lt;site&gt;
+#link to the available site to enable it
+ln -s ./nginx/sites-available/&lt;site&gt; ./nginx/sites-enabled/&lt;site&gt;
+＃include enabled sites in nginx.conf
+include ./nginx/sites-enabled/*
+</code></pre><p>实际上配置文件可以放在任何位置，只要合理的去include就可以了。</p>
+<h3 id="php-fpm安装及配置"><a href="#php-fpm安装及配置" class="headerlink" title="php-fpm安装及配置"></a>php-fpm安装及配置</h3><p>php5和php5-fpm的安装：</p>
+<pre><code>$ sudo apt-get install php5-cli
+$ sudo apt-get install php5-fpm
+</code></pre><p>在与nginx配合使用时，需要对php-fpm的listen端口进行修改，这个值位于php5/fpm/pool.d/www.conf目录下，原始值为listen = /var/run/php5-fpm.sock。这里修改为listen = 127.0.0.1:9000。其实只要保证listen的值和nginx配置文件的地址:端口一致即可，也即在nginx.conf所包含的配置文件中，处理php的server及location中，设置fastcgi_pass php5-fpm.sock。<br>配置完成后，启动php5-fpm，利用net-stat命令可以看到对目标地址:端口的监听是否存在，如果存在那么说明php5-fpm是正常工作的 </p>
+<pre><code>$ php5-fpm
+$ net-stat -ano|grep 9000
+</code></pre><h3 id="nginx-php配置"><a href="#nginx-php配置" class="headerlink" title="nginx + php配置"></a>nginx + php配置</h3><p>nginx和apache的不同之处在于，其本身不具有处理php的能力，它通过fastcgi来与php-fpm进行交互，来完成php文件的运行。因此为nginx和php设置好通讯端口，让两者能够正常交互是最基本的一步。<br>在nginx.conf（及其所包含文件中），可以通过设置server和location，来处理URI中的php请求。</p>
+<pre><code>server  {
+    listen 80;
+    server_name localhost;
+    location ~ \.php${
+        include fastcgi_params;
+        root html;
+        fastcgi_pass 127.0.0.1:9000;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    }
+}
+</code></pre><p>在配置完成之后，编写一个index.php文件进行测试。</p>
+<pre><code>#index.php
+&lt;?php
+phpinfo();
+?&gt;
+</code></pre><hr>
+<pre><code>./nginx -s reload
+php5-fpm
+curl localhost/index.php
+</code></pre><p>如果能够显示php的版本信息，说明nginx+php的基本环境搭建成功了。  </p>
+<h3 id="可能的问题"><a href="#可能的问题" class="headerlink" title="可能的问题"></a>可能的问题</h3><p>不能正常处理路径时，修改：</p>
+<pre><code>/etc/php5/fpm/php.ini中cgi.fix_pathinfo = 0;
+</code></pre><p>php5-fpm组和拥护设置不正确：</p>
+<pre><code>;/etc/php5/fpm/pool.d/www.conf
+user = www-data
+group = www-data
+</code></pre><p>浏览器中以下载方式打开php文件时：</p>
+<pre><code>/usr/local/nginx/conf/nginx.conf中default_type为text/html;
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/03/14/nginx笔记2/" data-id="cj5nn6mlg002mo43fspfd3ug9" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/">nginx</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/server/">server</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-nginx笔记1" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/03/11/nginx笔记1/" class="article-date">
+  <time datetime="2016-03-11T09:40:00.000Z" itemprop="datePublished">2016-03-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/03/11/nginx笔记1/">nginx笔记1.md</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="nginx-启动-终止-重载入"><a href="#nginx-启动-终止-重载入" class="headerlink" title="nginx 启动/终止/重载入"></a>nginx 启动/终止/重载入</h3><p>启动:运行主程序即启动<br>控制:</p>
+<pre><code>nginx -s [signal]
+signal:stop, quit, reload, ropen
+应用新的配置:
+nginx -s reload
+</code></pre><h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><p>nginx包含由配置文件中的<strong>directives</strong>（simple, block）来控制的模块。包含其他directives的block被称为context。不被任何context包含的directives，被称为main context。例如：events和http在main context中，server在http中，location在server中。  </p>
+<p>几个context包括有:<br>通常一个配置文件会包含有数个通过ports和server name区分的<strong>server</strong>。对于一个request，nginx会先确定用哪一个server，然后测试其header中的URI是否与<strong>server</strong>中的<strong>location</strong>中项一致。  </p>
+<pre><code>http{
+    server{
+        location / {
+            root /data/www;
+        }
+        location /imamges/ {
+            root /data;
+        }
+    }
+}
+</code></pre><p><strong>location</strong>指明了用来与URI比对的前缀，对于吻合的请求来说，URI会被添加上<strong>root</strong>中指定的根路径，来形成完整本地文件系统的路径。  </p>
+<h3 id="FastCGI-server"><a href="#FastCGI-server" class="headerlink" title="FastCGI server"></a>FastCGI server</h3><p>nginx能够讲requests导向FastCGI server。FastCGI server能够运行使用不同框架和编程语言（例如PHP）编写的程序。最为基本的的FastCGI server配置方法是使用fastcgi_pass命令，SCRIPT_FILENAME参数指定了脚本文件的名称，QUERY_STRING参数用来传递request parameters。</p>
+<pre><code>server {
+    location / {
+            fastcgi_pass  localhost:9000;
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+            fastcgi_param QUERY_STRING    $query_string;
+        }
+
+        location ~ \.(gif|jpg|png)$ {
+            root /data/images;
+        }
+    }
+</code></pre><h3 id="nginx如何处理request"><a href="#nginx如何处理request" class="headerlink" title="nginx如何处理request"></a>nginx如何处理request</h3><p>nginx首先确定处理request的server，例如配置3个server:</p>
+<pre><code>server {
+listen      80;
+server_name example.org www.example.org;
+...
+}
+
+server {
+listen      80;
+server_name example.net www.example.net;
+...
+}
+
+server {
+listen      80;
+server_name example.com www.example.com;
+...
+}
+</code></pre><p>nginx检测request的<strong>header</strong>域“Host”来确定它应该被指向哪一个server。如果request不吻合任何一个server name，或者不包含header，那么会被导向该端口默认的port。对于没有header的request，可以设置一个空的server来专门drop他们，例如，其中code 444表示关闭connection。</p>
+<pre><code>server{
+    listen 80;
+    server_name &quot;&quot;;
+    return 444;
+}
+</code></pre><p>在多个server监听不同IP地址的情况下，nginx首先会检测request的ip地址和port是否符合server中的listen命令。对于不同的ip，default server可以是不同的。</p>
+<pre><code>server {
+listen      192.168.1.1:80;
+server_name example.org www.example.org;
+...
+}
+
+server {
+listen      192.168.1.1:80;
+server_name example.net www.example.net;
+...
+}
+
+server {
+listen      192.168.1.2:80;
+server_name example.com www.example.com;
+...
+}
+</code></pre><p>那么nginx如何选择处理request的location呢？以一个简单的php网站为例。nginx首先搜索和字符串最长匹配的前缀。在下面的设置中，唯一的前缀位置时”/“，由于它会匹配任何request，所以它会被视为最靠后的选择。然后nginx检查配置文件中，通过正则表达式给出的locations列表。第一次成功匹配就会终止搜索，nginx会使用这个location。nginx只会检查request的URI部分。举例说明:  </p>
+<ul>
+<li>request “/logo.gif”首先匹配了”/“，然后匹配了正则式”.(git|jpg|png)$”，因此它会选择后一个location，通过指令”root /data/www”request会被映射到文件/data/www/logo.gif中。  </li>
+<li>reqeust “/index.php”首先匹配了”/“，然后匹配了正则式”.(php)$”。因此request会被交给监听localhost:9000的FastCGI server。fastcgi_param命令将其脚本名设置”/data/www/index.php”,随后FastCGI server执行这个文件。（$document_root变量和root命令指定的相同，$fastcgi_script_name与request的URI相同，也即/index.php）。  </li>
+<li>request “.about.html”只和前缀location”/“匹配，因此，它只会在这个location中被处理。使用“root /data/www”，request被映射到”data/www/about.html”，然后文件被发送到client。  </li>
+<li>request “/”的处理更为复杂，它只会匹配前缀location”/“，nginx会首先通过index指令来检测时候好存在index文件，如果/data/www/index.html不存在，但/data/www/index.php存在，那么FastCGI server会将其重定位到”index.php”，随后nginx会重新搜索这个location，就像这个request是被用户发送的一样。</li>
+</ul>
+<hr>
+<pre><code>server {
+    listen      80;
+    server_name example.org www.example.org;
+    root        /data/www;
+
+    location / {
+        index   index.html index.php;
+    }
+
+    location ~* \.(gif|jpg|png)$ {
+        expires 30d;
+    }
+
+    location ~ \.php$ {
+        fastcgi_pass  localhost:9000;
+        fastcgi_param SCRIPT_FILENAME
+                      $document_root$fastcgi_script_name;
+        include       fastcgi_params;
+    }
+}
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/03/11/nginx笔记1/" data-id="cj5nn6mlc002ho43fx1xmiw49" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/">nginx</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/server/">server</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+  <nav id="page-nav">
+    <a class="extend prev" rel="prev" href="/page/4/">&laquo; __('prev')</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/6/">__('next') &raquo;</a>
+  </nav>
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GCC/">GCC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/I-O/">I/O</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDA-pro/">IDA pro</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KVM/">KVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ocaml/">Ocaml</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PID-namespace/">PID namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/QEMU/">QEMU</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SGX/">SGX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/binutils/">binutils</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/container/">container</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/intel/">intel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kvm/">kvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux内核/">linux内核</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/llvm/">llvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/">memory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/namespace/">namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/server/">server</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/x64-assembly/">x64 assembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/x86-64/">x86-64</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/二进制/">二进制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内存安全/">内存安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/底层安全/">底层安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/文件系统/">文件系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/浏览器安全/">浏览器安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/爬虫/">爬虫</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/硬件/">硬件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/系统安全/">系统安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译器/">编译器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译安全/">编译安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚函数/">虚函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟化/">虚拟化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/链接器/">链接器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/静态分析/">静态分析</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/GCC/" style="font-size: 17.14px;">GCC</a> <a href="/tags/I-O/" style="font-size: 11.43px;">I/O</a> <a href="/tags/IDA-pro/" style="font-size: 10px;">IDA pro</a> <a href="/tags/KVM/" style="font-size: 10px;">KVM</a> <a href="/tags/Ocaml/" style="font-size: 11.43px;">Ocaml</a> <a href="/tags/PID-namespace/" style="font-size: 10px;">PID namespace</a> <a href="/tags/QEMU/" style="font-size: 10px;">QEMU</a> <a href="/tags/SGX/" style="font-size: 12.86px;">SGX</a> <a href="/tags/binutils/" style="font-size: 10px;">binutils</a> <a href="/tags/chrome/" style="font-size: 10px;">chrome</a> <a href="/tags/container/" style="font-size: 10px;">container</a> <a href="/tags/intel/" style="font-size: 11.43px;">intel</a> <a href="/tags/kvm/" style="font-size: 10px;">kvm</a> <a href="/tags/linux/" style="font-size: 20px;">linux</a> <a href="/tags/linux内核/" style="font-size: 12.86px;">linux内核</a> <a href="/tags/llvm/" style="font-size: 10px;">llvm</a> <a href="/tags/memory/" style="font-size: 10px;">memory</a> <a href="/tags/namespace/" style="font-size: 11.43px;">namespace</a> <a href="/tags/nginx/" style="font-size: 11.43px;">nginx</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/server/" style="font-size: 11.43px;">server</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/x64-assembly/" style="font-size: 11.43px;">x64 assembly</a> <a href="/tags/x86-64/" style="font-size: 10px;">x86-64</a> <a href="/tags/二进制/" style="font-size: 10px;">二进制</a> <a href="/tags/内存安全/" style="font-size: 10px;">内存安全</a> <a href="/tags/底层安全/" style="font-size: 10px;">底层安全</a> <a href="/tags/操作系统/" style="font-size: 18.57px;">操作系统</a> <a href="/tags/文件系统/" style="font-size: 10px;">文件系统</a> <a href="/tags/浏览器安全/" style="font-size: 10px;">浏览器安全</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a> <a href="/tags/硬件/" style="font-size: 10px;">硬件</a> <a href="/tags/系统安全/" style="font-size: 12.86px;">系统安全</a> <a href="/tags/编译器/" style="font-size: 11.43px;">编译器</a> <a href="/tags/编译安全/" style="font-size: 15.71px;">编译安全</a> <a href="/tags/虚函数/" style="font-size: 10px;">虚函数</a> <a href="/tags/虚拟化/" style="font-size: 14.29px;">虚拟化</a> <a href="/tags/链接器/" style="font-size: 10px;">链接器</a> <a href="/tags/静态分析/" style="font-size: 12.86px;">静态分析</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/07/28/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2017/07/15/浅谈GCC编译优化/">浅谈GCC编译优化</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/27/虚函数，原理和攻击方式/">从虚函数的实现，到虚表劫持攻击</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/19/编译链中的一环，静态链接详解/">编译链中的一环，静态链接详解</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/09/Hack gcc：添加新的函数/">Hack GCC，在编译时构造新的函数</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

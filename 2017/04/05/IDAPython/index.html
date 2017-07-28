@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>IDAPython：入门 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="取地址ScreenEA()和here()是最常用的取地址函数，它们会返回一个整数值。MaxEA()和MinxEA()可以用来取最大和最小地址。GetDisasm() GetMnem() GetOpand() 可以用来取某个地址中的指令、操作符、操作数等。   遍历：Segments，Functions,and InstructionsIDAPython的强大之处在于迭代。从Segments()开始">
+<meta name="keywords" content="IDA pro,python,静态分析">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IDAPython：入门">
+<meta property="og:url" content="http://yoursite.com/2017/04/05/IDAPython/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="取地址ScreenEA()和here()是最常用的取地址函数，它们会返回一个整数值。MaxEA()和MinxEA()可以用来取最大和最小地址。GetDisasm() GetMnem() GetOpand() 可以用来取某个地址中的指令、操作符、操作数等。   遍历：Segments，Functions,and InstructionsIDAPython的强大之处在于迭代。从Segments()开始">
+<meta property="og:updated_time" content="2017-07-28T09:04:47.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="IDAPython：入门">
+<meta name="twitter:description" content="取地址ScreenEA()和here()是最常用的取地址函数，它们会返回一个整数值。MaxEA()和MinxEA()可以用来取最大和最小地址。GetDisasm() GetMnem() GetOpand() 可以用来取某个地址中的指令、操作符、操作数等。   遍历：Segments，Functions,and InstructionsIDAPython的强大之处在于迭代。从Segments()开始">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-IDAPython" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/04/05/IDAPython/" class="article-date">
+  <time datetime="2017-04-05T13:40:00.000Z" itemprop="datePublished">2017-04-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      IDAPython：入门
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="取地址"><a href="#取地址" class="headerlink" title="取地址"></a>取地址</h4><p><code>ScreenEA()</code>和<code>here()</code>是最常用的取地址函数，它们会返回一个整数值。<br><code>MaxEA()</code>和<code>MinxEA()</code>可以用来取最大和最小地址。<br><code>GetDisasm()</code> <code>GetMnem()</code> <code>GetOpand()</code> 可以用来取某个地址中的指令、操作符、操作数等。  </p>
+<h4 id="遍历：Segments，Functions-and-Instructions"><a href="#遍历：Segments，Functions-and-Instructions" class="headerlink" title="遍历：Segments，Functions,and Instructions"></a>遍历：Segments，Functions,and Instructions</h4><p>IDAPython的强大之处在于迭代。从<code>Segments()</code>开始是一个好的选择。这段代码能够遍历所有的segments。</p>
+<pre><code>for seg in idautils.Segments():
+    print idc.SegName(seg),    idc.SegStart(seg),    idc.SegEnd(seg)
+</code></pre><p>同理的，对于Functions的遍历，可以有：</p>
+<pre><code>for func in idautils.Functions():
+    print hex(func), idc.GetFunctionName(func)
+</code></pre><p>这里，<code>Functions()</code>是可以添加范围的，例如<code>Functions(start_addr, end_addr)</code>，而<code>get_func()</code>返回的函数，则还具有<code>startEA</code>和<code>endEA</code>属性，也即起起始和结束地址。这里，<code>get_func()</code>实际上是返回了一个类。<code>dir(class)</code>能够返回这个类中的成员。<br><code>idc.NextFunction(ea)</code>和<code>idc.PrevFunction(ea)</code>能够用来访问毗邻的两个函数。这里，<code>ea</code>只要是某个函数边界中的任何一个地址就可以了。利用这种方式来遍历也存在问题，如果不是函数的话，那么代码块会被IDA跳过。那么如果想在函数中遍历指令怎么办呢？<code>idc.NextHead</code>会帮你找到下一条指令。但这依赖于函数的边界，而且可能被jump影响。更好的方式是使用<code>idautils.FuncItems(ea)</code>，来遍历function当中的地址。<br>一旦知道了一个function，就可以遍历其中的指令。idautils.FuncItems(ea)返回的是一个指向<code>list</code>的迭代器。这个<code>list</code>包含了每一条指令的起始地址。以下是一个综合的应用，它输出一段代码中的非直接跳转。    </p>
+<pre><code>for func in idautils.Functions():
+    flags = idc.GetFunctionFlags(func)
+    if flags &amp; FUNC_LIB or flags &amp; FUNC_THUNK:
+        continue
+    dism_addr = list(idautils.FuncItems(func)) 
+    for line in dism_addr:
+        m = idc.GetMnem(line)
+        if m == &apos;call&apos; or m == &apos;jmp&apos;:
+            op = idc.GetOpType(line, 0) 
+            if op == o_reg:
+                print &quot;0x%x %s&quot; % (line, idc.GetDisasm(line))
+</code></pre><p>这里，<code>GetOpType</code>会返回一个整型值，它能被用来查看一个操作数是否为寄存器，内存引用。  </p>
+<h4 id="Operands"><a href="#Operands" class="headerlink" title="Operands"></a>Operands</h4><p>前面也有提到，<code>GetOpType</code>能够用来获取操作数的类型。一共有这些类型：<br><code>o_void</code>表示不包含操作数<br><code>o_reg</code>表示一个通用寄存器<br><code>o_mem</code>表示直接内存引用<br><code>o_phrase</code>操作数包含基址寄存器+偏移寄存器<br><code>o_displ</code>操作数是由一个寄存器和一个偏移量组成的<br><code>o_imm</code>操作数直接是一个整型数<br><code>o_far</code>和<code>o_near</code>在x86和x86_64下均不常见。指用立即数表示的far/near地址<br><code>idaapi.decode_insn()</code>可用来对某个地址的指令进行解码。而<code>idaapi.cmd</code>则能用来提取指令中的各部分结构。  </p>
+<h4 id="Searching"><a href="#Searching" class="headerlink" title="Searching"></a>Searching</h4><p>前文已经提到了一些搜索的方式，但有些时候可能会需要搜索一些特定的bytes序列，比如<code>0x55 0x8b 0xec</code>，这时就需要利用到<code>FindBinary</code>，对对应的格式进行搜索。其具体形式为<code>FindBinary(ea, flag, searchstr, radix)</code>。这其中，searchstr也即所搜索的pattern。radix是和CPU相关的，可以不写。  </p>
+<pre><code>addr = MinEA()
+for x in range(0,5):
+    addr = idc.FindBinary(addr, SEARCH_DOWN|SEARCH_NEXT, pattern);
+    if addr != idc.BADADDR:
+        print hex(addr), idc.Getdisasm(addr)
+</code></pre><p>与之类似的，还有<code>FindText(ea, flag, y, x, searchstr)</code>，这个函数可以用来搜索一些字符串，例如一些变量中的内容可能是一些特定的字符串，就可以利用这个函数进行搜索。此外，还有<code>isCode()</code>和<code>isData()</code>，<code>isTail()</code>，<code>isUnknown()</code>等函数，来判断一个地址的属性。<code>FindCode()</code>能够找到下一个被标记为代码的地址；而<code>FindData()</code>则能够返回下一个被标记为数据的地址。与之类似的<code>FindUnexplored()</code>，<code>FindExplored()</code>则是搜索下一个未识别／识别的地址。<code>FindImmediate()</code>则是找到特定的立即数。<br>不过，并不是每一次都需要对data/code进行搜索的。有时候，我们已经知道了code或者data的位置了，只是需要选择对应的内容进行分析。这时就可以用<code>SelStart()``SelEnd()</code>等一系列的函数。<br>对于数据、代码，还可以对其原始格式进行访问，也即它们的二进制形式。这些数据可以用<code>Byte()``Word()``Dword()``Qword()``GetFloat()``GetDouble()</code>来获取。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/04/05/IDAPython/" data-id="cj5nn6mka001lo43frnc5dygx" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IDA-pro/">IDA pro</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/静态分析/">静态分析</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/04/05/IDAPython-advance1/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          IDAPython:进阶（一）
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/03/30/深入理解文件系统/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">深入理解文件系统</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GCC/">GCC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/I-O/">I/O</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDA-pro/">IDA pro</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KVM/">KVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ocaml/">Ocaml</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PID-namespace/">PID namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/QEMU/">QEMU</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SGX/">SGX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/binutils/">binutils</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/container/">container</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/intel/">intel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kvm/">kvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux内核/">linux内核</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/llvm/">llvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/">memory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/namespace/">namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/server/">server</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/x64-assembly/">x64 assembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/x86-64/">x86-64</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/二进制/">二进制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内存安全/">内存安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/底层安全/">底层安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/文件系统/">文件系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/浏览器安全/">浏览器安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/爬虫/">爬虫</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/硬件/">硬件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/系统安全/">系统安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译器/">编译器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译安全/">编译安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚函数/">虚函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟化/">虚拟化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/链接器/">链接器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/静态分析/">静态分析</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/GCC/" style="font-size: 17.14px;">GCC</a> <a href="/tags/I-O/" style="font-size: 11.43px;">I/O</a> <a href="/tags/IDA-pro/" style="font-size: 10px;">IDA pro</a> <a href="/tags/KVM/" style="font-size: 10px;">KVM</a> <a href="/tags/Ocaml/" style="font-size: 11.43px;">Ocaml</a> <a href="/tags/PID-namespace/" style="font-size: 10px;">PID namespace</a> <a href="/tags/QEMU/" style="font-size: 10px;">QEMU</a> <a href="/tags/SGX/" style="font-size: 12.86px;">SGX</a> <a href="/tags/binutils/" style="font-size: 10px;">binutils</a> <a href="/tags/chrome/" style="font-size: 10px;">chrome</a> <a href="/tags/container/" style="font-size: 10px;">container</a> <a href="/tags/intel/" style="font-size: 11.43px;">intel</a> <a href="/tags/kvm/" style="font-size: 10px;">kvm</a> <a href="/tags/linux/" style="font-size: 20px;">linux</a> <a href="/tags/linux内核/" style="font-size: 12.86px;">linux内核</a> <a href="/tags/llvm/" style="font-size: 10px;">llvm</a> <a href="/tags/memory/" style="font-size: 10px;">memory</a> <a href="/tags/namespace/" style="font-size: 11.43px;">namespace</a> <a href="/tags/nginx/" style="font-size: 11.43px;">nginx</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/server/" style="font-size: 11.43px;">server</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/x64-assembly/" style="font-size: 11.43px;">x64 assembly</a> <a href="/tags/x86-64/" style="font-size: 10px;">x86-64</a> <a href="/tags/二进制/" style="font-size: 10px;">二进制</a> <a href="/tags/内存安全/" style="font-size: 10px;">内存安全</a> <a href="/tags/底层安全/" style="font-size: 10px;">底层安全</a> <a href="/tags/操作系统/" style="font-size: 18.57px;">操作系统</a> <a href="/tags/文件系统/" style="font-size: 10px;">文件系统</a> <a href="/tags/浏览器安全/" style="font-size: 10px;">浏览器安全</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a> <a href="/tags/硬件/" style="font-size: 10px;">硬件</a> <a href="/tags/系统安全/" style="font-size: 12.86px;">系统安全</a> <a href="/tags/编译器/" style="font-size: 11.43px;">编译器</a> <a href="/tags/编译安全/" style="font-size: 15.71px;">编译安全</a> <a href="/tags/虚函数/" style="font-size: 10px;">虚函数</a> <a href="/tags/虚拟化/" style="font-size: 14.29px;">虚拟化</a> <a href="/tags/链接器/" style="font-size: 10px;">链接器</a> <a href="/tags/静态分析/" style="font-size: 12.86px;">静态分析</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/07/28/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2017/07/15/浅谈GCC编译优化/">浅谈GCC编译优化</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/27/虚函数，原理和攻击方式/">从虚函数的实现，到虚表劫持攻击</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/19/编译链中的一环，静态链接详解/">编译链中的一环，静态链接详解</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/09/Hack gcc：添加新的函数/">Hack GCC，在编译时构造新的函数</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

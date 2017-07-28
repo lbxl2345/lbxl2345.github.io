@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Ocaml笔记(一) | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Ocaml网上关于Ocaml的资料比较少，可见它是一门偏小众的语言。不过在DSL和程序分析方面，Ocaml是十分强大的。由于目前研究需要使用的Uroboros(https://github.com/s3team/uroboros)是由Ocaml来编写的，因此我也打算一探究竟，学一学这门语言。 函数的定义和调用Ocaml中，定义函数的语法很简单。这个函数是输入两个浮点数后计算它们的平均值。 let">
+<meta name="keywords" content="静态分析,Ocaml">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ocaml笔记(一)">
+<meta property="og:url" content="http://yoursite.com/2017/03/27/ocaml/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Ocaml网上关于Ocaml的资料比较少，可见它是一门偏小众的语言。不过在DSL和程序分析方面，Ocaml是十分强大的。由于目前研究需要使用的Uroboros(https://github.com/s3team/uroboros)是由Ocaml来编写的，因此我也打算一探究竟，学一学这门语言。 函数的定义和调用Ocaml中，定义函数的语法很简单。这个函数是输入两个浮点数后计算它们的平均值。 let">
+<meta property="og:updated_time" content="2017-07-28T09:04:47.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Ocaml笔记(一)">
+<meta name="twitter:description" content="Ocaml网上关于Ocaml的资料比较少，可见它是一门偏小众的语言。不过在DSL和程序分析方面，Ocaml是十分强大的。由于目前研究需要使用的Uroboros(https://github.com/s3team/uroboros)是由Ocaml来编写的，因此我也打算一探究竟，学一学这门语言。 函数的定义和调用Ocaml中，定义函数的语法很简单。这个函数是输入两个浮点数后计算它们的平均值。 let">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-ocaml" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/03/27/ocaml/" class="article-date">
+  <time datetime="2017-03-27T10:40:00.000Z" itemprop="datePublished">2017-03-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Ocaml笔记(一)
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="Ocaml"><a href="#Ocaml" class="headerlink" title="Ocaml"></a>Ocaml</h3><p>网上关于Ocaml的资料比较少，可见它是一门偏小众的语言。不过在DSL和程序分析方面，Ocaml是十分强大的。由于目前研究需要使用的Uroboros(<a href="https://github.com/s3team/uroboros" target="_blank" rel="external">https://github.com/s3team/uroboros</a>)是由Ocaml来编写的，因此我也打算一探究竟，学一学这门语言。</p>
+<h4 id="函数的定义和调用"><a href="#函数的定义和调用" class="headerlink" title="函数的定义和调用"></a>函数的定义和调用</h4><p>Ocaml中，定义函数的语法很简单。这个函数是输入两个浮点数后计算它们的平均值。</p>
+<pre><code>let average a b =
+    (a +. b) /. 2.0;;
+</code></pre><p>在C当中，如果要定义一个相同的函数，其定义是这样的：</p>
+<pre><code>double average(double a, double b){
+return (a + b) / 2;
+}
+</code></pre><p>可以看到，OCaml没有定义a和b的类型，而且也没有所谓的<code>return</code>，而且写的是<code>2.0</code>，没有用隐式转换。这其实是由Ocaml语言的特性决定的：</p>
+<ul>
+<li>Ocaml是强静态类型的语言  </li>
+<li>OCaml使用类型推倒，不需要注明类型</li>
+<li>OCaml不做任何隐式转换(所以要写浮点数就必须是2.0)</li>
+<li>OCaml不允许重载，<code>+.</code>表示两个浮点数相加，也就是说操作符是和类型相关的</li>
+<li>OCaml的返回值是最后的表达式，不需要<code>return</code></li>
+</ul>
+<p>和大多数基于C的语言不同，OCaml的函数调用，是没有括号的。例如定义了一个函数<code>repeated</code>，它的参数是一个字符串<code>s</code>和一个数<code>n</code>，那么它的调用形式会是：</p>
+<pre><code>repeated &quot;hello&quot; 3    (*this is Ocaml code*)
+</code></pre><p>可以看到既没有括号，也没有都好。不过<code>reoeated (&quot;hello&quot;, 3)</code>也是合法的，只不过它的参数是一个含两个元素的对(pair)。</p>
+<h4 id="基本类型、转换与推倒"><a href="#基本类型、转换与推倒" class="headerlink" title="基本类型、转换与推倒"></a>基本类型、转换与推倒</h4><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>范围</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>int</td>
+<td>32bit:31位;64bit:63位</td>
+</tr>
+<tr>
+<td>float</td>
+<td>双精度，类似于C中的double</td>
+</tr>
+<tr>
+<td>bool</td>
+<td>true/flase</td>
+</tr>
+<tr>
+<td>char</td>
+<td>8bit字符</td>
+</tr>
+<tr>
+<td>string</td>
+<td>字符串</td>
+</tr>
+<tr>
+<td>unit</td>
+<td>写作()，类似void</td>
+</tr>
+</tbody>
+</table>
+<p>这里，Ocaml内部使用了int中的一位来自动管理内存(垃圾收集)，因此会少一位。<br>前面也提到，OCaml是没有隐式类型转换的。因此</p>
+<pre><code>1 + 2.5;;
+1 +. 2.5;;
+</code></pre><p>在OCaml中是会报错的。但是如果一定要让一个整数和浮点数相加，就必须显示的进行转换，比如：</p>
+<pre><code>float_of_int i +. f;;
+float i +. f;;
+</code></pre><p>许多情况下，不需要声明函数的变量和类型，因为Ocaml自己会知道，它会一直检查所有的类型匹配。比如前面的average函数，就能够自给判断出这个函数需要两个浮点数参数和返回一个浮点数。  </p>
+<h4 id="函数的递归和类型"><a href="#函数的递归和类型" class="headerlink" title="函数的递归和类型"></a>函数的递归和类型</h4><p>和基于C的语言不同之处在于，OCaml中，函数一般不是递归的，除非用let rec代替let定义递归函数。这是一个递归函数的例子：</p>
+<pre><code>let rec range a b =
+    if a &gt; b then []
+    else a :: range (a+1) b
+</code></pre><p>let和let rec的唯一区别，就是函数的定义域。举个例子，如果用<code>let</code>定义<code>range</code>，那么<code>range</code>会去找一个已经定义好的函数，而不是它自身。不过在性能上，<code>let</code>和<code>let rec</code>并没有太大的差异。所以即使全部用<code>let rec</code>来定义也可以。<br>而OCaml的类型推倒，也使得几乎不用显式的写出函数的类型。不过Ocaml经常以这样的实行显示参数和返回值的类型：</p>
+<pre><code>f:arg1 -&gt; arg2 -&gt; ... -&gt; argn -&gt; rettype
+f: &apos;a-&gt;int    (*单引号表示人意类型*)
+</code></pre><h4 id="表达式"><a href="#表达式" class="headerlink" title="表达式"></a>表达式</h4><p>在Ocaml当中，局部变量/全局变量其实都是一个表达式。例如，局部表达式有：</p>
+<pre><code>let average a b =
+    let sum = a +. b in
+    sum /. 2.0;;
+</code></pre><p>标准短语<code>let name = expression in</code>是用来定义一个命名的局部表达式的。<code>name</code>在这个函数当中，就可以代替<code>expression</code>，直到一个<code>;;</code>结束这个代码块。这里把<code>let ... in</code>视为一个整体。和C中不一样，OCaml中<code>name</code>只是<code>expression</code>的一个别名，我们是不能给<code>name</code>赋值或者改值的。<br>而全局表达式，也可以像定义局部变量一样定义全局名，但这些也不是真正的变量，而只是缩略名。  </p>
+<pre><code>let html =
+  let content = read_whole_file file in
+  GHtml.html_from_string content
+  ;;
+
+let menu_bold () =
+  match bold_button#active with
+  | true -&gt; html#set_font_style ~enable:[`BOLD] ()
+  | false -&gt; html#set_font_style ~disable:[`BOLD] ()
+  ;;
+
+let main () =
+  (* code omitted *)
+  factory#add_item &quot;Cut&quot; ~key:_X ~callback: html#cut
+  ;;
+</code></pre><p>这里，<code>html</code>实际上是一个“小部件”，没有指针去保存它的地址，也不能赋值，而是在之后的两个函数中被引用。  </p>
+<h4 id="Let-绑定"><a href="#Let-绑定" class="headerlink" title="Let-绑定"></a>Let-绑定</h4><p>绑定，<code>let ...</code>，能够在OCaml中，实现真正的变量。在OCaml中，引用使用关键字<code>ref</code>来进行定义。例如，  </p>
+<pre><code>let my_ref = ref 0;;(*引用保存着一个整数0*)
+myref := 100(*引用被赋值为100*)
+</code></pre><p><code>:=</code>用来给引用赋值，而<code>！</code>用来取出引用的值。以下是一个C和OCaml的比较   </p>
+<pre><code>OCaml                   C/C++
+
+let my_ref = ref 0;;    int a = 0; int *my_ptr = &amp;a;
+my_ref := 100;;         *my_ptr = 100;
+!my_ref                 *my_ptr
+</code></pre><h4 id="嵌套函数"><a href="#嵌套函数" class="headerlink" title="嵌套函数"></a>嵌套函数</h4><p>与C语言不同的是，OCaml是可以使用嵌套函数的。  </p>
+<pre><code>let read_whole_channel chan =
+let buf = Buffer.create 4096 in
+let rec loop () =
+  let newline = input_line chan in
+  Buffer.add_string buf newline;
+  Buffer.add_char buf &apos;\n&apos;;
+  loop ()
+in
+try
+  loop ()
+with
+  End_of_file -&gt; Buffer.contents buf;;
+</code></pre><p>这里，<code>loop</code>是只有一个嵌套函数，在<code>read_whole_channel</code>中，是可以调用<code>loop()</code>的，但它在<code>read_whole_channel</code>当中并没有定义，嵌套函数可以使用主函数当中的变量，它的格式和局部命名表达式是一致的。</p>
+<h4 id="模块和OPEN"><a href="#模块和OPEN" class="headerlink" title="模块和OPEN"></a>模块和OPEN</h4><p>OCaml也提供了很多模块，包括画图、数据结构、处理大数等等。这些库位于<code>usr/lib/ocaml/VERSION</code>。例如一个简单的模块<code>Graphics</code>，如果想使用其中的函数，有两种方法。第一种是在开头声明<code>open Graphics</code>，第二种是在函数调用之前加上前缀，例如<code>Graphics.open_graph</code>。<br>如果想用<code>Graphics</code>当中的符号，也可以通过重命名的方式，简化前缀。  </p>
+<pre><code>module Gr = Graphics;;
+</code></pre><p>这个技巧在模块嵌套时十分有用。</p>
+<h4 id="还是-，或者什么都不用？"><a href="#还是-，或者什么都不用？" class="headerlink" title=";;还是;，或者什么都不用？"></a><code>;;</code>还是<code>;</code>，或者什么都不用？</h4><p>在OCaml中，有时候会使用<code>;;</code>，有时候会使用<code>;</code>，有时候却什么都不用，这就让初学者很容易迷惑。这里，OCaml实际上定义了一系列的规则。  </p>
+<p> #1 必须使用<code>;;</code>在代码的最顶端，来分隔不同语句(不同代码段之间的分隔)，并且<strong>不要</strong>在函数定义或其他语句中使用  </p>
+<p> #2 可以在某些时候省略掉<code>;;</code>，包括<code>let</code>，<code>open</code>，<code>type</code>之前，文件的最后，以及OCaml能自动判断的地方  </p>
+<p> #3 <code>let ... in</code>是一条单独道语句，不能在后面加单独的<code>;</code>  </p>
+<p> #4 所有代码块中其他语句后面，跟上一个单独的<code>;</code>，最后一个例外  </p>
+<p> 看到这些规则，我依然没有完全理解这三者的用法。我想，只有实际接触过Ocaml代码，才能逐渐体会到其中的精髓吧。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/03/27/ocaml/" data-id="cj5nn6mll002ro43fy3qkgmxo" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Ocaml/">Ocaml</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/静态分析/">静态分析</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/03/27/ocaml-3/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Ocaml笔记(二)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/03/23/LLVM笔记/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">LLVM框架与Pass</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GCC/">GCC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/I-O/">I/O</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDA-pro/">IDA pro</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KVM/">KVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ocaml/">Ocaml</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PID-namespace/">PID namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/QEMU/">QEMU</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SGX/">SGX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/binutils/">binutils</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/container/">container</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/intel/">intel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kvm/">kvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux内核/">linux内核</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/llvm/">llvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/">memory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/namespace/">namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/server/">server</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/x64-assembly/">x64 assembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/x86-64/">x86-64</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/二进制/">二进制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内存安全/">内存安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/底层安全/">底层安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/文件系统/">文件系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/浏览器安全/">浏览器安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/爬虫/">爬虫</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/硬件/">硬件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/系统安全/">系统安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译器/">编译器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译安全/">编译安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚函数/">虚函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟化/">虚拟化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/链接器/">链接器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/静态分析/">静态分析</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/GCC/" style="font-size: 17.14px;">GCC</a> <a href="/tags/I-O/" style="font-size: 11.43px;">I/O</a> <a href="/tags/IDA-pro/" style="font-size: 10px;">IDA pro</a> <a href="/tags/KVM/" style="font-size: 10px;">KVM</a> <a href="/tags/Ocaml/" style="font-size: 11.43px;">Ocaml</a> <a href="/tags/PID-namespace/" style="font-size: 10px;">PID namespace</a> <a href="/tags/QEMU/" style="font-size: 10px;">QEMU</a> <a href="/tags/SGX/" style="font-size: 12.86px;">SGX</a> <a href="/tags/binutils/" style="font-size: 10px;">binutils</a> <a href="/tags/chrome/" style="font-size: 10px;">chrome</a> <a href="/tags/container/" style="font-size: 10px;">container</a> <a href="/tags/intel/" style="font-size: 11.43px;">intel</a> <a href="/tags/kvm/" style="font-size: 10px;">kvm</a> <a href="/tags/linux/" style="font-size: 20px;">linux</a> <a href="/tags/linux内核/" style="font-size: 12.86px;">linux内核</a> <a href="/tags/llvm/" style="font-size: 10px;">llvm</a> <a href="/tags/memory/" style="font-size: 10px;">memory</a> <a href="/tags/namespace/" style="font-size: 11.43px;">namespace</a> <a href="/tags/nginx/" style="font-size: 11.43px;">nginx</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/server/" style="font-size: 11.43px;">server</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/x64-assembly/" style="font-size: 11.43px;">x64 assembly</a> <a href="/tags/x86-64/" style="font-size: 10px;">x86-64</a> <a href="/tags/二进制/" style="font-size: 10px;">二进制</a> <a href="/tags/内存安全/" style="font-size: 10px;">内存安全</a> <a href="/tags/底层安全/" style="font-size: 10px;">底层安全</a> <a href="/tags/操作系统/" style="font-size: 18.57px;">操作系统</a> <a href="/tags/文件系统/" style="font-size: 10px;">文件系统</a> <a href="/tags/浏览器安全/" style="font-size: 10px;">浏览器安全</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a> <a href="/tags/硬件/" style="font-size: 10px;">硬件</a> <a href="/tags/系统安全/" style="font-size: 12.86px;">系统安全</a> <a href="/tags/编译器/" style="font-size: 11.43px;">编译器</a> <a href="/tags/编译安全/" style="font-size: 15.71px;">编译安全</a> <a href="/tags/虚函数/" style="font-size: 10px;">虚函数</a> <a href="/tags/虚拟化/" style="font-size: 14.29px;">虚拟化</a> <a href="/tags/链接器/" style="font-size: 10px;">链接器</a> <a href="/tags/静态分析/" style="font-size: 12.86px;">静态分析</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/07/28/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2017/07/15/浅谈GCC编译优化/">浅谈GCC编译优化</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/27/虚函数，原理和攻击方式/">从虚函数的实现，到虚表劫持攻击</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/19/编译链中的一环，静态链接详解/">编译链中的一环，静态链接详解</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/09/Hack gcc：添加新的函数/">Hack GCC，在编译时构造新的函数</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

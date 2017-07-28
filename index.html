@@ -96,7 +96,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/07/28/hello-world/" data-id="cj5nn3rx00000nd3fsz3wl5s6" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2017/07/28/hello-world/" data-id="cj5nn6mlf002jo43fehewpixy" class="article-share-link">Share</a>
       
       
     </footer>
@@ -106,7 +106,878 @@
 
 
   
+    <article id="post-浅谈GCC编译优化" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/07/15/浅谈GCC编译优化/" class="article-date">
+  <time datetime="2017-07-15T13:40:00.000Z" itemprop="datePublished">2017-07-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/15/浅谈GCC编译优化/">浅谈GCC编译优化</a>
+    </h1>
+  
 
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="GCC-Pass"><a href="#GCC-Pass" class="headerlink" title="GCC Pass"></a>GCC Pass</h4><p>在GCC完成词法、语法分析，并获得源代码对应的抽象语法树AST之后，会将其转换为对应的GIMPLE序列。随后，GCC会对GIMPLE中间表示进行一系列的处理，包括GIMPLE的低级化、优化、RTL生成等、RTL优化等。为了方便管理，GCC采用了一种称为Pass的组织形式，把它们分成一个个的处理过程，把每个输出结果作为下一个处理过程的输入。<br>GCC中，Pass可以分为4类，GIMPLE_PASS，RTL_PASS，SIMPLE_IPA_PASS，IPA_PASS。其中除了RTL_PASS之外，处理对象都是GIMPLE中间表示。名字包含IPA的两类Pass的功能主要是过程分析，也即函数间调用和传递。  Pass的执行是以链表的形式组织的，每个Pass还可以包含子Pass，并且以函数为执行的基本单元。<br>如果把GCC中的Pass全部打印出来，可以看到数量有数百个，因此这里只选择几个代表性的pass研究一下。值得说明的是，在GCC 4.6之后，增加了插件功能，它同样是通过Pass的形式来进行管理，这使得我们自定义处理过程变得很容易。    </p>
+<h4 id="去除无用表达式"><a href="#去除无用表达式" class="headerlink" title="去除无用表达式"></a>去除无用表达式</h4><p>该Pass从GIMPLE序列中进行搜索，从中删除死代码。这些死代码主要包括：<br>（1）空语句<br>（2）无意义的语句块、条件表达式<br>（3）目标地址就是下一条段GOTO表达式<br>（4）无意义的malloc、free<br>（5）…<br>在GCC 4.4版本中，这个Pass是<code>pass_remove_useless_stmts</code>，现在这个函数已经被移除了；其功能被拆分到了别的函数中。但gcc的文档中还是说明了这个Pass。<br>类似这样的结构，在这个Pass中都会被优化掉：</p>
+<pre><code>if(1)        //无意义的条件表达式
+
+goto next;    //无意义的goto
+next:
+    //do sth
+</code></pre><p>那么该Pass是如何进行判断的呢？我们来看看GCC 5.4版本中，类似函数的实现。在gcc/tree-ssa-dce.c当中，有这样一个函数<code>eliminate_unnecessary_stmts()</code>。这个函数会(逆序的)逐个遍历表达式，防止某些定义或名字被释放：</p>
+<pre><code>for(gsi = gsi_last_bb (bb); !gsi_end_p (gsi); gsi = psi){
+    stmt = gsi_stmt (gsi);
+    ...
+    if (gimple_call_with_bounds_p (stmt)) {
+        //如果有必要删除，那么会首先利用这个函数设置
+        gimple_set_plt(...)
+    }
+    //对于需要删除的表达式进行删除
+    if (!gimple_plf (stmt, STMT_NECESSARY))
+    ...
+}
+</code></pre><p>如果进行了删除，那么这个函数还会对一部分CFG进行修改，并删除不可达的基本块。</p>
+<h4 id="控制流图的构造"><a href="#控制流图的构造" class="headerlink" title="控制流图的构造"></a>控制流图的构造</h4><p>在GCC中，控制流图指的是<strong>函数内的控制流图</strong>，这和我平时在文章中看到的“CFG”是不同的。GCC中，CFG的节点为基本块，而边则是基本块之间的跳转关系。<code>pass_build_cfg</code>对函数对GIMPLE序列进行分析，完成基本块的划分，并且根据GIMPLE语义来构造基本块之间的跳转关系。<br>控制流图的构造，主要是在<code>build_gimple_cfg()</code>当中完成的。</p>
+<pre><code>static void
+build_gimgple_cfg (gimple_seq seq)
+{
+    gimple_register_cfg_hooks();//注册这个函数，要构造cfg了
+    init_empty_tree_cfg();//先构造一个空的cfg
+    make_blocks(seq);//具体的基本块构造过程
+    ...
+    make_edges();//创建基本块的边
+}
+
+static void
+make_blocks (gimple_seq seq)
+{
+    while (!gsi_end_p (i))//遍历seq中的每一条
+    {
+        ...    
+        gimple_set_bb (stmt, bb);//把当前的语句添加到基本块
+        if(stmt_ends_bb_p(stmt))
+        {
+        //如果stmt是基本块的终结，就进行处理，并且在下一次创建一个新的基本块
+        ...
+        }
+    }
+}
+</code></pre><p>在基本块创建之后，就可以根据基本块，构造基本块中的边，对于函数中的不同情况，生成了不同的边，并且创建了对应的label。</p>
+<pre><code>static void
+make_edges (basic_block min, basic_block max, int updata_p)
+{
+    ...
+    //处理min和max之间的基本块
+    FOR_BB_BETWEEN (bb, min, max-&gt;next_bb, next_bb)
+    {
+        //在5.4版本中，是直接对RTL进行处理
+        rtx_insn *insn;
+        insn = BB_END(bb);
+        //如果为JUMP指令，还包括了条件跳转
+        if(code == JUMP_INSN)
+        ...
+        //如果为CALL指令，还包括了异常处理
+        else if(code == CALL_INSN || cfun-&gt;can_throw_non_call_exceptions)
+        ...
+    }
+}
+</code></pre><h4 id="指令调度"><a href="#指令调度" class="headerlink" title="指令调度"></a>指令调度</h4><p>前面介绍了GCC当中，GIMPLE表达式的部分优化过程，现在我们来说说RTL中的优化过程。指令调度是对当前函数中的insn序列进行重新排列，从而更充分地利用目标机器的硬件资源，提高指令执行的效率。指令调度主要考虑有数据的依赖关系、控制相关性、结构相关、指令延迟和指令代价等，通常指令调度与目标架构上的流水线有关。在GCC中，指令调度分为两个部分：寄存器分配之前的pass_sched和寄存器分配之后的pass_sched2。<br>不过，在这里应该先阐述一下：为什么要进行指令调度？这是由硬件的特性决定的：<br>（1）指令拥有不同的执行时间。对于指令来说，其实latency（指令开始执行后，多少时钟数能够为其他指令提供数据）、throughtput（指令完成计算需要的时钟数）、μops（指令包含的微操作数）都是不同的。<br>（2）指令流水线能够并行执行指令的微操作，从而在等待时完成一部分工作。<br>（3）超标量处理器，比如现在的i7处理器，能够同时运行多条指令，虽然硬件完成了一部分调度工作，但存在一个窗口的问题，依然需要编译器进行调度。<br>正因如此，编译器需要对指令进行调度，来提高运行时的效率。指令在调度时，存在着以下限制：<br>（1）数据依赖关系。包括flow（一条指令定义的值和寄存器在后面的指令用到）、anti（一条指令用的值或者寄存器会被后面的指令修改）、output（一条指令定义的值或寄存器在后面会被改；<br><!--（2）控制依赖关系。也即涉及到控制流转移的指令，例如if语句等； --><br>（2）循环限制，多次迭代之间的关系，循环内部的依赖关系等；<br>（3）硬件资源的限制，例如能够同时并行的指令数；<br>这些限制必须作为指令调度的输入被考虑到，通过这些依赖关系，可以把所有的指令，构成一个依赖关系图。<br>指令调度是一个典型的NP-hard问题，而<strong>表调度算法</strong>就是一种典型的启发式算法。通常其调度的单元在<strong>基本块的内部</strong>，并把数据依赖关系图作为输入，并计算出指令的优先级。优先级的计算涉及：依赖图的根到节点的路径长度、某个节点的后继数量、节点的latency等。<br>随后，保持两个表：<strong>ready</strong>表中保存了能够不延时执行的指令，它们根据优先级从高到低排列；<strong>active</strong>表包括了所有正在执行的指令。在算法的每一步：<br>（1）从<strong>ready</strong>表中取出优先级最高的指令进行调度，将它移到<strong>active</strong>队列当中，它会在队列中呆上一个时延的时间；<br>（2）更新指令的依赖关系，把新的就绪指令插入<strong>ready</strong>表中。这里我们用一个例子来说明：<br>在每一轮，都取了<strong>ready</strong>队列中，优先级最高的指令，如果<strong>active</strong>中的指令没有执行完，导致依赖关系无法满足，那么<strong>ready</strong>可能是空的，此时就继续下一轮调度。<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E7%BC%96%E8%AF%91%E5%99%A8/%E8%A1%A8%E8%B0%83%E5%BA%A6.png?raw=true" alt="">  </p>
+<table>
+<thead>
+<tr>
+<th>cycle</th>
+<th>ready</th>
+<th>active  </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>a13, c12, e10, g8</td>
+<td>a</td>
+</tr>
+<tr>
+<td>2</td>
+<td>c12, e10, g8</td>
+<td>a, c</td>
+</tr>
+<tr>
+<td>3</td>
+<td>e10, g8</td>
+<td>a, c, e</td>
+</tr>
+<tr>
+<td>4</td>
+<td>b10, g8</td>
+<td>b, c, e</td>
+</tr>
+<tr>
+<td>5</td>
+<td>d9, g8</td>
+<td>d, e</td>
+</tr>
+<tr>
+<td>6</td>
+<td>g8</td>
+<td>d, g</td>
+</tr>
+<tr>
+<td>7</td>
+<td>f7</td>
+<td>f, g</td>
+</tr>
+<tr>
+<td>8</td>
+<td></td>
+<td>f, g</td>
+</tr>
+<tr>
+<td>9</td>
+<td>h5</td>
+<td>h</td>
+</tr>
+<tr>
+<td>10</td>
+<td></td>
+<td>h</td>
+</tr>
+<tr>
+<td>11</td>
+<td>i3</td>
+<td>i  </td>
+</tr>
+</tbody>
+</table>
+<p>GCC中默认的指令调度算法是<strong>表调度算法</strong>。其处理过程在/gcc/sched-rgn.c中定义。<code>schedule_insns()</code>是调度的主要函数，它会执行两次，分别在：<br>（1）寄存器分配之前，在<code>pass_sched</code>中调用，实现以区域为调度范围的指令调度；<br>（2）寄存器分配之后，在<code>pass_sched2</code>中调用，通常只在每个基本块内部进行指令调度；  </p>
+<pre><code>schedule_insns()
+{
+    int rgn;
+    //如果没有包含代码的基本块，直接退出
+    if (n_basic_blocks_for_fn (cfun) == NUM_FIXED_BLOCKS)
+        return;
+    //初始化指令调度信息
+    rgn_setup_common_sched_info ();
+    //初始表调度的基本信息
+      rgn_setup_sched_infos ();
+    //haifa表调度的数据结构初始化，进行数据流分析
+      haifa_sched_init ();
+      //初始化区域信息，将CFG的区域提取出来
+      sched_rgn_init (reload_completed);
+
+      bitmap_initialize (&amp;not_in_df, 0);
+      bitmap_clear (&amp;not_in_df);    
+
+      //对每个区域内的基本块进行调度
+      for (rgn = 0; rgn &lt; nr_regions; rgn++)
+    if (dbg_cnt (sched_region))
+          schedule_region (rgn);
+
+      //清除
+      sched_rgn_finish ();
+      bitmap_clear (&amp;not_in_df);
+      haifa_sched_finish ();
+}  
+</code></pre><h4 id="统一寄存器分配"><a href="#统一寄存器分配" class="headerlink" title="统一寄存器分配"></a>统一寄存器分配</h4><p>我们知道，RTL在生成和处理的过程中，大量地使用了虚拟寄存器，那么这些虚拟寄存器在转换为目标机器的汇编码之前，需要映射到目标机器中的物理寄存器上，该过程即为寄存器分配。那么合理地分配、使用物理寄存器，是GCC后端及其重要的一个任务。<br>GCC中采用的是一种把寄存器合并、寄存器生存范围划分、寄存器优选、代码生成和染色整合在一起的算法，所以被称为统一寄存器分配。整个统一寄存器分配是这样一个过程：  </p>
+<p><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E7%BC%96%E8%AF%91%E5%99%A8/ira.png?raw=true" alt="">  </p>
+<p>第一步是建立IRA的中间表示，其代码在ira-build.c中，入口函数为<code>ira-build()</code>；<br><strong>第二步</strong>是寄存器的着色。这一步按照自顶向下的顺序，遍历每个区域，对于区域中的分配元进行着色，由<code>ira_color()</code>函数完成；<br>第三步是代码移动，解决父子区域中，寄存器被spill/store的问题，如果子区域需要spill到内存，那么父区域也可以直接spill到内存，这样就不用多次进行移入内存/存内存取值到寄存器的过程；<br>第四步是代码修改，在着色处理后，父子区域中，相同虚拟寄存器可能会分配到不同的物理寄存器活着存储位置，而某个区域内部也可能会会对同一个虚拟寄存器分配不同的物理寄存器。此时IRA就分配新的虚拟寄存器进行取代，并且在区域边界实现新的分配元并进行交换；<br>第五步：将所有区域的分配元合并到一个区域中；<br>第六步：尝试对spill操作的分配元分配物理寄存器；<br>第七步：Reload Pass。前面的过程可能会引入新的代码、虚拟寄存器，产生不能满足模版约束的情况，reload处理这些情况，因此要重新进行第二步开始的操作，直到不再产生新的代码。  </p>
+<p>这里只说明一下寄存器着色的过程。在第一步中，我们能够根据每个虚拟寄存器的生存范围，能够确定它们的冲突关系：生存范围有冲突的虚拟寄存器，不能被分配到同一个硬件寄存器当中去（<code>ira_build_conflicts()</code>的工作）。而寄存器着色，就是根据虚拟寄存器之间的冲突关系图，进行图的着色处理。在这个图中，每个节点代表需要着色的虚拟寄存器，而每条边都定义了冲突关系，也就是这两个虚拟寄存器不能着相同的颜色。那么如果有N个寄存器可以分配，就相当于用N个颜色来着色；如果N不够大，那么就需要物理内存来保存虚拟寄存器的值。  </p>
+<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><p>编译器的优化是一个及其复杂的过程，这里我只是从几个点出发，了解它的工作过程，对编译优化形成一个浅薄的认识。日后如果真的要从事编译优化方面的研究，再好好看看编译器的代码吧！ </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/07/15/浅谈GCC编译优化/" data-id="cj5nn6mlx003bo43fo64xm302" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译器/">编译器</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-虚函数，原理和攻击方式" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/06/27/虚函数，原理和攻击方式/" class="article-date">
+  <time datetime="2017-06-27T03:40:00.000Z" itemprop="datePublished">2017-06-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/06/27/虚函数，原理和攻击方式/">从虚函数的实现，到虚表劫持攻击</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="虚函数与多态"><a href="#虚函数与多态" class="headerlink" title="虚函数与多态"></a>虚函数与多态</h4><p>继承和多态，是面向对象中老生常谈的话题。C++中，我们也可以经常看到<code>virtaul</code>、<code>override</code>这样的关键字；这正是虚函数的标志。虚函数就是为了解决多态的问题：如果要使用一个基类的指针，根据对象的不同类型去调用相应的函数，就需要使用虚函数了。通俗的说也就是同一个入口，却能够调用不同的方法。<br>通常，对于虚函数的调用，往往在运行时才能确定调用哪个版本的函数。这是由于基类的指针或者引用，其动态类型必须在运行的时候才能确定（它具体指向了什么类型）。而“动态绑定”就指的在运行时，根据对象的类型，调用具体方法的过程，这个过程正是通过<strong>虚函数表</strong>实现的。<br><strong>抽象基类</strong>指的是有<strong>纯虚函数</strong>的类。纯虚函数，指的是没有函数体的函数，通常通过在函数体的位置写上<code>=0</code>来表示。对于抽象基类，是不能直接创建一个对象的；但是可以创建它它们的派生类的对象：只要它们覆盖了纯虚函数。纯虚函数表示这个函数的具体实现全部交给派生类去做。  </p>
+<h4 id="虚函数表与虚函数的调用"><a href="#虚函数表与虚函数的调用" class="headerlink" title="虚函数表与虚函数的调用"></a>虚函数表与虚函数的调用</h4><p>那么，“动态绑定”是如何实现的呢？这便是借助于虚函数表来实现。对于每个具有虚函数的类，都会有一个对应的虚函数表vtable，其代码和对应内存结构如下所示：</p>
+<pre><code>class A {
+    int varA;
+    public:
+    virtual int vAfoo(int a, int *b){
+        return a + (*b);
+    }
+    virtual int vAbar(int a){
+        return a + 1;
+    }
+    virtual bool vAduh(){
+        return true;
+    }
+    virtual int vAtest(int a){
+        return 0;
+    }
+    void Afoo(){
+        this-&gt;vAduh();
+    }
+};
+
+class B {
+    int varB;
+    public:
+    virtual int vBfoo(int a) = 0;
+    virtual bool vBbar(int b){
+        return b == 0;
+    }
+    char *Bfoo(char *c){
+        return c;
+    }
+};
+
+class C : public A, public B {
+    int varC;
+    public:
+    int vAtest(int a){
+        return -(a);
+    }
+    int vAfoo(int a, int *b){
+        return *b;
+    }
+    int vBfoo(int a){
+        return a - 1;
+    }
+    virtual void vCfoo(){}
+    bool vAduh(){
+        return false;
+    }
+};
+</code></pre><p><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/c++/%E8%99%9A%E8%A1%A8.png?raw=true" alt="虚函数表"><br>这个表中的每一项，都是一个虚函数的地址，也就是虚函数的指针。而每个对象的第一个值都是虚标指针，它指向了了所对应虚函数表的第一个表项（也就是虚函数表的基址）。每次调用虚函数时，都会首先通过这个虚表指针，找到虚函数表，然后再在虚函数表中，找到真正的虚函数的地址，并进行调用。假设存在有多继承的情况，那么就会有多个vptr，分别放在对应的基类对象的开头位置。  </p>
+<h4 id="虚继承"><a href="#虚继承" class="headerlink" title="虚继承"></a>虚继承</h4><p>对于“菱形继承”情况（也即两个子类继承同一个父类，而新的子类又同时继承这两个子类），则可能产生二义性问题。例如下面的情况，那么D中就会保存两次A中的变量和函数，并且在使用时也会很不方便，必须利用域作用符来使用变量和函数。  </p>
+<pre><code>   A
+ /   \
+B1   B2
+ \   /
+   D
+</code></pre><p>虚继承是在继承时，在基类类型前面加上<code>virtual</code>关键字。虚继承能够解决基类多副本的问题：在任何派生类当中，虚基类都是通过一个共享对象来表示的，它们通过指针去访问这个基类中的内容；它不用去保存多份基类的拷贝，而是只需要多出一个指向基类子对象的指针。从内存布局上来说，在虚表的负offset位置，会保存一个指针指向虚基类对象。<br>也就是说继承自A的虚函数和对象，全部只保存一份在D自身的子对象中，相比不使用虚继承，它删除了B1和B2当中的（2份）基类成员；它自己则需要保存一份基类成员和偏移指针；而如果要用B1和B2的指针或者引用去访问一个D对象时，那么访问A的成员则需要通过间接引用来访问；也就是说子对象需要有一个<strong>偏移量</strong>，指示在内存中，基类的位置。其内存布局一般如下：</p>
+<table>
+<thead>
+<tr>
+<th>内存</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>B1的虚表指针</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>B1的偏移指针</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>B1的数据成员</td>
+<td></td>
+</tr>
+<tr>
+<td>B2的虚表指针</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>B2的偏移指针</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>B2的数据成员</td>
+<td></td>
+</tr>
+<tr>
+<td>D的虚表指针</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>D的偏移指针</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>D的数据成员</td>
+<td></td>
+</tr>
+<tr>
+<td>A的虚表指针</td>
+<td></td>
+</tr>
+<tr>
+<td>A的数据成员</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="虚表与劫持攻击"><a href="#虚表与劫持攻击" class="headerlink" title="虚表与劫持攻击"></a>虚表与劫持攻击</h4><p>在C++程序中，%90以上的间接调用都是vcall。篡改程序中的虚函数调用，是劫持C++程序的一种常见手段。这里简单说说常见手段。<br>一种方法是<strong>虚表注入</strong>。众所周知，虚表保存在程序的.rodata段中，它是可读，不可写的；而对象当中的虚表指针却是可读写的状态；因此篡改虚表指针是较为直接的方式。<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/c++/%E8%99%9A%E8%A1%A8%E6%B3%A8%E5%85%A5.png?raw=true" alt="虚表注入"><br>如图，如果利用漏洞（overflow、use-after-free等）在内存中构造一个虚假的虚表，并且将对象中的虚函数指针指向注入的虚假的虚表，那么在虚函数调用时，就会调用虚假的虚函数。甚至只需要一次虚函数调用就能够通过shellcode完成攻击。<br>当然，如果程序进行了一定程度的保护，例如检查虚表指针是否属于.rodata段，攻击就只能依赖于现有的虚表来构造了。<a href="http://syssec.rub.de/media/emma/veroeffentlichungen/2015/03/28/COOP-Oakland15.pdf" target="_blank" rel="external">Counterfeit Object-oriented Programming</a>就提出了这样一种方法。<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/c++/coop%E6%94%BB%E5%87%BB.png?raw=true" alt="COOP"><br>可以看到，这种方法没有注入新的虚表，而是将vptr的值，指向了虚表中的不同位置（而不是虚表的起始地址）。如果能够构造一系列的虚假对象，那么就可以在一次循环中（比如某个对象数组的依次析构），在调用同一个虚函数时，实际上调用不同的函数，从而构造一个虚假的执行链。看到这里，也许你会有疑问：仅仅用有限的虚函数，能够构造图灵计算的攻击吗？答案是肯定的：有兴趣的话可以阅读一下原文，通过拼凑虚函数，是能够组合出各种语义的。  </p>
+<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><p>可见，虚函数是面向对象语言中，十分巧妙而又必不可少的设计；但它的特点也使得它成为黑客滥用、攻击的目标。指的庆幸的是，目前已经有一些开销较小的方法，能够保护虚表和虚函数了。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/06/27/虚函数，原理和攻击方式/" data-id="cj5nn6mmd0045o43f2422cl19" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/内存安全/">内存安全</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/虚函数/">虚函数</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-编译链中的一环，静态链接详解" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/06/19/编译链中的一环，静态链接详解/" class="article-date">
+  <time datetime="2017-06-19T13:40:00.000Z" itemprop="datePublished">2017-06-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/06/19/编译链中的一环，静态链接详解/">编译链中的一环，静态链接详解</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>GCC的工作，到生成汇编代码为止。剩下的工作，交给了Binutils来完成：assembler和static linker。最近详细地研究了一下linker的工作过程。<br>linker主要完成的是静态链接，目标文件合并的工作。例如，把多个.o文件合并成一个可执行文件。  </p>
+<h4 id="两步链接"><a href="#两步链接" class="headerlink" title="两步链接"></a>两步链接</h4><p>两步链接指的是：  </p>
+<ol>
+<li>空间与地址的分配<br>链接器会首先扫描所有的输入文件，获得各个段的长度、属性和位置，将段合并；并将输入目标文件中的符号表合并为全局符号表。  </li>
+<li>符号解析与重定位<br>使用上一步中收集到的信息，进行符号解析和重定位，调整代码中的地址等。这一步也是链接过程的核心，特别是重定位过程。<br>链接器首先获取各个段的虚拟地址；在确定段的虚拟地址之后，也就能确定各个符号的虚拟地址了。  </li>
+</ol>
+<h4 id="重定位与符号解析"><a href="#重定位与符号解析" class="headerlink" title="重定位与符号解析"></a>重定位与符号解析</h4><p>在完成空间和地址的分配之后，链接器开始进行符号解析和重定位的过程。在链接之前，各个段中的符号地址，都是以0为基地址的，对于未知的地址，也通通用0进行替代。编译器在编译时，对于不知道的符号地址，全部用一个假值替代，把真正的工作留给链接器去做。<br>而链接器在分配了虚拟地址之后，就可以修正每一个需要重定位的入口。这个工作是借助于重定位表来实现的。重定位表包括：<strong>重定位入口</strong>（也就是需要重定位的地方），<strong>偏移</strong>表示入口在被重定位的段中的位置。<br>在x86_64下，重定位表的结构也很简单（定义在elf.h当中）：  </p>
+<pre><code>typedef struct{
+    Elf64_Addr r_offset;
+    Elf64_Xword r_info;
+}Elf64_Rel;
+
+typedef struct{
+    Elf64_Addr r_offset;
+    Elf64_Xword r_info;
+    ELF64_Sxword r_addend;
+}Elf64_Rela
+</code></pre><p>这里，<code>r_offset</code>是重定位入口，相对于段起始的偏移；<code>r_info</code>则是重定位入口的类型和符号。其低位表示重定位入口的类型；高位表示重定位入口的符号，在符号表中的下标。（不同处理器的格式不一样）<br>符号解析则是为符号的重定位提供帮助，根据多个目标文件中的符号表，生成全局符号表，找到相应的符号并进行重定位。对于未定义的符号，链接器都应该能在全局符号表中找到，否则就报出符号未定义的错误。<br>PS：x86_64只使用Elf64_Rela。  </p>
+<h4 id="指令修正"><a href="#指令修正" class="headerlink" title="指令修正"></a>指令修正</h4><p>在x86_64中，call、jmp、mov、lea等指令的寻址方式千差万别。对于重定位来说，修正指令的寻址方式定义在binutils/elfcpp/x86_64.h当中。这其中主要包括：<code>R_X86_64_64</code>和<code>R_X86_64_PC32</code>两种。这是因为X86_64上，相对寻址依然只支持32位（实际上这也很科学；因为一个可执行文件通常不会有4G那么大）。<br>两种寻址方式的修正方法分别为：<code>符号地址 + 保存在被修正位置的值</code>和<code>符号地址 + 保存在被修正位置的值  - 被修正的位置相对于段开始的偏移量</code>  </p>
+<h4 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h4><h6 id="第一步：初始化，parsing-command-line-amp-script-file"><a href="#第一步：初始化，parsing-command-line-amp-script-file" class="headerlink" title="第一步：初始化，parsing command line &amp; script file"></a>第一步：初始化，parsing command line &amp; script file</h6><p>linker的入口，在ldmain.c当中(通常在链接的时候，通过编译器内部直接进行调用)。首先，linker会调用bfd库，识别二进制文件的格式，生成各个段的描述符，并且转换为<code>canonical form</code>。（例如linker中的符号表识别工作，就是首先由BFD来进行分析和转化，然后linker直接在<code>canonical form</code>上进行操作，再由BFD来进行输出）因此在ldmain.c的<code>main</code>中，首先进行的也是bfd的初始化<code>bfd_init</code>。随后linker进行了一系列的设置，包括路径，回调函数、初始化，加载插件、读取命令、linker script等。  </p>
+<h6 id="第二步：文件和符号的加载"><a href="#第二步：文件和符号的加载" class="headerlink" title="第二步：文件和符号的加载"></a>第二步：文件和符号的加载</h6><p>随后，<code>lang_process</code>中，linker会对每个输入文件进行处理。对于每个输入文件，linker都会分配一个bfd，对输入文件进行扫描，识别出其中的符号。首先<code>open_input_bfds</code>为所有文件建立了bfd，随后载入文件中的所有符号。每个符号对应一个<code>bfd_link_hash_entry</code>，它们保存在<code>bfd_link_hash_table</code>当中。<code>bfd_link_add_symbols</code>将符号添加到hash_table当中。  </p>
+<h6 id="第三步：输入文件的分析和合并"><a href="#第三步：输入文件的分析和合并" class="headerlink" title="第三步：输入文件的分析和合并"></a>第三步：输入文件的分析和合并</h6><p>在链接的第一部分完成后，第二部分开始前，链接器首先调用了<code>ldctor_build_sets</code>函数，它主要为C++中的constructor/dectructor提供支持。随后链接器<code>lang_do_memory_region</code>计算出内存区域（它们保存在<code>lang_memory_region_list</code>当中）。再通过<code>lang_common</code>处理全局符号，将它们添加到对应的section，移除没有被使用的sections等。随后链接器建立输入section和输出section之间的映射关系，并且将文件的section合并，以及设置段的属性等。  </p>
+<h6 id="第四步：重定位"><a href="#第四步：重定位" class="headerlink" title="第四步：重定位"></a>第四步：重定位</h6><p>第四步是符号的重定位工作。这里<code>lang_size_section</code>首先获取所有section的大小，然后<code>lang_set_startof</code>会修正section的大小和位置。在确定了sections的信息之后，就可以对符号进行重定位了，这便是<code>lang_do_assignments</code>和<code>ldexp_finalize_syms</code>的工作。它们会按照前面提到的方法，对符号进行重定位。最后链接器还会检查符号和section的正确性。  </p>
+<h6 id="第五步：交给bfd，输出文件"><a href="#第五步：交给bfd，输出文件" class="headerlink" title="第五步：交给bfd，输出文件"></a>第五步：交给bfd，输出文件</h6><p>在完成重定位之后，如果没有出现异常，linker就把工作交给bfd了。<code>ldwrite</code>负责把链接好的文件输出。完成一些清理工作后，整个链接过程就结束了。  </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/06/19/编译链中的一环，静态链接详解/" data-id="cj5nn6mmc0042o43fr3u9x1sq" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/binutils/">binutils</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/链接器/">链接器</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Hack gcc：添加新的函数" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/06/09/Hack gcc：添加新的函数/" class="article-date">
+  <time datetime="2017-06-09T03:40:00.000Z" itemprop="datePublished">2017-06-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/06/09/Hack gcc：添加新的函数/">Hack GCC，在编译时构造新的函数</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="怎么做和为什么？"><a href="#怎么做和为什么？" class="headerlink" title="怎么做和为什么？"></a>怎么做和为什么？</h4><p>首先对于GCC来说，<strong>添加一个新的函数</strong>是完全可以实现的，但我并没有看到任何相关的资料。我给gcc的mailing list发了封邮件，但没人给出回答。倒是有人私下给我发了封邮件，表示他对这个做法很好奇，希望我做出来之后能和大家分享一下方法。<br>看来求人终究不如求自己，我看了好几天代码，终于能够在编译的过程中添加函数了。<br>至于为什么要这么做，我认为如果编译时<strong>插桩的代码是大量重复的</strong>，那么去构造一个函数，并且插桩对这个函数的调用，是能够减少最后编译的可执行文件的体积的。  </p>
+<h4 id="从函数的结构出发"><a href="#从函数的结构出发" class="headerlink" title="从函数的结构出发"></a>从函数的结构出发</h4><p>要构造一个新的函数，不妨先看看函数包含有哪些部分：<a href="https://gcc.gnu.org/onlinedocs/gccint/Function-Basics.html#Function-Basics" target="_blank" rel="external">这里</a>说明了函数的四个核心部分：函数名、参数、返回值、函数体。那么生成一个函数，也就要构造这些部分；并且对于函数的某些property，也应该进行相应的设置。  </p>
+<p>有兴趣的朋友可以参考这几个函数：tree-parloops.c中的<code>create_loop_fn()</code>，omp-low.c当中的<code>create_omp_child_function()</code>，以及cgraphunit中的<code>init_lowered_empty_function</code>。  </p>
+<h4 id="函数的构造"><a href="#函数的构造" class="headerlink" title="函数的构造"></a>函数的构造</h4><p>总的来说，如果要构造一个函数，需要完成这些步骤：</p>
+<ol>
+<li>构造函数的type</li>
+<li>构造函数的name</li>
+<li>构造函数的declaration</li>
+<li>构造函数体</li>
+<li>创建函数的cgraph_node</li>
+<li>设置函数的attributes</li>
+<li>构造函数的result</li>
+<li>构造函数的paramater</li>
+<li>添加新的函数</li>
+</ol>
+<h5 id="type-amp-name"><a href="#type-amp-name" class="headerlink" title="type&amp;name"></a>type&amp;name</h5><p>build_function_type(tree return_type, …)`用来构造一个function的type。return_type是函数返回的类型。可变参数是用来设置额外的参数类型的，参数类型必须由NULL_TREE来终结。  </p>
+<p>那么这个这些type是从哪儿来的呢？<code>build_complex_type</code>用来生成一系列组合的type，比如<code>unsigned long</code>，而其他的基本类型实际上已经定义好了，例如<code>void_type_node</code>，<code>ptr_type_node</code>等。可见，数据的类型，就是通过这种方式来定义的，对于用户自己定义的数据类型，同样会通过build_complex_type来处理。  </p>
+<p><code>get_identifier</code>会返回一个标识符id，如果name能够找到，它会返回原有值，如果找不到，就会创建一个新的表项并返回。随后<code>decl</code>会实际去构造一个声明。<code>build_decl</code>的内部如下： </p>
+<pre><code>tree
+build_decl_stat(location_t loc, enum tree_code code, tree name, tree type MEM_STAT_DECL){
+tree t;
+t = make_node_stat(code PASS_MEM_STAT);
+</code></pre><h5 id="declaration"><a href="#declaration" class="headerlink" title="declaration"></a>declaration</h5><p><code>build_fn_decl(const char *name, tree type)</code>函数用来构造并且返回一个函数的声明。这里详细看看这个函数的内部：</p>
+<pre><code>tree build_fn_decl(const char *name, tree type){
+    tree id = get_identifier(name);
+    tree decl = build_decl(input_location, FUNCTION_DECL, id, type);
+    DECL_EXTERNAL(decl) = 1;
+    TREE_PUBLIC(decl) = 1;
+    DECL_ARTIFICIAL(decl) = 1;
+    TREE_NOTHROW(decl) = 1;
+}
+</code></pre><h5 id="函数体"><a href="#函数体" class="headerlink" title="函数体"></a>函数体</h5><p>然而，这里仅仅是构造了一个声明，对于一个函数来说，不仅应该有它的声明，还应该有其函数体。<code>allocate_struct_function(tree fndecl, bool abstract_p)</code>会为一个声明生成一个function structure，并且把它设置为默认内容。<code>abstract_p</code>表示这个函数是一个抽象的(类似于函数模版)。<br>在创建函数体之后，还要创建函数体的基本块：赋予函数最基本的结构，并且正确的连接ENTRY_BLOCK和EXIT_BLOCK。这个步骤可以通过<code>create_basic_block</code>来完成。  </p>
+<h5 id="cgraph-node"><a href="#cgraph-node" class="headerlink" title="cgraph_node"></a>cgraph_node</h5><p><code>cgraph_node</code>定义在cgraph.h中，它是一个<code>symtab_node</code>的子类，也就是符号表的子类。它包含有函数声明的调用关系（这也是它的名字call graph node的由来），也就是<code>callee</code>和<code>caller</code>。<br><code>cgraph_node::get_create()</code>能够创建一个函数的call graph。这个函数会为某个函数声明，找到对应的的call graph。如果不存在这样的call graph，就为它构造一个call graph。<br>这个过程还将函数加入符号表<code>symtab</code>，这是极其重要的。函数间调用的转换，也依赖于这个符号表。  </p>
+<h5 id="attributes"><a href="#attributes" class="headerlink" title="attributes"></a>attributes</h5><p><code>tree_cons</code>用来创建TREE_LIST结点。它根据purpose、value（实际上也就是tree_list的两个元素），创建一个结点，并设置这个node的tree_chain。对于函数来说，它的attributes通常是保存在一个TREE_LIST当中的。  </p>
+<h5 id="paramaters-amp-result"><a href="#paramaters-amp-result" class="headerlink" title="paramaters&amp;result"></a>paramaters&amp;result</h5><p>对一个函数来说，它的参数和返回值，同样都是利用tree结构来表示的。对于一个函数，参数是可以不设置的，但返回值不行。这两者可以通过这样的形式来构造声明：  </p>
+<pre><code>t = build_decl(UNKNOWN_LOCATION, RESULT_DECL, NULL_TREE, void_type_node);
+DECL_CONTEXT(t) = fndecl;
+DECL_RESULT(fndecl) = t;
+t = build_decl(UNKNOWN_LOCATION, PARAM_DECL, NULL_TREE, void_type_node);
+DECL_CONTEXT(t) = fndecl;
+DECL_ARGUMENTS(fndecl) = t;
+</code></pre><p>当然，还要设置这它们和函数之间的上下文关系。  </p>
+<h5 id="添加新的函数"><a href="#添加新的函数" class="headerlink" title="添加新的函数"></a>添加新的函数</h5><p>cgraphunit.c当中，提供了一个函数<code>cgraph_node::add_new_function</code>。在编译过程中，编译器会插入一些新的函数，这个函数将新的函数添加到一个数组<code>cgraph_new_nodes</code>当中去。这个函数还会对所添加的函数，执行之前所有“错过”的pass。因此不论在任何时间点插入函数，其所经历的优化过程其实并没有减少；值得一提的是，这个函数只允许插入GIMPLE形式的函数（high，low，ssa），所以我想<a href="https://gcc.gnu.org/ml/gcc/2003-10/msg00330.html" target="_blank" rel="external">这个问题</a>目前应该是不能实现的；因为如果直接写RTL，可能会无法恢复成GIMPLE，也就没法去进行某些优化了。<br><code>cgraph_new_nodes</code>中所保存的函数，会被<code>process_new_functions</code>处理，将它们添加到call graph当中去。现在这些函数就像原有的函数一样了。  </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/06/09/Hack gcc：添加新的函数/" data-id="cj5nn6mk4001do43f4cq1jle2" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译安全/">编译安全</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Hack GCC：insturment on RTL" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/05/16/Hack GCC：insturment on RTL/" class="article-date">
+  <time datetime="2017-05-16T13:40:00.000Z" itemprop="datePublished">2017-05-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/16/Hack GCC：insturment on RTL/">Hack GCC，在RTL上插桩</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="insn的创建"><a href="#insn的创建" class="headerlink" title="insn的创建"></a>insn的创建</h4><p>在<code>emit-rtl.c</code>当中，列举了一系列的<code>emit_insn</code>函数：  </p>
+<pre><code>/* 在before前插入x */
+emit_insn_before_noloc(rtx x, rtx before)
+/* 在after后插入x */
+emit_insn_after_noloc(rtx x, rtx after)
+/* 插入x的同时插入jump */
+emit_jump_insn_before(rtx x, rtx before)
+emit_jump_insn_after(rtx x, rtx after)
+/* 插入x的同时插入call */
+emit_call_insn_before(rtx x, rtx before)
+emit_call_insn_after(rtx x, rtx after)
+</code></pre><p>emit，也即发射。在指令生成之后，可以利用这一系列的API，把它“发射”到指令序列当中去。首先是要生成相应的指令，包括。其实insn-emit当中，已经提供了许多模版，比如<code>gen_nop</code>，就可以生成一条nop指令。    </p>
+<h4 id="instrument-bound-check"><a href="#instrument-bound-check" class="headerlink" title="instrument bound check"></a>instrument bound check</h4><p>在gcc/config/i386/i386.c当中，<code>ix86_expand_builtin</code>函数包含了一系列“处理器内置函数”的expand过程。这个函数中，首先用<code>DECL_FUNCTION_CODE()</code>对对应的内置功能进行判断，随后根据内置功能的类型进行进一步判断。其中，<code>IX86_BUILTIN_BNDCU/IX86_BUILTIN_BNDCL</code>就是bound check指令对应的处理。不妨来看看这两类指令是如何生成的吧：</p>
+<pre><code>case IX86_BUILTIN_BNDCU:
+arg0 = CALL_EXPR_ARG(exp, 0);
+arg1 = CALL_EXPR_ARG(exp, 1);
+op0 = expand_normal(arg0);
+op1 = expand_normal(arg1);
+if(!register_operand(op0, Pmode))
+    op0 = ix86_zero_expand_to_Pmode(op0);
+if(!register_operand(op1, BNDmode))
+    op1 = copy_to_mode_reg(BNDmode, op1);
+emit_insn(BNDmode == BND64mode ? gen_bnd64_cu(op1, op0):gen_bnd32_cu(op1, op0));
+</code></pre><p>可见,<code>arg0</code>和<code>arg1</code>是由<code>exp</code>得到的，随后被转化为<code>op0</code>和<code>op1</code>。这里对于<code>op0</code>和<code>op1</code>的模式进行了判断。这里的判断，是对操作数的machine mode进行了判断。对于<code>op0</code>来说，是判断它是否满足<code>Pmode</code>，也即指针使用的模式（比如x86_64用了48bit，这里的P表示partial）；而BNDmode则表示的是指针”bounds”的模式。后面的<code>gen_bnd64_cu(op1, op0)</code>也表明，<code>op1</code>是指针指向的地址，<code>op0</code>是bound寄存器的值。  </p>
+<h4 id="寄存器的申请"><a href="#寄存器的申请" class="headerlink" title="寄存器的申请"></a>寄存器的申请</h4><p>对于<code>op1</code>来说，其值也就是相应的指令进行访问的地址。而<code>op0</code>则是具体的寄存器了，那么这个寄存器如何申请呢？在RTL当中，寄存器的选择是由<code>gen_rtx_REG()</code>来决定的。它的第一个参数，选择了这个寄存器的mode，第二个参数则是通过一个编号，来选择寄存器。这些寄存器的编号，定义在gcc/config/i386/i386.h当中。  </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/05/16/Hack GCC：insturment on RTL/" data-id="cj5nn6mk0001co43fny9xwqui" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译安全/">编译安全</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Hack GCC，修改二进制文件中函数的顺序" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/05/12/Hack GCC，修改二进制文件中函数的顺序/" class="article-date">
+  <time datetime="2017-05-12T13:40:00.000Z" itemprop="datePublished">2017-05-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/12/Hack GCC，修改二进制文件中函数的顺序/">Hack GCC，改变函数的顺序</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="GCC的函数输出"><a href="#GCC的函数输出" class="headerlink" title="GCC的函数输出"></a>GCC的函数输出</h4><p>直观的来看，在<code>cgraphunit.c</code>当中，<code>expand_all_functions()</code>被用来输出所有需要输出的函数。这里，它首先进行了一次拓扑排序，在<code>ipa_reverse_postorder()</code>中完成。这样做的好处是，当一个函数被输出时，它所调用的所有函数都已经被输出了。这个函数还会先把内联的情况给处理掉。<br>在<code>expand_all_functions()</code>中，随后在允许函数重排列的情况下，利用<code>qsort</code>，对其顺序进行了重新排列。其比较函数，是通过比较两个<code>cgraph_node</code>代表的函数第一次执行的时间来进行的。<br>奇怪的是，在我修改了<code>expand_all_functions()</code>中的order之后，输出文件的格式并没有变。这里我出了一点小差错，结果在编译GCC的时候出现了问题，不过这也恰好说明GCC是通过自举来完成编译的。<br>于是我继续在上一层函数进行查找，在<code>symbol_table::compile</code>当中，实际上通过了了一个<code>flag_toplevel_reorder</code>来进行判断。在该值为false时，函数的调用会直接调用：<code>output_in_order(false)</code>。在实验之后，我发现gcc默认使用的是<code>-fno-toplevel-reorder</code>的方式，也即使用的是<code>output_in_order(false)</code>；但它自举的时候使用的是<code>-ftoplevel-reorder</code>的方式，也即<code>output_in_order(ture)</code>。这很自然：gcc优化自己的代码，这是它自身的需要。</p>
+<pre><code>if(!flag_toplevel_reorder)
+    output_in_order(false);
+else{
+    output_in_order(true);
+    expand_all_functions();
+    output_variables();
+}
+</code></pre><p>那么不妨看看<code>output_in_order()</code>中的代码。</p>
+<pre><code>FOR_EACH_DEFINED_FUNCTION(pf){
+    ...
+    if(no_reorder &amp;&amp; !pf-&gt;no_reorder)
+    continue;
+    i = pf-&gt;order;
+    nodes[i].kind = ORDER_FUNCTION;
+    nodes[i].u.f = pf;
+}
+</code></pre><p>很明显，如果采用reorder的方式，也即output_in_order(ture)，那么这里会跳过nodes的排序部分，并且进一步执行<code>expand_all_functions()</code>。<br>而如果采用的是no_reorder，那么nodes[i]所对应的也就是通过FOR_EACH_DEFINED_FUNCTION遍历到的第i个函数了，也就是严格按照次序来决定的。</p>
+<h4 id="改变函数的输出次序"><a href="#改变函数的输出次序" class="headerlink" title="改变函数的输出次序"></a>改变函数的输出次序</h4><p>那么如果想要更改汇编输出的函数次序，对于优化的情况，在<code>expand_all_functions()</code>中，在<code>qsort</code>对函数进行重排列之后，对order进行修改就可以了。那么GCC自身为什么要改变函数的顺序呢？因为把具有调用关系的函数，放在同一个页当中，是可以有效的减少缺页的情况的。不过现在内存的大小都很大，其实代码页并不会占据很多内存，所以从这个角度上来看，其实差异没有想象中那么大。另一种方式是采用和没有优化的方式相同的处理方法，但是在编译时加上<code>-fno-toplevel-reorder</code>选项。<br>而假如没有进行优化，那么直接在<code>output_in_order()</code>当中，对nodes中的次序进行修改就行了。那么函数的随机化就可以在这些知识的基础之上实现了。  </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/05/12/Hack GCC，修改二进制文件中函数的顺序/" data-id="cj5nn6mjy001ao43fn27gwisp" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译安全/">编译安全</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-RTL详解" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/05/10/RTL详解/" class="article-date">
+  <time datetime="2017-05-10T13:40:00.000Z" itemprop="datePublished">2017-05-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/10/RTL详解/">RTL，指令和运算，识别特定指令</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="运算"><a href="#运算" class="headerlink" title="运算"></a>运算</h4><p>RTL中的运算，采用一种很直观、简单的方式来进行描述。通常，表达式都会借助于m mode。运算包含有算术、比较、向量操作、Bit域、类型转换等。  </p>
+<h4 id="Side-Effect-表达式"><a href="#Side-Effect-表达式" class="headerlink" title="Side Effect 表达式"></a>Side Effect 表达式</h4><p>之前所说的表达式代码，通常表示的是值，而非某种行为。但机器指令，只有在对机器的状态产生了改变时，才会有意义；因此对于这些对寄存器、执行状态产生影响的过程，是有对应的表达式的，被称为side effect表达式。<br>一条指令的主体，一定是这些side effect之一；而之前表示值的表达式代码，只是作为它们的操作数出现的。<br>set lval x：表示将x的止保存在lval当中。lval表示一个能够存放值的位置。它们包括（仅列出了比较常用的一部分）：<br>return/simple_return：表述函数返回。<br>call function nargs：表示函数调用。<br>clobber x，表示不可预期的，可能的存储，将不可描述的值保存到x，必须为一个<code>reg</code>，<code>scratch</code>，<code>parallel</code>或者<code>mem</code>。说明x的值可能被修改（也就是说值会被改变？）<br>use x：x的值被使用。x必须为寄存器。<br>parallel：并行发生的side effects。<br>cond_exec [cond expr]：条件执行的表达式。<br>sequence [insns]：顺序执行的insn序列。<br>除此之外，还有一些和内存地址有关的side effects，例如pre_dec:m x表示x减少一个标准值，其中m必须是指针的对应machine mode。例如(mem:DF (pre_dec:SI (reg:SI 39)))表示，减少伪寄存器39的值(减少DFMODE的大小)并且把结果作为一个DFMODE值。  </p>
+<h4 id="指令"><a href="#指令" class="headerlink" title="指令"></a>指令</h4><p>一个函数的代码的RTL形式，是保存在一个双向链表当中的，它被称为insns。insn是具有特殊代码的表达式，它们不作它用，其中一部分是用来生成真实的代码的，另一部分表示jump table，或者jump的labels。<br>insn除了自身特定的数据之外，每一个insn还必须有一个独有的id－number，用来和当前函数中其他的insns进行区分，并且和其他的insns进行串联。在每个insns中，都有这样三个区域，分别用INSN_UID，PREV_INSN，NEXT_INSN这三个宏定义来取值。<br>insn一定包含有如下的某一类表达式代码：<br>insn：非jump/call的代码。<br>jump_insn：可能会造成跳转的指令，包括ret。<br>call_insn：可能进行函数调用的指令。call_insn也包含有一个域，CALL_INSN_FUNCTION_USAGE，它包含有一个链表，它记录了call调用所调用函数所需要利用的寄存器、内存地址等。<br>code_label：表示jump_insn能够跳转到的label。它包含两个特殊的域，分别是CODE_LABEL_NUMBER和LABEL_NUSES，后者只在jump优化阶段结束之后，它包含目前这个函数中，该label被使用了多少次。<br>jump_table_data：用来保存jumptable，位于tablejump_p insn之后。<br>barrier：放在非条件jump指令之后。<br>note：表示额外的调试信息。<br>debug_insn：用来track的伪代码。  </p>
+<h4 id="insn，jump-insn-call-insn"><a href="#insn，jump-insn-call-insn" class="headerlink" title="insn，jump_insn,call_insn"></a>insn，jump_insn,call_insn</h4><p>这几类指令都含有额外的域：<br>PATTERN(i)：这条指令的side effect表达式。<br>INSN_CODE(i)：一个integer，表示了这个insn机器描述的pattern，但通常一般不会做匹配，因此一般都是－1，尤其是对于use，clobber，asm_inpu，addr_vec和addr_diff_vec表达式而言。<br>LOG_LINK：insn_list链表，记录了instructions和basic block的依赖关系。只被schedulers和combine使用。<br>REG_NOTES：一个链表，记录了和寄存器有关的信息。具体的，宏REG_NOTE_KIND返回了register note的类型。而PUT_REG_NOTE_KIND则用来修改类型。  </p>
+<h4 id="一个例子"><a href="#一个例子" class="headerlink" title="一个例子"></a>一个例子</h4><p>那么，不妨来看看在gcc里面，一个insn到底是如何表示的：</p>
+<pre><code>(insn 21
+      20
+      22
+      6 
+      (set (reg:SI 59 [ D.1238 ])
+           (mem/c/i:SI (plus:SI (reg/f:SI 54 virtual-stack-vars)
+                                (const_int -8 [0xfffffffffffffff8])) [0 sum+0 S4 A32]))
+      /home/kito/sum.c:7
+      -1
+      (nil))
+</code></pre><p>把它和”iuuBeiie”对应起来，那么其实也就是一对一的关系，这里解释的很到位：  </p>
+<pre><code>(insn 21 # 1. i
+      20 # 2. u
+      22 # 3. u
+      6  # 4. B
+      (set (reg:SI 59 [ D.1238 ])
+           (mem/c/i:SI (plus:SI (reg/f:SI 54 virtual-stack-vars)
+                                (const_int -8 [0xfffffffffffffff8])) [0 sum+0 S4 A32])) # 5. e
+      /home/kito/sum.c:7 # i
+      -1 # 6. i
+      (nil)) # 7. e
+</code></pre><p>i 代表该 INSN 的 uid<br>u 上一道 INSN 的 uid<br>u 下一道 INSN 的 uid<br>B Basic Block的 编号<br>e 该 INSN 的主要內容, 例如上面那道指令所描述的是從内存读取一個值到寄存器中<br>i 该 INSN 对应源码的位置<br>i 放 RTL pattern Name<br>e 放 REG_NOTES 主要和寄存器有关   </p>
+<p>其中，这个<code>“iuuBeiie”</code>是打印的格式，每个字符的含义定义在rtl.c当中。这里，我比较关心的’e’指的是一个rtl表达式。再来看一个例子。call_insn对应的输出是<code>“iuuBeiiee”</code>，其输出为：</p>
+<pre><code>(call_insn    16 #1. i
+            15 #2. u
+            17 #3. u
+            2  #4. B
+            (call (mem:QI (symbol_ref:DI (&quot;printf&quot;)[flags 0x41] &lt;function_decl 0x7f1fd042e100 printf&gt;)[0 __builtin_printf S1 A8]) const_int 0 [0])))) #5. e
+            hello.c:12 #6. i
+            649     #7. i
+            (nil)    #8. i
+            (expr_list (use (reg:QI 0 ax))
+                (expr_list:DI (use (reg:DI 5 di))
+                    (expr_list:SI (use (reg:SI 4 si))
+                        (nil)))))    #9. e
+)
+</code></pre><p>和普通的insn相比，多出来的一项expr_list，是一个链表，它包含了用来传递参数的寄存器、内存的信息。  </p>
+<h4 id="RTL中的寄存器"><a href="#RTL中的寄存器" class="headerlink" title="RTL中的寄存器"></a>RTL中的寄存器</h4><p>从GCC官方的说明来看，RTL和llvm一样，首先是假设“有无限个寄存器”的，这也就是说，在RTL代码中，必然会有伪寄存器存在。在编译过程中，这些伪寄存器，要么被替换为真实的、硬件寄存器，要么被替换为内存引用。我也为此困扰过：那么在翻译时，是如何确定RTL具体对应的机器码的呢？RTL既然是一个和机器相关的语言，那么寄存器的选择，应该与最后的指令生成无关了。<br>其实这个问题是在gcc内置的rtl pass当中解决了。具体的，<code>register alloction</code>这个（准确的说是一系列）pass，它保证了所有的伪寄存器被清除了，其方式正是将它们替换为硬件寄存器、常量或者栈上的值。这也就是说，假设想要做一些和寄存器的选择相关的优化，最好是在这个过程之后去做。<br>在这个过程之后，rtx中的<code>reg</code>就表示的是实实在在的寄存器了。而相对的，<code>subregs</code>也不存在了，而<code>mem</code>毫无疑问也就表示了对表达式addr所示地址的主内存进行引用。其中<code>mem:m addr alias</code>中，m描述的是被访问内存单元的大小，alias代表这个引用点别名集合，只有引用相同内存地址的项，才会放在一个别名集合里面。  </p>
+<h4 id="RTL，读取内存"><a href="#RTL，读取内存" class="headerlink" title="RTL，读取内存"></a>RTL，读取内存</h4><p>既然知道<code>mem:m addr alias</code>用来引用内存，那么<code>addr</code>这个东西到底是怎么表示的？它是用一个寄存器来保存指针吗？还是用一个变量名称呢？首先我们来看看有哪些表达式会读取内存吧：<br><strong>副作用表达式</strong><br><code>set lval x</code>，表示将x对值放到由lval表示的地方。那么如果x是一个<code>mem</code>，无疑是会对内存进行引用的。<br><code>parallel [x0 x1 ...]</code>，多个并行执行的副作用，那么其中的每一个<code>set</code>都会发生内存的引用。<br><strong>算术表达式</strong><br>在RTL中，算术表达式并不会改变一个值，它只是一个单独的运算，代表一个结果。举个例子，如果是一个<code>ADD</code>指令，那么它实际上在RTL中是通过一个parallel来表示，这个parallel包括了<code>plus</code>，还包含了<code>set</code>，只不过在汇编阶段生成的只是一条指令而已。所以说其实RTL里面的parallel，并不是说的概念上的并行，而是说某些表达式，会同时发生、生效。<br>在<code>mem:m addr alias</code>当中，mem既可以是寄存器中存储的地址，也可以是常量指针中的地址。  </p>
+<h4 id="指令的遍历"><a href="#指令的遍历" class="headerlink" title="指令的遍历"></a>指令的遍历</h4><p>在GCC，所有的pass，都是以函数为粒度来进行调用的。它是一种“run on function”的机制。在gcc内部，当前处理的函数用<code>cfun</code>来进行访问。<br>而指令，是由特殊的rtx表达式：<code>insn</code>来表示的。那么如何访问每一条指令呢？我个人认为，首先遍历基本块，随后再在基本块的内部进行遍历，是更为有效的。也就是这样的方式：</p>
+<pre><code>FOR_EACH_BB_FN(bb, cfun){
+    FOR_BB_INSNS(bb, insn){
+        ...    //handle insn
+    }
+}
+</code></pre><p>但是，INSN中其实还包含有<code>note</code>，如果只想留下<code>insn</code>，那么用<code>INSN_P(insn)</code>进行过滤就可以。这样一来，剩下的就只有<code>insn</code>、<code>jump_insn</code>、<code>call_insn</code>三种情况了（还有<code>debug_insn</code>，这里不考虑这种情况）。这三种情况，实际上还可以用宏继续细分判断，分别是<code>JUMP_P</code>，<code>CALL_P</code>，<code>NONJUMP_INSN_P</code>。  </p>
+<h4 id="需要关注哪些指令？"><a href="#需要关注哪些指令？" class="headerlink" title="需要关注哪些指令？"></a>需要关注哪些指令？</h4><p>这里，我想定义的内存读取，指的是“通过一个指针，从内存中取值，并且把它放在寄存器当中”，当然这个取值可能会在计算之后放在寄存器中，例如<code>ADD</code>，也可能是通过<code>MOV</code>直接放到寄存器里面。无论如何，只要涉及到访问内容的数据（通过指针实现），并且结果被放到了寄存器中，这个行为就被认为是内存读取了。<br>当然，在RTL中，指令还没有那么的直观。那么如何识别出这些指令呢？首先，有一点是可以肯定的，那就是实际上只有<code>nonjump_insn</code>会产生这些指令。我在分析之后，发现：<code>jump_insn</code>、<code>call_insn</code>，即使是间接跳转的（比如c++里面，常常可以见到的vpointer），它们其实也只是代表控制流转移的过程而已，其指针的提取、计算，其实都是放在这条指令之前的<code>insn</code>中去执行的。  </p>
+<h4 id="指令中的内存读取"><a href="#指令中的内存读取" class="headerlink" title="指令中的内存读取"></a>指令中的内存读取</h4><p>下一步，就是从这些指令中，把真正的指令读取给提取出来。对应一个insn，它的输出格式是<code>&quot;iuuBeiie&quot;</code>，其中，e也即rtx表达式。在输出的时候，这部分表示的是这个insn的实际代码。<code>GET_CODE</code>能够用来提取出insn的代码部分，其实它只是一个<code>enum</code>：<code>#define GET_CODE(RTX) ((enum rtx_code) (RTX)-&gt;code)</code>，而<code>PATTERN</code>则是获取这个insn的副作用。这里，不应该被其名字所迷惑：因为<code>GET_CODE</code>不过是获取rtx code的类型，它和这个insn的内容，反而没有联系；相反，<code>PATTERN</code>则说明了这个insn会带来什么副作用，也就是对值的影响。<br>在看了<code>var-tracking.c</code>和<code>gcse.c</code>当中的源码之后，我注意到一条<code>set</code>指令中的<code>src</code>和<code>dest</code>，实际上都可以用宏提取，也即<code>rtx src = SET_SRC(PATTERN(insn))</code>和<code>rtx dest = SET_DEST(PATTERN(insn))</code>。<br>而PATTERN的代码类型其实也很有限。在<code>var-tracking</code>之后，实际上<code>sequence</code>也已经被去除了。那么实际上我们需要关注的PATTERN也就只有两种：分别是<code>set</code>和<code>parallel</code>。（实际上还有一种，那就是<code>asm_input</code>，这里先不予考虑）<br>那么对于<code>insn</code>，也就只有两种情况，一是一个单独的<code>set</code>，二是一个<code>parallel</code>，它可能包含了很多条<code>insn</code>，那么其中的指令就要逐条分析了。<br>注意：在gcc 5.0之后点版本，专门的数据结构rtx_insn表示一条指令，而不是用rtx来一概而论了。  </p>
+<h4 id="SET的分析"><a href="#SET的分析" class="headerlink" title="SET的分析"></a>SET的分析</h4><p>一个<code>set val x</code>，其lval可以是<code>reg</code>，<code>mem</code>，<code>pc</code>，<code>parallel</code>或者<code>cc0</code>。其中，<code>parallel</code>用来表示一个函数通过多个寄存器来返回一个结构体的情况，这里不用关注这个情况，只需要关注lval是<code>reg</code>，而x是<code>mem</code>的情况。（目前只考虑了这个最基本的情况）<br>对于<code>x</code>来说，set的源操作数可能是一个内存地址，还可能是一个表达式的，比如加减乘除、位操作等。  </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/05/10/RTL详解/" data-id="cj5nn6mkn001uo43frxe04eom" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译安全/">编译安全</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-gcc rtx" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/05/07/gcc rtx/" class="article-date">
+  <time datetime="2017-05-07T13:40:00.000Z" itemprop="datePublished">2017-05-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/07/gcc rtx/">RTL，类型和操作数</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="RTX"><a href="#RTX" class="headerlink" title="RTX"></a>RTX</h4><p>rtx(RTL expression)，也即一个RTL的表达式。在<code>coretypes.h</code>中，其被定义为<code>struct rtx_def *rtx</code>，也即一个指向rtx_def的指针。那么rtx_def是一个什么结构呢？它同样定义在rtl.h当中：</p>
+<pre><code>struct GTY((chain_next (&quot;RTX_NEXT (&amp;%h)&quot;),
+    chain_prev (&quot;RTX_PREV (&amp;%h)&quot;), variable_size)) rtx_def {
+  /* 表达式类型 */
+  ENUM_BITFIELD(rtx_code) code: 16;
+
+  /* 表达式包含值的类型 */
+  ENUM_BITFIELD(machine_mode) mode : 8;
+
+  /* 一系列位段，在不同情况下表示不同含义*/
+  unsigned int jump : 1;
+
+  unsigned int call : 1;
+
+  unsigned int unchanging : 1;
+
+  unsigned int volatil : 1;
+
+  unsigned int in_struct : 1;
+
+  unsigned int used : 1;
+
+  unsigned frame_related : 1;
+
+  unsigned return_val : 1;
+
+  /* rtx的第一个操作数，操作数的个数和类型是在code域中定义的*/
+  union u {
+    rtunion fld[1];
+    HOST_WIDE_INT hwint[1];
+    struct block_symbol block_sym;
+    struct real_value rv;
+    struct fixed_value fv;
+  } GTY ((special (&quot;rtx_def&quot;), desc (&quot;GET_CODE (&amp;%0)&quot;))) u;
+};
+</code></pre><p><a href="https://dmalcolm.fedorapeople.org/gcc/2013-10-31/doxygen/html/structrtx__def.html" target="_blank" rel="external">https://dmalcolm.fedorapeople.org/gcc/2013-10-31/doxygen/html/structrtx__def.html</a>中对每个位段进行了更详细的描述。</p>
+<p>其中，rtx所包含的所有可能情况，都包含在了rtl.def当中；注意这里rtx和insn其实有一些微妙的关系：rtx表示一条中间指令的时候，它是一个insn；rtx不一定是insn，但insn一定是rtx。</p>
+<h4 id="RTL：对象"><a href="#RTL：对象" class="headerlink" title="RTL：对象"></a>RTL：对象</h4><p>如果想在RTL阶段上，进行编译的优化，那么首先就必须好好了解RTL。RTL使用五种类型的对象： expressions、integers、wide integers、strings和vectors。其中，RTX是最为重要的的一个，它是一个C数据结构，通常用指针的形式来调用，也就是前面所提到的rtx。<br>interger和wide integer分别对应着机器上的整型和长整型。string则是一串非空的字符；vector则包含指向任意数量expression的指针，用[…]的形式来表示，并用空格分割。expressions被称为RTX code，它定义在rtl.def当中，其含义是与机器无关的。一个rtx的code部分，可以用<code>GET_CODE(x)</code>来获取，并且可以用<code>PUTCODE(x, newcode)</code>来替换。<br>expression code决定了：表达式所包含的操作数个数、它们是什么类型的objdect。RTL不像Lisp，不能通过operand自身来确定它是什么类型的object，而必须知道它的上下文（例如一个subreg code，它的第一个操作数被当成表达式，而第二个被认为是一个整型；又例如plus code，两个operands都被当成了表达式）。expression写作：()，包含表达式类型、flags、机器码等，以及用空格分割的操作数。  </p>
+<h4 id="RTL：类和格式"><a href="#RTL：类和格式" class="headerlink" title="RTL：类和格式"></a>RTL：类和格式</h4><p>expression code可被归为许多类，它们用<strong>一个字符</strong>来表示，<code>GET_RTX_CLASS(code)</code>能够用来获取RTX代码的类型，这些类定义在<code>rtl.def</code>当中。<br>RTX_OBJ：表示一个具体的object，例如REG/MEM/SYMBOL等<br>RTX_CONST_OBJ：表示一个常量object<br>RTX_COMPARE：表示不对称的比较，例如GEU/LT。<br>RTX_COMM_COMPARE：表示对称的比较。(表示满足交换律的)<br>RTX_UNARY：一元的算数操作，例如NEG、NOT、ABS、类型转换等<br>RTX_COMM_ARITH：满足交换律的二进制操作，例如PLUS、AND。<br>RTX_BIN_ARITH：不满足交换律的二进制操作，例如MINUX、DIV。<br>RTX_BITFIELD_OPS：位操作，包含ZERO_EXTRACT，SIGH_EXTRACT。<br>RTX_TERBARY：其他有三个输入的操作，例如IF_THEN_ELSE。<br>RTX_INSN：表示整条INSN，包括INSN、JUMP_INSN、CALL_INSN。<br>RTX_MATCH：表示insns当中的matches，例如MATCH_DUP。<br>RTX_AUTOINC：表示寻址时的自增，例如POST_INC。<br>RTX_EXTRA：所有其它的codes。<br>这些class，能够让expression code采用很方便的方式来表示，比如subreg直接可以表示为’ei’。<br><code>GET_RTX_LENGTH(code)</code>和<code>GET_RTX_FORMAT(code)</code>分别会返回操作数的数量，以及格式(简写，例如一个比较的操作写成ee)  </p>
+<h4 id="访问操作数"><a href="#访问操作数" class="headerlink" title="访问操作数"></a>访问操作数</h4><p>通过宏定义，可以访问一个表达式的操作数，包含<code>XEXP</code>、<code>XINT</code>、<code>XWINT</code>、<code>XSTR</code>。这些宏都包含了两个参数：其一是一个RTX，其二是从0开始数的操作数编号。例如<code>XEXP(x,2)</code>访问了x的第二个操作数(作为expression来访问)。<code>XINT(x,2)</code>访问了x的第二个操作数(作为integer来访问)。<br>使用者必须自己根据expression code来判断每个操作数是什么类型的。而对vector的访问则更复杂，<code>XVEC</code>能够获取vector指针，而<code>XVECEXP</code>和<code>XVECLEN</code>可以用来访问一个vector的元素和长度。<br>对于某些的RTL节点，还有一些特殊的操作数访问方式。例如MEM、REG、SYMBOL_REF都能够用来获取不同的相关信息。</p>
+<h4 id="Machine-Modes"><a href="#Machine-Modes" class="headerlink" title="Machine Modes"></a>Machine Modes</h4><p>Machine Modes描述了数据对象的大小，以及它的表现形式。Machine mode以枚举的形式来表示，machine_mode，定义在machmode.def当中。每个RTL表达式，都包含有一个machine mode的区域。在dump文件、机器描述中，RTL的machine mode被写在表达式的后面，用一个冒号分隔。<br>在GCC中，insn相当于rtx的组合。例如，</p>
+<pre><code>insn: mov ax, 8
+rtx: ax
+rtx: 8
+rtx: mov ax, 8
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/05/07/gcc rtx/" data-id="cj5nn6mkr0022o43f1sjw1291" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译安全/">编译安全</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-GCC插件编写" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/05/05/GCC插件编写/" class="article-date">
+  <time datetime="2017-05-05T13:40:00.000Z" itemprop="datePublished">2017-05-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/05/GCC插件编写/">GCC插件：注册、编译和使用</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="GCC插件-注册、编译、和使用"><a href="#GCC插件-注册、编译、和使用" class="headerlink" title="GCC插件:注册、编译、和使用"></a>GCC插件:注册、编译、和使用</h4><p>GCC 4.5版本后，为用户提供了接口，允许用户去编写额外的<em>代码优化过程</em>、<em>改造代码形式</em>、<em>对代码进行分析</em>。在GCC中，插件是以共享库的形式工作的。在安装好GCC之后，如果想编写插件，首先可以确定API的位置：</p>
+<pre><code>gcc -print-file-name=plugin
+</code></pre><p>在gcc-plugin.h中，提供了以下的结构：<br><code>struct plugin_name_args</code>包含了GCC调用插件所需要的信息，<code>plugin_info</code>是插件的帮助信息，<code>plugin_gcc_version</code>包含了插件支持的GCC版本。  </p>
+<p>对于一个插件，首先要决定它是在编译的那个阶段执行的，并且通过注册回调的方式，在编译的特殊时间段调用这个插件。GCC中的插件可以在GIMPLE、IPA、RTL等阶段工作。插件必须定义一个对应的数据结构，并且将它的信息，传递给插件框架，由它来回调插件的功能。插件所能够完成多功能，被称为”events”，它们定义在plugin.def文件当中。</p>
+<p>每一个gcc插件，都需要有一个初始化模块。对于一个gimple-pass插件，其初始化数据结构为：</p>
+<pre><code>static struct gimple_opt_pass myplugin_pass = 
+{
+    .pass.type = GIMPLE_PASS,
+    .pass.name = &quot;myplugin&quot;, /* For use in the dump file */
+
+    /* Predicate (boolean) function that gets executed before your pass.  If the
+     * return value is &apos;true&apos; your pass gets executed, otherwise, the pass is
+     * skipped.
+     */I
+    .pass.gate = myplugin_gate,  /* always returns true, see full code */
+    .pass.execute = myplugin_exec, /* Your pass handler/callback */
+};
+</code></pre><p>在tree-pass.h中，定义了一系列的数据结构，用来设置编写pass的执行顺序。在gcc/passes.def当中，定义了所有的pass。<br><a href="http://gcc-python-plugin.readthedocs.io/en/latest/tables-of-passes.html" target="_blank" rel="external">http://gcc-python-plugin.readthedocs.io/en/latest/tables-of-passes.html</a>上标注了GCC所有的passes，以及它们的所属的阶段。我注意到，在pass编写中，是这样标注pass的位置的：</p>
+<pre><code>pass.reference_pass_name = &quot;ssa&quot;;
+pass.ref_pass_instance_number = 1;
+pass.pos_op = PASS_POS_INSERT_AFTER;
+</code></pre><p>注释中写道，这个plugin将在GCC完成SSA表现形式之后，调用这个plugin，并且在第一个SSA之后调用。从tree-pass.h中，可以看到这样的定义：</p>
+<pre><code>struct register_pass_info
+{
+    opt_pass *pass;
+    const char* reference_pass_name;/*引用新pass的原有pass的名字*/
+    int ref_pass_instance_number;/*在原有pass后的特定位置插入新pass*/
+    enum pass_positioning_ops pos_ops;/*具体的插入方式，替换，之前，还是之后*/
+}
+</code></pre><p>在pass的init过程中，还需要进行回调的注册，把这个info传递给插件框架。</p>
+<pre><code>register_callback(&quot;myplugin&quot;, PLUGIN_PASS_MANAGER_SETUP, NULL, &amp;pass);
+register_callback(&quot;myplugin&quot;, PLUGIN_INFO, NULL, &amp;myplugin_info);
+</code></pre><p>当然，插件的运行也可以不用通过pass manager来进行hook，而是在某个特定的时间段运行。在<code>gcc/plugins.text</code>中，可以看到plugin_event的定义，它包含了一系列段时间点，于是乎在某些特定的时间点调用插件变得很方便，例如before gimplification, after compilation等。不过，如果想要更精确的设置调用的时机，那便还是要利用pass_manager来进行hook了。  </p>
+<p>插件的编译与一般的共享库编译并无不同。在老版本的GCC中，插件都是用C语言编写的，然而在我看到的版本(4.9.4)中，却一律变成了C++，看来用面向对象的语言来处理还是更为方便。  </p>
+<p>那么在编译好插件之后，就可以在gcc编译时调用它:</p>
+<pre><code>gcc -fplugin=./myplugin.so -c -o test test1.c
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/05/05/GCC插件编写/" data-id="cj5nn6mjx0019o43fkqu1y0qk" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译安全/">编译安全</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+  <nav id="page-nav">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/">__('next') &raquo;</a>
+  </nav>
 </section>
         
           <aside id="sidebar">
@@ -115,15 +986,29 @@
 
   
     
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GCC/">GCC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/I-O/">I/O</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDA-pro/">IDA pro</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KVM/">KVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ocaml/">Ocaml</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PID-namespace/">PID namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/QEMU/">QEMU</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SGX/">SGX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/binutils/">binutils</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/container/">container</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/intel/">intel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kvm/">kvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux内核/">linux内核</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/llvm/">llvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/">memory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/namespace/">namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/server/">server</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/x64-assembly/">x64 assembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/x86-64/">x86-64</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/二进制/">二进制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内存安全/">内存安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/底层安全/">底层安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/文件系统/">文件系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/浏览器安全/">浏览器安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/爬虫/">爬虫</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/硬件/">硬件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/系统安全/">系统安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译器/">编译器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译安全/">编译安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚函数/">虚函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟化/">虚拟化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/链接器/">链接器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/静态分析/">静态分析</a></li></ul>
+    </div>
+  </div>
+
 
   
     
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/GCC/" style="font-size: 17.14px;">GCC</a> <a href="/tags/I-O/" style="font-size: 11.43px;">I/O</a> <a href="/tags/IDA-pro/" style="font-size: 10px;">IDA pro</a> <a href="/tags/KVM/" style="font-size: 10px;">KVM</a> <a href="/tags/Ocaml/" style="font-size: 11.43px;">Ocaml</a> <a href="/tags/PID-namespace/" style="font-size: 10px;">PID namespace</a> <a href="/tags/QEMU/" style="font-size: 10px;">QEMU</a> <a href="/tags/SGX/" style="font-size: 12.86px;">SGX</a> <a href="/tags/binutils/" style="font-size: 10px;">binutils</a> <a href="/tags/chrome/" style="font-size: 10px;">chrome</a> <a href="/tags/container/" style="font-size: 10px;">container</a> <a href="/tags/intel/" style="font-size: 11.43px;">intel</a> <a href="/tags/kvm/" style="font-size: 10px;">kvm</a> <a href="/tags/linux/" style="font-size: 20px;">linux</a> <a href="/tags/linux内核/" style="font-size: 12.86px;">linux内核</a> <a href="/tags/llvm/" style="font-size: 10px;">llvm</a> <a href="/tags/memory/" style="font-size: 10px;">memory</a> <a href="/tags/namespace/" style="font-size: 11.43px;">namespace</a> <a href="/tags/nginx/" style="font-size: 11.43px;">nginx</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/server/" style="font-size: 11.43px;">server</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/x64-assembly/" style="font-size: 11.43px;">x64 assembly</a> <a href="/tags/x86-64/" style="font-size: 10px;">x86-64</a> <a href="/tags/二进制/" style="font-size: 10px;">二进制</a> <a href="/tags/内存安全/" style="font-size: 10px;">内存安全</a> <a href="/tags/底层安全/" style="font-size: 10px;">底层安全</a> <a href="/tags/操作系统/" style="font-size: 18.57px;">操作系统</a> <a href="/tags/文件系统/" style="font-size: 10px;">文件系统</a> <a href="/tags/浏览器安全/" style="font-size: 10px;">浏览器安全</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a> <a href="/tags/硬件/" style="font-size: 10px;">硬件</a> <a href="/tags/系统安全/" style="font-size: 12.86px;">系统安全</a> <a href="/tags/编译器/" style="font-size: 11.43px;">编译器</a> <a href="/tags/编译安全/" style="font-size: 15.71px;">编译安全</a> <a href="/tags/虚函数/" style="font-size: 10px;">虚函数</a> <a href="/tags/虚拟化/" style="font-size: 14.29px;">虚拟化</a> <a href="/tags/链接器/" style="font-size: 10px;">链接器</a> <a href="/tags/静态分析/" style="font-size: 12.86px;">静态分析</a>
+    </div>
+  </div>
+
   
     
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a></li></ul>
     </div>
   </div>
 
@@ -137,6 +1022,22 @@
         
           <li>
             <a href="/2017/07/28/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2017/07/15/浅谈GCC编译优化/">浅谈GCC编译优化</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/27/虚函数，原理和攻击方式/">从虚函数的实现，到虚表劫持攻击</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/19/编译链中的一环，静态链接详解/">编译链中的一环，静态链接详解</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/09/Hack gcc：添加新的函数/">Hack GCC，在编译时构造新的函数</a>
           </li>
         
       </ul>

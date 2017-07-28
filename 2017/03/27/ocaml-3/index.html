@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Ocaml笔记(二) | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="模块OCaml把每一段代码，都包装成一个模块。例如两个文件amodule.ml和bmodule.ml都会定义一个模块，分别为Amodule和Bmodule。通常模块是一个个编译的，比如 ocamlopt -c amodule.ml ocamlopt -c bmodule.ml ocamlopt -o hello amodule.cmx bmodule.cmx 那么访问模块中的内容可以使用open，">
+<meta name="keywords" content="静态分析,Ocaml">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ocaml笔记(二)">
+<meta property="og:url" content="http://yoursite.com/2017/03/27/ocaml-3/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="模块OCaml把每一段代码，都包装成一个模块。例如两个文件amodule.ml和bmodule.ml都会定义一个模块，分别为Amodule和Bmodule。通常模块是一个个编译的，比如 ocamlopt -c amodule.ml ocamlopt -c bmodule.ml ocamlopt -o hello amodule.cmx bmodule.cmx 那么访问模块中的内容可以使用open，">
+<meta property="og:updated_time" content="2017-07-28T09:04:47.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Ocaml笔记(二)">
+<meta name="twitter:description" content="模块OCaml把每一段代码，都包装成一个模块。例如两个文件amodule.ml和bmodule.ml都会定义一个模块，分别为Amodule和Bmodule。通常模块是一个个编译的，比如 ocamlopt -c amodule.ml ocamlopt -c bmodule.ml ocamlopt -o hello amodule.cmx bmodule.cmx 那么访问模块中的内容可以使用open，">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-ocaml-3" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/03/27/ocaml-3/" class="article-date">
+  <time datetime="2017-03-27T14:40:00.000Z" itemprop="datePublished">2017-03-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Ocaml笔记(二)
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="模块"><a href="#模块" class="headerlink" title="模块"></a>模块</h4><p>OCaml把每一段代码，都包装成一个模块。例如两个文件<code>amodule.ml</code>和<code>bmodule.ml</code>都会定义一个模块，分别为Amodule和Bmodule。<br>通常模块是一个个编译的，比如</p>
+<pre><code>ocamlopt -c amodule.ml
+ocamlopt -c bmodule.ml
+ocamlopt -o hello amodule.cmx bmodule.cmx
+</code></pre><p>那么访问模块中的内容可以使用<code>open</code>，也可以使用<code>module.func</code>这样的方式。<br>通常模块会定义为<code>struct...end</code>的形式，这样能够形成一个有效的闭包，防止命名的重复等，它需要和一个<code>module</code>关键字绑定。比如：</p>
+<pre><code>module PrioQueue = 
+    struct
+    ...
+    end;;
+</code></pre><h4 id="接口、签名"><a href="#接口、签名" class="headerlink" title="接口、签名"></a>接口、签名</h4><p>通常模块中的所有定义，都可以从外部进行访问。但实际中，模块只应该提供一系列接口，隐藏一些内容，这也是面向对象语言中所提倡的。模块是定义在<code>.ml</code>文件中的，而相应的接口，则是从<code>.mli</code>文件中得到的。它包含了一个带有类型的值的表。例如，对于一个模块来说，它的接口可以这样定义：</p>
+<pre><code>(*模块定义*)
+let message = &quot;Hello&quot;
+let hello() = print_endline message
+
+(*接口定义*)
+val hello : uint -&gt; unit
+</code></pre><p>这样，接口的定义就隐藏了<code>message</code>。这里，<code>.mli</code>文件是在<code>.ml</code>文件之前编译的。<code>.mli</code>用<code>ocamlc</code>来编译，而<code>.ml</code>则是用<code>ocamlopt</code>来编译的。<code>.mli</code>文件就是所说的“签名”。</p>
+<pre><code>ocamlc -c amodule.mli
+ocamlopt -c amodule.ml
+</code></pre><h4 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h4><p>值可以通过把它们的名字和类型，放到.mli文件的方式来导出。</p>
+<pre><code>val hello : unit -&gt; unit
+</code></pre><p>但模块经常定义新的类型。例如，</p>
+<pre><code>type date = { day : int; month : int; year : int }
+</code></pre><p>这里其实有几种.mli文件的写法，例如，包括：</p>
+<ul>
+<li>完全忽略类型</li>
+<li>把类型定义拷贝到签名</li>
+<li>把类型抽象，只给出名字<code>type date</code></li>
+<li>把域做成只读的:<code>type date = private{...}</code></li>
+</ul>
+<p>如果采用第三种方式，那么模块的用户就只能操作date对象，使用模块提供的函数去间接进行访问。    </p>
+<h4 id="子模块"><a href="#子模块" class="headerlink" title="子模块"></a>子模块</h4><p>一个给定的模块，可以在文件中显示的定义，成为当前模块的字模块。通过约束一个给定自模块的接口，是能够达到和写一对<code>.mli/.ml</code>文件一样的效果的。例如：</p>
+<pre><code>module type Hello_type = sig
+ val hello : unit -&gt; unit
+end
+
+module Hello : Hello_type = struct
+  ...
+end
+</code></pre><h4 id="仿函数（函子）"><a href="#仿函数（函子）" class="headerlink" title="仿函数（函子）"></a>仿函数（函子）</h4><p>OCaml中的仿函数，定义与其他语言不太一样，它是用另一个模块，来参数化的模块。它允许传入一个类型作为参数，但这在OCaml中直接做是不可能的。个人理解，这里的函子和C++中的STL比较类似，它接受不同类型的输入作为初始化。事实上在OCaml中，map和set模块都是要通过函子来使用的。<br>例如，标准库定义的<code>Set</code>模块，就提供了一个<code>Make</code>函子。假如要使用不同类型的集合，可以这样这样利用函子：</p>
+<pre><code># module Int_set = Set.Make (struct type t = int let compare = compare end)
+# module String_set = Set.Make (String);;
+</code></pre><p>至于函子的定义，则是这样：</p>
+<pre><code>module F(X : X_type) = struct
+    ...
+end
+</code></pre><p><code>X</code>是作为参数被传递的模块，而<code>X_type</code>是它的签名，这种写法是强制。  </p>
+<pre><code>module F(X:X_type) : Y_type = 
+struct
+    ...
+end
+</code></pre><p>这种写法对于返回模块的签名，也能够进行约束。函子的操作也是比较难理解的，多使用set/map，并且阅读这两个库中的源码，是能够帮助理解和记忆的。  </p>
+<h4 id="模式匹配"><a href="#模式匹配" class="headerlink" title="模式匹配"></a>模式匹配</h4><p>OCaml能够把数据结构分开，并对其做模式匹配。这里举一个例子，表示一个数学表达式<code>n * (x + y)</code>，并且分解公因式为<code>n * x + n * y</code><br>首先定义一个表达式类型：</p>
+<pre><code># type expr =
+| Plus of expr * expr        (* means a + b *)
+| Minus of expr * expr       (* means a - b *)
+| Times of expr * expr       (* means a * b *)
+| Divide of expr * expr      (* means a / b *)
+| Value of string            (* &quot;x&quot;, &quot;y&quot;, &quot;n&quot;, etc. *);;
+</code></pre><p>那么，对于一个表达式，用模式匹配的方式，可以将其打印成对应的数学表达式：  </p>
+<pre><code># let rec to_string e =
+match e with
+| Plus (left, right) -&gt;
+   &quot;(&quot; ^ to_string left ^ &quot; + &quot; ^ to_string right ^ &quot;)&quot;
+| Minus (left, right) -&gt;
+   &quot;(&quot; ^ to_string left ^ &quot; - &quot; ^ to_string right ^ &quot;)&quot;
+| Times (left, right) -&gt;
+   &quot;(&quot; ^ to_string left ^ &quot; * &quot; ^ to_string right ^ &quot;)&quot;
+| Divide (left, right) -&gt;
+   &quot;(&quot; ^ to_string left ^ &quot; / &quot; ^ to_string right ^ &quot;)&quot;
+| Value v -&gt; v;;
+
+val to_string : expr -&gt; string = &lt;fun&gt;
+# let print_expr e =
+    print_endline (to_string e);;
+val print_expr : expr -&gt; unit = &lt;fun&gt;
+</code></pre><p>这样，使用print_expr，就能够把一个表达式打印成一个数学表达式。那么，模式匹配的通用形式是：</p>
+<pre><code>match value with
+| pattern    -&gt;  result
+| pattern    -&gt;  result
+  ...
+</code></pre><p>或者对条件进行进一步的约束</p>
+<pre><code>match value with
+| pattern  [ when condition ] -&gt;  result
+| pattern  [ when condition ] -&gt;  result
+  ...
+</code></pre><p>注意，这里还有一种特殊的模式匹配，<code>| _</code>，它用来匹配剩下的任意情况。</p>
+<h4 id="奇奇怪怪的操作符"><a href="#奇奇怪怪的操作符" class="headerlink" title="奇奇怪怪的操作符"></a>奇奇怪怪的操作符</h4><p>OCaml中，还有许多有趣的操作符和表达式。在SO上，我也看到了类似的提问： </p>
+<pre><code>let m = PairsMap.(empty |&gt; add (0,1) &quot;hello&quot; |&gt; add (1,0) &quot;world&quot;) 
+</code></pre><p>这里有两个问题。第一个，<code>module.(e)</code>是啥意思？它其实等价于<code>let open Module in e</code>，它相当于一种简写的形式，同样是把module引入当前模块的方式。<br>第二个<code>|&gt;</code>表达式是什么意思？其实它是<code>Pervasives</code>中定义的一个操作符，其定义为<code>let (|&gt;) x f = f x</code>。它被称为”reverse application function”（我不知道应该如何翻译），但它的作用，是把连续的调用去有效的串联起来（可以把函数放在参数之后，从而保证一个调用顺序，有一点类似管道的意思）。如果不使用<code>|&gt;</code>符号，那么就必须写成：</p>
+<pre><code>let m = PairsMap.(add(1,0) &quot;world&quot; (add(0,1) &quot;hello&quot; empty))
+</code></pre><p>在Uroboros当中，还看到有一个奇怪的操作符，那便是<code>@</code>，从manual上来看，这个操作符的意思是“串联List”。有这样的例子：</p>
+<pre><code># List.append [1;2;3] [4;5;6];;
+- : int list = [1; 2; 3; 4; 5; 6]
+# [1;2;3] @ [4;5;6];;
+- : int list = [1; 2; 3; 4; 5; 6]
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/03/27/ocaml-3/" data-id="cj5nn6mlh002oo43fsc4a3lbp" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Ocaml/">Ocaml</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/静态分析/">静态分析</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/03/30/深入理解文件系统/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          深入理解文件系统
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/03/27/ocaml/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Ocaml笔记(一)</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GCC/">GCC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/I-O/">I/O</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDA-pro/">IDA pro</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KVM/">KVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ocaml/">Ocaml</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PID-namespace/">PID namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/QEMU/">QEMU</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SGX/">SGX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/binutils/">binutils</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/container/">container</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/intel/">intel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kvm/">kvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux内核/">linux内核</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/llvm/">llvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/">memory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/namespace/">namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/server/">server</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/x64-assembly/">x64 assembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/x86-64/">x86-64</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/二进制/">二进制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内存安全/">内存安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/底层安全/">底层安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/文件系统/">文件系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/浏览器安全/">浏览器安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/爬虫/">爬虫</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/硬件/">硬件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/系统安全/">系统安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译器/">编译器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译安全/">编译安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚函数/">虚函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟化/">虚拟化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/链接器/">链接器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/静态分析/">静态分析</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/GCC/" style="font-size: 17.14px;">GCC</a> <a href="/tags/I-O/" style="font-size: 11.43px;">I/O</a> <a href="/tags/IDA-pro/" style="font-size: 10px;">IDA pro</a> <a href="/tags/KVM/" style="font-size: 10px;">KVM</a> <a href="/tags/Ocaml/" style="font-size: 11.43px;">Ocaml</a> <a href="/tags/PID-namespace/" style="font-size: 10px;">PID namespace</a> <a href="/tags/QEMU/" style="font-size: 10px;">QEMU</a> <a href="/tags/SGX/" style="font-size: 12.86px;">SGX</a> <a href="/tags/binutils/" style="font-size: 10px;">binutils</a> <a href="/tags/chrome/" style="font-size: 10px;">chrome</a> <a href="/tags/container/" style="font-size: 10px;">container</a> <a href="/tags/intel/" style="font-size: 11.43px;">intel</a> <a href="/tags/kvm/" style="font-size: 10px;">kvm</a> <a href="/tags/linux/" style="font-size: 20px;">linux</a> <a href="/tags/linux内核/" style="font-size: 12.86px;">linux内核</a> <a href="/tags/llvm/" style="font-size: 10px;">llvm</a> <a href="/tags/memory/" style="font-size: 10px;">memory</a> <a href="/tags/namespace/" style="font-size: 11.43px;">namespace</a> <a href="/tags/nginx/" style="font-size: 11.43px;">nginx</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/server/" style="font-size: 11.43px;">server</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/x64-assembly/" style="font-size: 11.43px;">x64 assembly</a> <a href="/tags/x86-64/" style="font-size: 10px;">x86-64</a> <a href="/tags/二进制/" style="font-size: 10px;">二进制</a> <a href="/tags/内存安全/" style="font-size: 10px;">内存安全</a> <a href="/tags/底层安全/" style="font-size: 10px;">底层安全</a> <a href="/tags/操作系统/" style="font-size: 18.57px;">操作系统</a> <a href="/tags/文件系统/" style="font-size: 10px;">文件系统</a> <a href="/tags/浏览器安全/" style="font-size: 10px;">浏览器安全</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a> <a href="/tags/硬件/" style="font-size: 10px;">硬件</a> <a href="/tags/系统安全/" style="font-size: 12.86px;">系统安全</a> <a href="/tags/编译器/" style="font-size: 11.43px;">编译器</a> <a href="/tags/编译安全/" style="font-size: 15.71px;">编译安全</a> <a href="/tags/虚函数/" style="font-size: 10px;">虚函数</a> <a href="/tags/虚拟化/" style="font-size: 14.29px;">虚拟化</a> <a href="/tags/链接器/" style="font-size: 10px;">链接器</a> <a href="/tags/静态分析/" style="font-size: 12.86px;">静态分析</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/07/28/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2017/07/15/浅谈GCC编译优化/">浅谈GCC编译优化</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/27/虚函数，原理和攻击方式/">从虚函数的实现，到虚表劫持攻击</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/19/编译链中的一环，静态链接详解/">编译链中的一环，静态链接详解</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/09/Hack gcc：添加新的函数/">Hack GCC，在编译时构造新的函数</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

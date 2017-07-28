@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Hack GCC，在编译时构造新的函数 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="怎么做和为什么？首先对于GCC来说，添加一个新的函数是完全可以实现的，但我并没有看到任何相关的资料。我给gcc的mailing list发了封邮件，但没人给出回答。倒是有人私下给我发了封邮件，表示他对这个做法很好奇，希望我做出来之后能和大家分享一下方法。看来求人终究不如求自己，我看了好几天代码，终于能够在编译的过程中添加函数了。至于为什么要这么做，我认为如果编译时插桩的代码是大量重复的，那么去构造">
+<meta name="keywords" content="编译安全,GCC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hack GCC，在编译时构造新的函数">
+<meta property="og:url" content="http://yoursite.com/2017/06/09/Hack gcc：添加新的函数/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="怎么做和为什么？首先对于GCC来说，添加一个新的函数是完全可以实现的，但我并没有看到任何相关的资料。我给gcc的mailing list发了封邮件，但没人给出回答。倒是有人私下给我发了封邮件，表示他对这个做法很好奇，希望我做出来之后能和大家分享一下方法。看来求人终究不如求自己，我看了好几天代码，终于能够在编译的过程中添加函数了。至于为什么要这么做，我认为如果编译时插桩的代码是大量重复的，那么去构造">
+<meta property="og:updated_time" content="2017-07-28T09:04:47.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hack GCC，在编译时构造新的函数">
+<meta name="twitter:description" content="怎么做和为什么？首先对于GCC来说，添加一个新的函数是完全可以实现的，但我并没有看到任何相关的资料。我给gcc的mailing list发了封邮件，但没人给出回答。倒是有人私下给我发了封邮件，表示他对这个做法很好奇，希望我做出来之后能和大家分享一下方法。看来求人终究不如求自己，我看了好几天代码，终于能够在编译的过程中添加函数了。至于为什么要这么做，我认为如果编译时插桩的代码是大量重复的，那么去构造">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Hack gcc：添加新的函数" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/06/09/Hack gcc：添加新的函数/" class="article-date">
+  <time datetime="2017-06-09T03:40:00.000Z" itemprop="datePublished">2017-06-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Hack GCC，在编译时构造新的函数
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="怎么做和为什么？"><a href="#怎么做和为什么？" class="headerlink" title="怎么做和为什么？"></a>怎么做和为什么？</h4><p>首先对于GCC来说，<strong>添加一个新的函数</strong>是完全可以实现的，但我并没有看到任何相关的资料。我给gcc的mailing list发了封邮件，但没人给出回答。倒是有人私下给我发了封邮件，表示他对这个做法很好奇，希望我做出来之后能和大家分享一下方法。<br>看来求人终究不如求自己，我看了好几天代码，终于能够在编译的过程中添加函数了。<br>至于为什么要这么做，我认为如果编译时<strong>插桩的代码是大量重复的</strong>，那么去构造一个函数，并且插桩对这个函数的调用，是能够减少最后编译的可执行文件的体积的。  </p>
+<h4 id="从函数的结构出发"><a href="#从函数的结构出发" class="headerlink" title="从函数的结构出发"></a>从函数的结构出发</h4><p>要构造一个新的函数，不妨先看看函数包含有哪些部分：<a href="https://gcc.gnu.org/onlinedocs/gccint/Function-Basics.html#Function-Basics" target="_blank" rel="external">这里</a>说明了函数的四个核心部分：函数名、参数、返回值、函数体。那么生成一个函数，也就要构造这些部分；并且对于函数的某些property，也应该进行相应的设置。  </p>
+<p>有兴趣的朋友可以参考这几个函数：tree-parloops.c中的<code>create_loop_fn()</code>，omp-low.c当中的<code>create_omp_child_function()</code>，以及cgraphunit中的<code>init_lowered_empty_function</code>。  </p>
+<h4 id="函数的构造"><a href="#函数的构造" class="headerlink" title="函数的构造"></a>函数的构造</h4><p>总的来说，如果要构造一个函数，需要完成这些步骤：</p>
+<ol>
+<li>构造函数的type</li>
+<li>构造函数的name</li>
+<li>构造函数的declaration</li>
+<li>构造函数体</li>
+<li>创建函数的cgraph_node</li>
+<li>设置函数的attributes</li>
+<li>构造函数的result</li>
+<li>构造函数的paramater</li>
+<li>添加新的函数</li>
+</ol>
+<h5 id="type-amp-name"><a href="#type-amp-name" class="headerlink" title="type&amp;name"></a>type&amp;name</h5><p>build_function_type(tree return_type, …)`用来构造一个function的type。return_type是函数返回的类型。可变参数是用来设置额外的参数类型的，参数类型必须由NULL_TREE来终结。  </p>
+<p>那么这个这些type是从哪儿来的呢？<code>build_complex_type</code>用来生成一系列组合的type，比如<code>unsigned long</code>，而其他的基本类型实际上已经定义好了，例如<code>void_type_node</code>，<code>ptr_type_node</code>等。可见，数据的类型，就是通过这种方式来定义的，对于用户自己定义的数据类型，同样会通过build_complex_type来处理。  </p>
+<p><code>get_identifier</code>会返回一个标识符id，如果name能够找到，它会返回原有值，如果找不到，就会创建一个新的表项并返回。随后<code>decl</code>会实际去构造一个声明。<code>build_decl</code>的内部如下： </p>
+<pre><code>tree
+build_decl_stat(location_t loc, enum tree_code code, tree name, tree type MEM_STAT_DECL){
+tree t;
+t = make_node_stat(code PASS_MEM_STAT);
+</code></pre><h5 id="declaration"><a href="#declaration" class="headerlink" title="declaration"></a>declaration</h5><p><code>build_fn_decl(const char *name, tree type)</code>函数用来构造并且返回一个函数的声明。这里详细看看这个函数的内部：</p>
+<pre><code>tree build_fn_decl(const char *name, tree type){
+    tree id = get_identifier(name);
+    tree decl = build_decl(input_location, FUNCTION_DECL, id, type);
+    DECL_EXTERNAL(decl) = 1;
+    TREE_PUBLIC(decl) = 1;
+    DECL_ARTIFICIAL(decl) = 1;
+    TREE_NOTHROW(decl) = 1;
+}
+</code></pre><h5 id="函数体"><a href="#函数体" class="headerlink" title="函数体"></a>函数体</h5><p>然而，这里仅仅是构造了一个声明，对于一个函数来说，不仅应该有它的声明，还应该有其函数体。<code>allocate_struct_function(tree fndecl, bool abstract_p)</code>会为一个声明生成一个function structure，并且把它设置为默认内容。<code>abstract_p</code>表示这个函数是一个抽象的(类似于函数模版)。<br>在创建函数体之后，还要创建函数体的基本块：赋予函数最基本的结构，并且正确的连接ENTRY_BLOCK和EXIT_BLOCK。这个步骤可以通过<code>create_basic_block</code>来完成。  </p>
+<h5 id="cgraph-node"><a href="#cgraph-node" class="headerlink" title="cgraph_node"></a>cgraph_node</h5><p><code>cgraph_node</code>定义在cgraph.h中，它是一个<code>symtab_node</code>的子类，也就是符号表的子类。它包含有函数声明的调用关系（这也是它的名字call graph node的由来），也就是<code>callee</code>和<code>caller</code>。<br><code>cgraph_node::get_create()</code>能够创建一个函数的call graph。这个函数会为某个函数声明，找到对应的的call graph。如果不存在这样的call graph，就为它构造一个call graph。<br>这个过程还将函数加入符号表<code>symtab</code>，这是极其重要的。函数间调用的转换，也依赖于这个符号表。  </p>
+<h5 id="attributes"><a href="#attributes" class="headerlink" title="attributes"></a>attributes</h5><p><code>tree_cons</code>用来创建TREE_LIST结点。它根据purpose、value（实际上也就是tree_list的两个元素），创建一个结点，并设置这个node的tree_chain。对于函数来说，它的attributes通常是保存在一个TREE_LIST当中的。  </p>
+<h5 id="paramaters-amp-result"><a href="#paramaters-amp-result" class="headerlink" title="paramaters&amp;result"></a>paramaters&amp;result</h5><p>对一个函数来说，它的参数和返回值，同样都是利用tree结构来表示的。对于一个函数，参数是可以不设置的，但返回值不行。这两者可以通过这样的形式来构造声明：  </p>
+<pre><code>t = build_decl(UNKNOWN_LOCATION, RESULT_DECL, NULL_TREE, void_type_node);
+DECL_CONTEXT(t) = fndecl;
+DECL_RESULT(fndecl) = t;
+t = build_decl(UNKNOWN_LOCATION, PARAM_DECL, NULL_TREE, void_type_node);
+DECL_CONTEXT(t) = fndecl;
+DECL_ARGUMENTS(fndecl) = t;
+</code></pre><p>当然，还要设置这它们和函数之间的上下文关系。  </p>
+<h5 id="添加新的函数"><a href="#添加新的函数" class="headerlink" title="添加新的函数"></a>添加新的函数</h5><p>cgraphunit.c当中，提供了一个函数<code>cgraph_node::add_new_function</code>。在编译过程中，编译器会插入一些新的函数，这个函数将新的函数添加到一个数组<code>cgraph_new_nodes</code>当中去。这个函数还会对所添加的函数，执行之前所有“错过”的pass。因此不论在任何时间点插入函数，其所经历的优化过程其实并没有减少；值得一提的是，这个函数只允许插入GIMPLE形式的函数（high，low，ssa），所以我想<a href="https://gcc.gnu.org/ml/gcc/2003-10/msg00330.html" target="_blank" rel="external">这个问题</a>目前应该是不能实现的；因为如果直接写RTL，可能会无法恢复成GIMPLE，也就没法去进行某些优化了。<br><code>cgraph_new_nodes</code>中所保存的函数，会被<code>process_new_functions</code>处理，将它们添加到call graph当中去。现在这些函数就像原有的函数一样了。  </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/06/09/Hack gcc：添加新的函数/" data-id="cj5nn6mk4001do43f4cq1jle2" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译安全/">编译安全</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/06/19/编译链中的一环，静态链接详解/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          编译链中的一环，静态链接详解
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/05/16/Hack GCC：insturment on RTL/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Hack GCC，在RTL上插桩</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GCC/">GCC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/I-O/">I/O</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDA-pro/">IDA pro</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KVM/">KVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ocaml/">Ocaml</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PID-namespace/">PID namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/QEMU/">QEMU</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SGX/">SGX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/binutils/">binutils</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/container/">container</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/intel/">intel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kvm/">kvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux内核/">linux内核</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/llvm/">llvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/">memory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/namespace/">namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/server/">server</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/x64-assembly/">x64 assembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/x86-64/">x86-64</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/二进制/">二进制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内存安全/">内存安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/底层安全/">底层安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/文件系统/">文件系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/浏览器安全/">浏览器安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/爬虫/">爬虫</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/硬件/">硬件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/系统安全/">系统安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译器/">编译器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译安全/">编译安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚函数/">虚函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟化/">虚拟化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/链接器/">链接器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/静态分析/">静态分析</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/GCC/" style="font-size: 17.14px;">GCC</a> <a href="/tags/I-O/" style="font-size: 11.43px;">I/O</a> <a href="/tags/IDA-pro/" style="font-size: 10px;">IDA pro</a> <a href="/tags/KVM/" style="font-size: 10px;">KVM</a> <a href="/tags/Ocaml/" style="font-size: 11.43px;">Ocaml</a> <a href="/tags/PID-namespace/" style="font-size: 10px;">PID namespace</a> <a href="/tags/QEMU/" style="font-size: 10px;">QEMU</a> <a href="/tags/SGX/" style="font-size: 12.86px;">SGX</a> <a href="/tags/binutils/" style="font-size: 10px;">binutils</a> <a href="/tags/chrome/" style="font-size: 10px;">chrome</a> <a href="/tags/container/" style="font-size: 10px;">container</a> <a href="/tags/intel/" style="font-size: 11.43px;">intel</a> <a href="/tags/kvm/" style="font-size: 10px;">kvm</a> <a href="/tags/linux/" style="font-size: 20px;">linux</a> <a href="/tags/linux内核/" style="font-size: 12.86px;">linux内核</a> <a href="/tags/llvm/" style="font-size: 10px;">llvm</a> <a href="/tags/memory/" style="font-size: 10px;">memory</a> <a href="/tags/namespace/" style="font-size: 11.43px;">namespace</a> <a href="/tags/nginx/" style="font-size: 11.43px;">nginx</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/server/" style="font-size: 11.43px;">server</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/x64-assembly/" style="font-size: 11.43px;">x64 assembly</a> <a href="/tags/x86-64/" style="font-size: 10px;">x86-64</a> <a href="/tags/二进制/" style="font-size: 10px;">二进制</a> <a href="/tags/内存安全/" style="font-size: 10px;">内存安全</a> <a href="/tags/底层安全/" style="font-size: 10px;">底层安全</a> <a href="/tags/操作系统/" style="font-size: 18.57px;">操作系统</a> <a href="/tags/文件系统/" style="font-size: 10px;">文件系统</a> <a href="/tags/浏览器安全/" style="font-size: 10px;">浏览器安全</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a> <a href="/tags/硬件/" style="font-size: 10px;">硬件</a> <a href="/tags/系统安全/" style="font-size: 12.86px;">系统安全</a> <a href="/tags/编译器/" style="font-size: 11.43px;">编译器</a> <a href="/tags/编译安全/" style="font-size: 15.71px;">编译安全</a> <a href="/tags/虚函数/" style="font-size: 10px;">虚函数</a> <a href="/tags/虚拟化/" style="font-size: 14.29px;">虚拟化</a> <a href="/tags/链接器/" style="font-size: 10px;">链接器</a> <a href="/tags/静态分析/" style="font-size: 12.86px;">静态分析</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/07/28/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2017/07/15/浅谈GCC编译优化/">浅谈GCC编译优化</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/27/虚函数，原理和攻击方式/">从虚函数的实现，到虚表劫持攻击</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/19/编译链中的一环，静态链接详解/">编译链中的一环，静态链接详解</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/09/Hack gcc：添加新的函数/">Hack GCC，在编译时构造新的函数</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

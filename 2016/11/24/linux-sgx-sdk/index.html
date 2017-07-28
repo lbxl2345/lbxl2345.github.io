@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>SGX SDK相关 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Enclave Definition LanguageEDL文件，用来描述enclave当中的trusted和untrusted部分。在Linux中，Edger8r Tool通过这个文件来创建enclave的C wrapper函数，也即ECALL和OCALL所使用的函数。  //EDL Template enclave    {     //包含文件和作为参数的数据结构     trusted {">
+<meta name="keywords" content="系统安全,SGX">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SGX SDK相关">
+<meta property="og:url" content="http://yoursite.com/2016/11/24/linux-sgx-sdk/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Enclave Definition LanguageEDL文件，用来描述enclave当中的trusted和untrusted部分。在Linux中，Edger8r Tool通过这个文件来创建enclave的C wrapper函数，也即ECALL和OCALL所使用的函数。  //EDL Template enclave    {     //包含文件和作为参数的数据结构     trusted {">
+<meta property="og:updated_time" content="2017-07-28T09:04:47.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SGX SDK相关">
+<meta name="twitter:description" content="Enclave Definition LanguageEDL文件，用来描述enclave当中的trusted和untrusted部分。在Linux中，Edger8r Tool通过这个文件来创建enclave的C wrapper函数，也即ECALL和OCALL所使用的函数。  //EDL Template enclave    {     //包含文件和作为参数的数据结构     trusted {">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-linux-sgx-sdk" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/11/24/linux-sgx-sdk/" class="article-date">
+  <time datetime="2016-11-24T03:40:00.000Z" itemprop="datePublished">2016-11-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      SGX SDK相关
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="Enclave-Definition-Language"><a href="#Enclave-Definition-Language" class="headerlink" title="Enclave Definition Language"></a>Enclave Definition Language</h3><p>EDL文件，用来描述enclave当中的trusted和untrusted部分。在Linux中，Edger8r Tool通过这个文件来创建enclave的C wrapper函数，也即ECALL和OCALL所使用的函数。 </p>
+<pre><code>//EDL Template
+enclave    {
+    //包含文件和作为参数的数据结构
+    trusted {
+        //任何enclave_t.h中包含的文件
+        //trusted function原型
+    };
+
+    untrusted {
+        //任何enclave_u.t中包含的文件
+        //untrusted function原型
+    };
+};
+</code></pre><p>EDL文件不允许include有自定义类型的头文件。对于全局的包含文件，也不会包含在enclave当中。这类情况会使用不同的头文件，例如SGX会利用SDK所提供的stdio.h，而应用会使用由编译器提供的stdio.h。  </p>
+<h4 id="EDL中的数据"><a href="#EDL中的数据" class="headerlink" title="EDL中的数据"></a>EDL中的数据</h4><p>EDL中可以使用基本的关键字，包括</p>
+<pre><code>char, short, long, int, float, double, void, int8_t, int16_t, int32_t,     int64_t, size_t, wchar_t, uint8_t, uint16_t, uint32_t, uint64_t, unsigned,     struct, enum, union
+</code></pre><p>其它类型可以在头文件中包含。用户定义的数据类型可以在EDL中使用，但要遵守其编写的规范。正确的定义如下</p>
+<pre><code>enclave{
+    include &quot;user_types.h&quot; 
+
+
+    struct struct_foo_t { 
+        uint32_t struct_foo_0; 
+        uint64_t struct_foo_1;
+    };
+
+
+    enum enum_foo_t { 
+        ENUM_FOO_0 = 0,
+        ENUM_FOO_1 = 1 };
+    }; 
+
+    trusted {        
+        public void test_char(char val); public void test_int(int val);
+        public void test_long(long long val);
+};
+</code></pre><h4 id="EDL中的指针"><a href="#EDL中的指针" class="headerlink" title="EDL中的指针"></a>EDL中的指针</h4><p>EDL中定义有一些和指针一起使用的值，这些值是用在ECALL和OCALL时使用的参数上的。指针需要用in,out,或者user_check进行明确的修饰。其中[in]和[out]说明的是方向：  </p>
+<ul>
+<li>[in]表示参数从调用方传递到被调用放，对ECALL来说，in是从应用程序传递到enclave中，对OCALL来说则表示参数从应用程序传递到enclave中。  </li>
+<li>[out]表示参数是从被调用方返回到调用方。对ECALL来说，out表示参数从enclave传递到应用中，对OCALL来说则是从应用传递给enclave。  </li>
+<li>[in]和[out]组合使用表示参数是双向传递的。  </li>
+</ul>
+<p>方向属性能够用来提供保护，但会降低性能。如果使用user_check，则表示在不可信内存中的数据会在使用前进行验证。但[in]和[out]不支持包含有指针的结构体，这种情况必须使用user_check，并进行手动的验证。为了保证copy指针指向数据的安全性，它们还会和size，count，sizefun等一起使用。  </p>
+<h4 id="其它数据类型"><a href="#其它数据类型" class="headerlink" title="其它数据类型"></a>其它数据类型</h4><p>string和wstring表示参数是一个以NULL结束的字符串。  </p>
+<p>EDL支持用户定义的数据类型，但是不能定义在头文件中。任何使用typedef的基本类型，也都是用户定义的数据类型。有一些数据类型必须指定EDL属性，例如isptr，isary，readonly等，否则edger8r在编译时会报错。  </p>
+<p>propagate_error是OCALL的一个属性，如果使用这个属性，则enclave中的errno属性，会在OCALL返回之前被覆写为untrusted域中的errno中的值。在OCALL完成之后，无论OCALL是否成功，trusted域中的都会在OCALL完成之后更新。如果function失败了，那么errno就会检查是否出错，而如果函数成功了，那么OCALL就被允许修改errno的值。</p>
+<h4 id="ECALL访问-配置"><a href="#ECALL访问-配置" class="headerlink" title="ECALL访问/配置"></a>ECALL访问/配置</h4><p>默认的情况下，ECALL函数是不能直接被任何untrusted functions调用的。为了允许应用程序直接调用一个ECALL函数，则这个ECALL必须用public关键字来修饰。<br>Enclave配置文件是一个XML文件，它包含了用户定义的enclave参数，也是enclave项目的一部分。sgx_sign利用这个文件作为输入，来创建enclave的signature和metadata，它包括有这些项：</p>
+<pre><code>&lt;EnclaveConfiguration&gt;
+&lt;ProdID&gt;100&lt;/ProdID&gt; 
+&lt;ISVSVN&gt;1&lt;/ISVSVN&gt; 
+&lt;StackMaxSize&gt;0x50000&lt;/StackMaxSize&gt;
+&lt;HeapMaxSize&gt;0x100000&lt;/HeapMaxSize&gt;
+&lt;TCSNum&gt;1&lt;/TCSNum&gt;
+&lt;TCSPolicy&gt;1&lt;/TCSPolicy&gt;
+&lt;DisableDebug&gt;0&lt;/DisableDebug&gt;
+&lt;MiscSelect&gt;0&lt;/MiscSelect&gt;
+&lt;MiscMask&gt;0xFFFFFFFF&lt;/MiscMask&gt;
+&lt;/EnclaveConfiguration&gt;
+</code></pre><h4 id="Enclave加载"><a href="#Enclave加载" class="headerlink" title="Enclave加载"></a>Enclave加载</h4><p>Enclave的源代码被编译为一个共享对象，为了使用一个enclave，enclave.so应该通过调用sgx_create_enclave()函数来加载到受保护的内存中。在第一次加载一个enclave时，加载器会获取launch token并且将它保存到token参数当中，用户能够将它保存在一个文件中，并且在之后加载时，从文件中获取token。而卸载enclave则是由用户调用sgx_destory_enclave(sgx_enclave_id_t)来实现的。  </p>
+<pre><code>#define ENCLAVE_FILE _T(&quot;Enclave.signed.so&quot;)
+sgx_enclave_id_t eid;
+sgx_status_t ret = SGX_SUCCESS; 
+sgx_launch_token_t token = {0};
+int updated = 0;
+//创建
+sgx_create_enclave(ENCLAVE_FILE, SGX_DEBUG_FLAG, &amp;token, &amp;updated, &amp;eid, NULL);
+//摧毁
+sgx_destroy_enclave(eid);
+</code></pre><h4 id="Untrusted-Trusted-Library-Functions"><a href="#Untrusted-Trusted-Library-Functions" class="headerlink" title="Untrusted/Trusted Library Functions"></a>Untrusted/Trusted Library Functions</h4><p>untrusted函数只能在应用中，也就是enclave的外部调用。这些函数包括：</p>
+<ul>
+<li>Enclave的创建和摧毁</li>
+<li>Quoting（用来确定处于SGX环境中）</li>
+<li>untrusted key交换</li>
+<li>平台服务和启动控制  </li>
+</ul>
+<p>trusted库和enclave binary静态链接，它们只能在enclave内部使用。<br>Trusted Runtime System是SDK的一个关键组件，它提供enclave的入口逻辑，其他的helper函数，以及自定义的异常处理。<br>Trusted Service Library对数据进行保护，它包括有：</p>
+<p>－ Wrapper函数<br>－ sealing/unsealing<br>－ Trusted平台服务函数</p>
+<h4 id="SDK"><a href="#SDK" class="headerlink" title="SDK"></a>SDK</h4><p>SGX的SDK目前提供了两种模式，hardware模式，也即在物理上拥有sgx的计算机上能够使用；而simulation则是模拟拥有sgx的计算机。在DEBUG模式中，开发者能够直接使用被签名过的enclave.signed.so，而不需要自己去进行签名。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/11/24/linux-sgx-sdk/" data-id="cj5nn6mkt0027o43fn4xdqhg4" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SGX/">SGX</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/系统安全/">系统安全</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/12/05/memory-war/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          内存攻击与保护
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/10/10/PIDnamespace/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">PID namespace</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GCC/">GCC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/I-O/">I/O</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDA-pro/">IDA pro</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KVM/">KVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ocaml/">Ocaml</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PID-namespace/">PID namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/QEMU/">QEMU</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SGX/">SGX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/binutils/">binutils</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/container/">container</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/intel/">intel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kvm/">kvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux内核/">linux内核</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/llvm/">llvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/">memory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/namespace/">namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/server/">server</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/x64-assembly/">x64 assembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/x86-64/">x86-64</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/二进制/">二进制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内存安全/">内存安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/底层安全/">底层安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/文件系统/">文件系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/浏览器安全/">浏览器安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/爬虫/">爬虫</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/硬件/">硬件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/系统安全/">系统安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译器/">编译器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译安全/">编译安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚函数/">虚函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟化/">虚拟化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/链接器/">链接器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/静态分析/">静态分析</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/GCC/" style="font-size: 17.14px;">GCC</a> <a href="/tags/I-O/" style="font-size: 11.43px;">I/O</a> <a href="/tags/IDA-pro/" style="font-size: 10px;">IDA pro</a> <a href="/tags/KVM/" style="font-size: 10px;">KVM</a> <a href="/tags/Ocaml/" style="font-size: 11.43px;">Ocaml</a> <a href="/tags/PID-namespace/" style="font-size: 10px;">PID namespace</a> <a href="/tags/QEMU/" style="font-size: 10px;">QEMU</a> <a href="/tags/SGX/" style="font-size: 12.86px;">SGX</a> <a href="/tags/binutils/" style="font-size: 10px;">binutils</a> <a href="/tags/chrome/" style="font-size: 10px;">chrome</a> <a href="/tags/container/" style="font-size: 10px;">container</a> <a href="/tags/intel/" style="font-size: 11.43px;">intel</a> <a href="/tags/kvm/" style="font-size: 10px;">kvm</a> <a href="/tags/linux/" style="font-size: 20px;">linux</a> <a href="/tags/linux内核/" style="font-size: 12.86px;">linux内核</a> <a href="/tags/llvm/" style="font-size: 10px;">llvm</a> <a href="/tags/memory/" style="font-size: 10px;">memory</a> <a href="/tags/namespace/" style="font-size: 11.43px;">namespace</a> <a href="/tags/nginx/" style="font-size: 11.43px;">nginx</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/server/" style="font-size: 11.43px;">server</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/x64-assembly/" style="font-size: 11.43px;">x64 assembly</a> <a href="/tags/x86-64/" style="font-size: 10px;">x86-64</a> <a href="/tags/二进制/" style="font-size: 10px;">二进制</a> <a href="/tags/内存安全/" style="font-size: 10px;">内存安全</a> <a href="/tags/底层安全/" style="font-size: 10px;">底层安全</a> <a href="/tags/操作系统/" style="font-size: 18.57px;">操作系统</a> <a href="/tags/文件系统/" style="font-size: 10px;">文件系统</a> <a href="/tags/浏览器安全/" style="font-size: 10px;">浏览器安全</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a> <a href="/tags/硬件/" style="font-size: 10px;">硬件</a> <a href="/tags/系统安全/" style="font-size: 12.86px;">系统安全</a> <a href="/tags/编译器/" style="font-size: 11.43px;">编译器</a> <a href="/tags/编译安全/" style="font-size: 15.71px;">编译安全</a> <a href="/tags/虚函数/" style="font-size: 10px;">虚函数</a> <a href="/tags/虚拟化/" style="font-size: 14.29px;">虚拟化</a> <a href="/tags/链接器/" style="font-size: 10px;">链接器</a> <a href="/tags/静态分析/" style="font-size: 12.86px;">静态分析</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/07/28/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2017/07/15/浅谈GCC编译优化/">浅谈GCC编译优化</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/27/虚函数，原理和攻击方式/">从虚函数的实现，到虚表劫持攻击</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/19/编译链中的一环，静态链接详解/">编译链中的一环，静态链接详解</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/09/Hack gcc：添加新的函数/">Hack GCC，在编译时构造新的函数</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

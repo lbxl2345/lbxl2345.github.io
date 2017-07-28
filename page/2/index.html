@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://yoursite.com/page/2/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hexo">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-GCC overview" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/05/01/GCC overview/" class="article-date">
+  <time datetime="2017-05-01T13:40:00.000Z" itemprop="datePublished">2017-05-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/01/GCC overview/">GCC，Overview</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="前端：AST-GENERIC"><a href="#前端：AST-GENERIC" class="headerlink" title="前端：AST/GENERIC"></a>前端：AST/GENERIC</h4><p>AST:用<code>tree</code>来表示函数。其中，<code>tree</code>实际上是一个指针，它能够指向许多种类型的<code>tree_node</code>，这些<code>tree_node</code>定义在tree-core.h当中，就不一一赘述了。只需要明白，GCC当中最重要的数据就够就是tree，如果你想要添加一种<code>tree_node</code>，也可以在tree.def里面添加。  </p>
+<p>tree-core.h中定义了两种数据结构，用来直接表示tree节点，分别是tree_list和tree_vec。它们都包含有一个tree_common结构。tree_common包含有一个chain，用来和其他的tree链接起来。而tree_list则包含有purpose和value，它们都是<code>tree_node</code>。<strong>value包含了一个tree的主体</strong>。<br>可以说，在GENERIC中，<code>tree_node</code>才是主角。正如前面所说的，<code>tree_node</code>根据表示内容，也有不同的类型，而不同类型的<code>tree_node</code>的代码也不同了。比如指针类型使用POINTER_TYPE代码，而数组使用ARRAY_TYPE代码。<br>函数的声明、属性、表达式等，都是通过tree_node来表示的。在AST中，函数可以分为几个部分，分别是名字、参数、结果和函数体。这几个部分，都是通过<code>tree_node</code>来表示的。当然函数的内部还包含有许多属性。值得一提的是，有时候tree会为后端保留一些slot，用来在树被转化为RTL时，给GCC后端使用。 </p>
+<h4 id="中端：GIMPLE"><a href="#中端：GIMPLE" class="headerlink" title="中端：GIMPLE"></a>中端：GIMPLE</h4><p><strong>目前C和C++的前端直接从tree转换为GIMPLE</strong>，不再先转换为GENERIC了。<br>在GCC中，<code>gimplifier</code>过程将原始的GENERIC表达式，生成（不超过3个操作数）的GIMPLE元组。GIMPLE同样是基于tree结构的中间语言。其实GIMPLE还可以进行细分，它表现出了编译器在middle end的过程。没有完全下降的GIMPLE被称为“High GIMPLE”。“Low GIMPLE”完成了进一步下降，消除了隐式的跳转和异常表达式。<br>在Low GIMPLE之后，是基于SSA的GIMPLE。SSA，“静态单赋值”保证程序中的变量，只在一个位置赋值（赋值多次就在每次赋值后产生新的变量），这样做的好处是利于数据流分析，大多数优化都是基于SSA来做的。基于GIMPLE的优化过程，都是与机器语言无关的，它包括变量的属性设置、数据流分析和优化、别名分析等。<br>目前，大多数插桩的工作，也都是在GIMPLE上完成的，因为它属于与目标机器代码无关的中间语言；这也和LLVM IR类似。  </p>
+<h4 id="后端：RTL"><a href="#后端：RTL" class="headerlink" title="后端：RTL"></a>后端：RTL</h4><p>RTL则是从GIMPLE进一步拓展而来，它与机器语言直接相关。它也是大部分pass依赖的中间表示，和Lisp很类似。RTL会在优化过程中，逐渐去掉伪寄存器、合并指令，删除控制流图等。最后GCC根据RTL语言，根据insn-output当中的的模版，一一对应的输出汇编格式，再由汇编翻译成二进制代码。<br>RTL语言的定义位于rtl.def当中，在make过程中，GCC会根据机器描述文件，从对应到机器代码中提取寄存器、指令的配置，并生成相应的insn-out.c等文件，它们会在make install的时候进一步生成GCC。<br>值得一提的是，不论是RTL还是GIMPLE，都是和编译器所维护的控制流图相关的。控制流图由基本块和边来表示，并在编译过程中保持更新。控制流图在树拓展为RTL的过程中被丢弃。  </p>
+<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><p>总体而言，GCC的编译过程可以归纳为：从源码到语法树、从语法树到GIMPLE、从GIMPLE到RTL，再从RTL到汇编。在每个阶段，而GCC的优化工作，主要在GIMPLE和RTL上面进行。    </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/05/01/GCC overview/" data-id="cj5nn6mjt0016o43fi293a9id" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译安全/">编译安全</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-深入理解进程通信" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/04/30/深入理解进程通信/" class="article-date">
+  <time datetime="2017-04-30T03:40:00.000Z" itemprop="datePublished">2017-04-30</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/30/深入理解进程通信/">深入理解进程通信</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h4><p>管道是进程间的一个单向数据流；进程写入管道的数据都由内核定向到另一个进程，随后另一个进程由此从管道中读取数据，<strong>两个进程必须有亲缘关系，例如兄弟进程、父子进程</strong>。</p>
+<pre><code>//经常会使用到的
+$ ls | more
+</code></pre><p>管道可以被视为两个“打开的文件”，但它在文件系统中没有响应映象，其原理很简单：<code>pipe()</code>系统调用会返回两个FILE文件指针，分别用于读和写，两个进程分别能够读、写管道的内容。<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/%E7%AE%A1%E9%81%93.jpg?raw=true" alt=""><br>管道的结构定义在pipe_fs_i.h中：</p>
+<pre><code>struct pipe_inode_info {
+    struct mutex mutex;
+    wait_queue_head_t wait;    //FIFO等待队列
+    unsigned int nrbufs, curbuf, buffers;
+    unsigned int readers;    //读进程编号
+    unsigned int writers;    //写进程编号
+    unsigned int files;    
+    unsigned int waiting_writers;
+    unsigned int r_counter;
+    unsigned int w_counter;
+    struct page *tmp_page;
+    struct fasync_struct *fasync_readers;
+    struct fasync_struct *fasync_writers;
+    struct pipe_buffer *bufs;    //管道缓冲区
+    struct user_struct *user;
+};
+</code></pre><p>管道是作为一组VFS对象来实现的，它们用特殊的文件系统pipefs来组织。在<code>pipe</code>系统调用发生时，首先会为pipefs分配一个索引节点对象，并且对其进行初始化；随后分别创建一个读文件对象，和一个写文件对象，并对其中的f_ops设置为定义好的操作表地址。随后分配一个dentry，用它把两个文件对象和索引节点对象连接在一起。随后这两个文件描述符就被返回给了用户态进程，于是乎两个进程就能够通过文件描述符来读写数据了。  </p>
+<p><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/pipes.gif?raw=true" alt="">  </p>
+<h4 id="命名管道FIFO"><a href="#命名管道FIFO" class="headerlink" title="命名管道FIFO"></a>命名管道FIFO</h4><p>管道是十分方便的一种结构，不过它存在一个缺点，那就是不能让任意两个进程共享一个管道。命名管道和管道一样，都是借助于文件系统实现的，它遵循“先进先出”的原则，同样依赖于一个内存缓冲区。不过与管道不同的地方在于，管道的索引节点在pipefs文件系统中，而命名管道的节点在系统的目录树里面，所以所有的进程都可以访问命名管道，而且能够用读/写方式来打开。<br>命名管道首先需要通过<code>mknod</code>或<code>mkfifo</code>创建一个FIFO设备文件。一旦创建了FIFO文件，进程就可以用<code>open</code>、<code>write</code>、<code>read</code>等文件操作对FIFO进行操作。在进程使用系统调用<code>open</code>时，<code>init_special_inode()</code>会把FIFO相关的索引节点对象，进行初始化，并且把<code>i_fop</code>设置为定义好的表的地址，并执行<code>fifo_open()</code>。  </p>
+<h4 id="IPC"><a href="#IPC" class="headerlink" title="IPC"></a>IPC</h4><p>IPC是（Interprocess Communication）的缩写。它包含信号量、消息队列、共享内存三种方式。IPC在linux中被作为一种<strong>资源</strong>。<code>semget()</code>、<code>msgget()</code>、<code>shmget()</code>都以一个“关键字”作为参数，获得相应的IPC标识符，并且让进程能够通过标识符对资源进行访问。那么在不同的进程中，就可以通过同一关键字来访问IPC。<br>每一类IPC都有一个<code>ipc_ids</code>数据结构进行管理，其数据结构如下：  </p>
+<pre><code>struct ipc_ids {
+    int in_use;                //已经分配的资源数
+    unsigned short seq;        //下一个分配位置序号
+    struct rw_semaphore rwsem;
+    struct idr ipcs_idr;    //用基数树来保存，记录了所有IPC条目
+    int next_id;
+};
+</code></pre><p><code>kern_ipc_perm</code>对应一个IPC资源。<code>ipc_addid()</code>能够把一个kern_ipc_perm指针，添加到对应<code>ipc_ids</code>的基数树当中去。其结构如下，<code>key</code>是唯一的标识符。在对应的资源结构题中，都包含有一个kern_ipc_perm指针，它也是管理具体资源的关键所在。  </p>
+<pre><code>struct kern_ipc_perm {
+    spinlock_t    lock;
+    bool        deleted;
+    int        id;    
+    key_t        key;        //IPC关键字
+    kuid_t        uid;
+    kgid_t        gid;
+    kuid_t        cuid;
+    kgid_t        cgid;
+    umode_t        mode;
+    unsigned long    seq;    //位置使用序号
+    void        *security;
+} ____cacheline_aligned_in_smp;  
+</code></pre><h4 id="IPC信号量"><a href="#IPC信号量" class="headerlink" title="IPC信号量"></a>IPC信号量</h4><p>IPC信号量和内核中的信号量有相似之处，但实际上要比内核信号量复杂：首先IPC信号量可以包含多个信号量值，也就是保护多个独立的数据结构；其次IPC信号量还提供了失效的安全机制，用来处理进程意外死亡的情况。当然，它主要还是作为一种共享资源的访问控制手段，或者用于进程同步，不能传递大量的数据。其定义为<code>sem_array</code>。</p>
+<pre><code>struct sem_array {
+    struct kern_ipc_perm    sem_perm;    //对应的kern_ipc_perm结构
+    time_t            sem_ctime;            /* last change time */
+    struct sem        *sem_base;            //第一个sem结构指针
+    struct list_head    pending_alter;    //阻塞替换数组的请求队列
+                                        /* that alter the array */
+    struct list_head    pending_const;    //阻塞没有替换数组的请求队列
+                                        /* that do not alter semvals */
+    struct list_head    list_id;        //用来取消信号量操作
+    int            sem_nsems;                //信号量的总数
+    int            complex_count;            /* pending complex operations */
+    unsigned int        use_global_lock;
+}; 
+</code></pre><p>其中，<code>struct sem</code>的结构也很简单，除了信号量的值和上次操作的进程pid之外，它还有一个阻塞队列（在最新版本的linux中，这个队列被分成了两个）</p>
+<pre><code>struct sem {
+    int    semval;            //信号量的值
+    int    sempid;            //上次操作的pid
+    spinlock_t    lock;    /* spinlock for fine-grained semtimedop */
+    struct list_head    pending_alter;    /* pending operations */
+                                        /* that alter the array */
+    struct list_head    pending_const;    /* pending complex operations */
+                                        /* that do not alter semvals */
+    time_t    sem_otime;    /* candidate for sem_otime */
+} ____cacheline_aligned_in_smp;
+</code></pre><p>具体的组织方式如图所示。每个IPC信号量，都分配了一个挂起请求队列，它标识等待数组中信号量的进程。这也是一个FIFO队列，新的挂起请求都被追加到链表的末尾。<br>另一个值得注意的结构是<code>list_id</code>，它用来协助信号量的取消工作。它保存了某个进程对信号量所做的所有修改，如果说进程意外的退出了，那么就会把信号量的值恢复成正确的值。<br> <img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/%E4%BF%A1%E5%8F%B7%E9%87%8F.png?raw=true =600x400" alt=""> </p>
+<h4 id="IPC消息"><a href="#IPC消息" class="headerlink" title="IPC消息"></a>IPC消息</h4><p>IPC消息保存在一个IPC消息队列中，直到某个进程把它读走为止。它是内核中的消息链表，用队列的形式进行发送和接收，可以保存格式化的数据，并且缓冲区大，读写顺序完全可控。</p>
+<pre><code>struct msg_queue {
+    struct kern_ipc_perm q_perm;        //对应的kern_ipc_perm结构
+    time_t q_stime;                        /* last msgsnd time */
+    time_t q_rtime;                        /* last msgrcv time */
+    time_t q_ctime;                        /* last change time */
+    unsigned long q_cbytes;                //队列中的字节数
+    unsigned long q_qnum;                //队列中的消息数
+    unsigned long q_qbytes;                /* max number of bytes on queue */
+    pid_t q_lspid;                        /* pid of last msgsnd */
+    pid_t q_lrpid;                        /* last receive pid */
+
+    struct list_head q_messages;        //消息链表
+    struct list_head q_receivers;        //接收消息的进程链表
+    struct list_head q_senders;            //发送消息的进程链表
+};
+</code></pre><p>对于q_messages来说，每条消息都用一个struct <code>msg_msg</code>来表示：  </p>
+<pre><code>struct msg_msg {
+    struct list_head m_list;
+    long m_type;
+    size_t m_ts;        /* message text size */
+    struct msg_msgseg *next;
+    void *security;
+    /* the actual message follows immediately */
+};
+</code></pre><p>真正的消息部分紧跟在<code>msg_msg</code>的内存区域之后：  </p>
+<pre><code>struct msgbuf {
+    __kernel_long_t mtype;          /* type of message */
+    char mtext[1];                  /* message text */
+};
+</code></pre><p>整个消息队列的工作机制如图所示。用户可以通过一个整数值来进行标识，这就允许进程有选择的从消息队列中获取消息。只要进程从消息队列中读消息，内核就会把读的消息删除。发送消息和接收消息分别使用<code>msgsnd</code>和<code>msgrcv</code>函数来完成。</p>
+<p><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97.png?raw=true =600x400" alt=""></p>
+<h4 id="IPC共享内存"><a href="#IPC共享内存" class="headerlink" title="IPC共享内存"></a>IPC共享内存</h4><p>共享内存是IPC里面，最快的一种方式。其本质就是一块物理内存同时映射到多个进程各自的进程空间当中。相应的，每个进程都要在自己的地址空间中，增加一个新的内存区，他映射与这个共享内存区相关的页框。共享内存区用<code>shmid_kernel</code>来表示：  </p>
+<pre><code>struct shmid_kernel /* private to the kernel */
+{    
+    struct kern_ipc_perm    shm_perm;    //kern_ipc_perm数据结构
+    struct file        *shm_file;            //共享段的特殊文件
+    unsigned long        shm_nattch;
+    unsigned long        shm_segsz;
+    time_t            shm_atim;
+    time_t            shm_dtim;
+    time_t            shm_ctim;
+    pid_t            shm_cprid;
+    pid_t            shm_lprid;
+    struct user_struct    *mlock_user;
+
+    /* The task created the shm object.  NULL if the task is dead. */
+    struct task_struct    *shm_creator;
+    struct list_head    shm_clist;    /* list by creator */
+};
+</code></pre><p><code>shmid_kernel</code>中，一个很重要的域就是<code>shm_file</code>，因为共享段实际上是一个特殊的文件。我们知道在<code>vm_area_struct</code>当中，包含一个<code>vm_file</code>，也就是映射文件的域。不过shm文件系统并没有对应到目录树当中去，所以其操作只有mmap。对于共享内存映射来说，会通过<code>address_space</code>把页框包含在页高速缓存当中去。<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98.png?raw=true =600x400" alt="">  </p>
+<h4 id="Socket"><a href="#Socket" class="headerlink" title="Socket"></a>Socket</h4><p>Socket与其它方法的不同之处在于，它能够用于不同机器之间的进程通信。它与网络相关，涉及到具体的协议；作为本机通信时，可以设置对应的参数为<code>AF_UNIX</code>或<code>AF_INET</code>。注意，这里有两种方法，第一种是依然利用网络socket，把地址设置为localhost，这样通信依然会经过网络协议栈；第二种是利用<strong>Donmain Socket</strong>，不需要经过打包拆包、计算校验等过程，其本质是创建一个socket类型的文件。<br>在服务端：应用程序用系统调用<code>socket</code>创建一个套接字，并且用系统调用<code>bind</code>，将其绑定到IP地址和端口号上去，随后监听这个套接字，并且通过<code>accept</code>接收请求。在确定建立请求之后，通过<code>send</code>可以与客户端进行交互。    </p>
+<pre><code>server_sockfd = socket(AF_INET, SOCK_STREAM, 0);  
+server_addr.sin_family = AF_INET;                //指定网络套接字  
+server_addr.sin_addr.s_addr = htonl(INADDR_ANY);//接受所有IP地址的连接  
+server_addr.sin_port = htons(9736);                //绑定端口   
+bind(server_sockfd, (struct sockaddr*)&amp;server_addr, sizeof(server_addr));//绑定套接字     
+listen(server_sockfd, 5);监听套接字，建立一个队列
+
+while(1){
+    client_fd = accept(sockfd, (struct sockaddr*)&amp;remote_addr, &amp;sin_size));
+    //创建子进程处理连接
+    if(!fork()){
+        if(send(client_fd, &quot;Hellp, you are connected!&quot;, 26, 0) == -1)
+        ...
+    }
+}   
+</code></pre><p>在客户端：同样用系统调用<code>socket</code>创建一个套接字，但是用<code>connect</code>函数来尝试建立连接。在连接之后，使用<code>recv</code>系统调用接收服务器的信息。  </p>
+<pre><code>sockfd = socket(AF_INET, SOCK_STREAM,0)) == -1;
+
+serv_addr.sin_family = AF_INET;  
+serv_addr.sin_port = htons(SERVPORT);  
+serv_addr.sin_addr = *((struct in_addr*)host-&gt;h_addr);  
+bzero(&amp;(serv_addr.sin_zero), 8);  
+
+//面向连接的socket通信要用connect在客户端首先连接  
+if(connect(sockfd, (struct sockaddr *)&amp;serv_addr, sizeof(struct sockaddr)) == -1)  
+{  
+    perror(&quot;connect 出错！&quot;);  
+    exit(1);  
+}  
+
+//用于接收服务器的反馈信息  
+if((recvbytes = recv(sockfd, buf, MAXDATASIZE, 0)) == -1)  
+{  
+    perror(&quot;recv出错！&quot;);  
+    exit(1);  
+}  
+</code></pre><h4 id="内存映射-amp-信号"><a href="#内存映射-amp-信号" class="headerlink" title="内存映射&amp;信号"></a>内存映射&amp;信号</h4><p>内存映射其实就是在两个进程中，同时映射一个文件，然后通过文件中的内容进行通信。<br>信号也可以用于进程通信。之前的博文已经详细说明了，不再赘述。  </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/04/30/深入理解进程通信/" data-id="cj5nn6mmb0040o43f6ab35lwe" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-深入理解信号" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/04/27/深入理解信号/" class="article-date">
+  <time datetime="2017-04-27T13:40:00.000Z" itemprop="datePublished">2017-04-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/27/深入理解信号/">深入理解信号</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="信号"><a href="#信号" class="headerlink" title="信号"></a>信号</h4><p>信号用来通知进程异步事件，可以把它理解为对中断的一种模拟。它是一个很小的消息，用来达到两个目的：（1）告知进程发生了一个特定的事件；（2）强迫进程执行自身所包含的信号处理程序。<br>linux预先定义了一些常规信号，并为它们定义了一些缺省操作。除此之外，还有一类实时信号，它们需要排队进行处理，我们也可以自己定义信号和信号处理方式。<br>既然信号是和进程相关的，那么<code>task_struct</code>中就必然包含有与信号相关的域了。</p>
+<pre><code>task_struct{
+    ...
+    struct signal_struct *signal;        //进程信号描述符
+    struct sighand_struct *sighand;        //进程信号处理程序描述符
+    sigset_t blocked;                    //被阻塞信号掩码
+    sigset_t real_bloced;                //被阻塞信号临时掩码
+    struct sigpending pending;            //存放私有挂起信号
+    ...
+}
+</code></pre><p><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E8%BF%9B%E7%A8%8B/%E4%BF%A1%E5%8F%B7.gif?raw=true" alt="">  </p>
+<h4 id="信号的产生"><a href="#信号的产生" class="headerlink" title="信号的产生"></a>信号的产生</h4><p>信号是由内核函数产生的，它们完成信号处理的第一步，也即更新一个/多个进程的描述符。产生的信号并不直接传递，而是根据信号的类型、目标进程的状态唤醒进程，让它们来接收信号。内核提供了一组产生信号的函数，包括为进程、线程组产生信号等，但它们最终都会调用<code>__send_signal()</code>。当然，在调用<code>__send_signal()</code>之前，会检查这个信号是否应该被忽略（进程没有被跟踪、信号被阻塞，显示忽略信号）   </p>
+<pre><code>static int __send_signal(int sig, struct siginfo *info, struct task_struct *t,
+        int group, int from_ancestor_ns)
+{
+struct sigpending *pending;
+struct sigqueue *q;    
+int override_rlimit;
+int ret = 0, result;
+
+assert_spin_locked(&amp;t-&gt;sighand-&gt;siglock);
+
+result = TRACE_SIGNAL_IGNORED;
+if (!prepare_signal(sig, t,
+        from_ancestor_ns || (info == SEND_SIG_FORCED)))
+    goto ret;
+//获取进程或线程组的私有挂起队列
+pending = group ? &amp;t-&gt;signal-&gt;shared_pending : &amp;t-&gt;pending;
+
+//这个信号已经挂起了，忽略它
+result = TRACE_SIGNAL_ALREADY_PENDING;
+if (legacy_queue(pending, sig))
+    goto ret;
+
+result = TRACE_SIGNAL_DELIVERED;
+//如果是kernel内部的某些强制信号，就立马执行
+if (info == SEND_SIG_FORCED)
+    goto out_set;
+
+//如果没有超过挂起信号的上限
+if (sig &lt; SIGRTMIN)
+    override_rlimit = (is_si_special(info) || info-&gt;si_code &gt;= 0);
+else
+    override_rlimit = 0;
+
+//产生一个sigqueue对象，并把它加入到队列中去
+q = __sigqueue_alloc(sig, t, GFP_ATOMIC | __GFP_NOTRACK_FALSE_POSITIVE,
+    override_rlimit);
+if (q) {
+    list_add_tail(&amp;q-&gt;list, &amp;pending-&gt;list);
+    switch ((unsigned long) info) {
+    case (unsigned long) SEND_SIG_NOINFO:
+        q-&gt;info.si_signo = sig;
+        q-&gt;info.si_errno = 0;
+        q-&gt;info.si_code = SI_USER;
+        q-&gt;info.si_pid = task_tgid_nr_ns(current,
+                        task_active_pid_ns(t));
+        q-&gt;info.si_uid = from_kuid_munged(current_user_ns(), current_uid());
+        break;
+    case (unsigned long) SEND_SIG_PRIV:
+        q-&gt;info.si_signo = sig;
+        q-&gt;info.si_errno = 0;
+        q-&gt;info.si_code = SI_KERNEL;
+        q-&gt;info.si_pid = 0;
+        q-&gt;info.si_uid = 0;
+        break;
+    default:
+        copy_siginfo(&amp;q-&gt;info, info);
+        if (from_ancestor_ns)
+            q-&gt;info.si_pid = 0;
+        break;
+    }
+
+    //......
+}
+</code></pre><p>在信号产生之后，linux会调用<code>signal_wake_up()</code>通知进程，告知有新的挂起信号到来，如果当前进程占有了CPU，那么就可以立即执行；否则则要强制进行重新调度。</p>
+<h4 id="信号的传递"><a href="#信号的传递" class="headerlink" title="信号的传递"></a>信号的传递</h4><p>在信号产生之后，如何确保挂起的信号被正确的处理呢？进程在信号产生时，可能并不在CPU上运行。在进程恢复用户态执行时，会进行检查，如果存在非阻塞的挂起信号，就调用<code>do_signal()</code>，这个函数会逐个助理挂起的非阻塞信号，而信号的处理则进一步调用<code>handle_signal()</code>。  </p>
+<pre><code>handle_signal(struct ksignal *ksig, struct pt_regs *regs)
+{
+    bool stepping, failed;
+    struct fpu *fpu = &amp;current-&gt;thread.fpu;
+
+    //是否处于系统调用中
+    if (syscall_get_nr(current, regs) &gt;= 0) {
+        //系统调用被打断了，没有执行完，需要重新执行
+        switch (syscall_get_error(current, regs)) {
+        case -ERESTART_RESTARTBLOCK:
+        case -ERESTARTNOHAND:
+            regs-&gt;ax = -EINTR;
+            break;
+
+        case -ERESTARTSYS:
+            if (!(ksig-&gt;ka.sa.sa_flags &amp; SA_RESTART)) {
+                regs-&gt;ax = -EINTR;
+                break;
+            }
+        /* fallthrough */
+        case -ERESTARTNOINTR:
+            regs-&gt;ax = regs-&gt;orig_ax;
+            regs-&gt;ip -= 2;
+            break;
+        }
+    }
+
+    //设置栈帧
+    failed = (setup_rt_frame(ksig, regs) &lt; 0);
+    if (!failed) {
+        regs-&gt;flags &amp;= ~(X86_EFLAGS_DF|X86_EFLAGS_RF|X86_EFLAGS_TF);
+        /*
+         * Ensure the signal handler starts with the new fpu state.
+         */
+        if (fpu-&gt;fpstate_active)
+            fpu__clear(fpu);
+    }
+    signal_setup_done(failed, ksig, stepping);
+}
+</code></pre><p>这里存在一个问题：<code>handle_signal()</code>处于内核态中，但信号处理程序是在用户态定义的，因此这里存在着堆栈转换的问题。linux采用的方法是：把内核态堆栈中的硬件上下文，拷贝到当前进程的用户态堆栈中。而当信号处理程序完成时，会自动调用<code>sigreturn()</code>把硬件上下文拷贝回内核态堆栈中，并且恢复用户态堆栈中的内容。这里需要构造一个用户态栈帧：</p>
+<p><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E8%BF%9B%E7%A8%8B/%E6%A0%88.gif?raw=true" alt="">  </p>
+<p>首先内核需要把内核栈中的内容复制到用户态堆栈中去，把内核态堆栈的返回地址修改为信号处理程序的入口。注意，为了让信号处理程序结束时，能够清除栈上的内容，用户态堆栈还应该放入一个信号处理程序的返回地址，它指向<code>__kernel_sigreturn()</code>，把硬件上下文拷贝到内核态堆栈，然后把这个栈帧删除，随后从内核态返回到用户态继续执行。</p>
+<h4 id="信号的接口"><a href="#信号的接口" class="headerlink" title="信号的接口"></a>信号的接口</h4><p><code>kill</code>/<code>tkill</code>/<code>kgill</code>系统调用分别用来给某个进程、线程组发送信号。其中，<code>kill(pid, sig)</code>分别接受一个进程的pid号，以及一个所发送的信号。<br>实时信号的发送则应该使用<code>rt_sigqueueinfo()</code>来进行发送。如果用户需要为信号指定一个操作，那么则应该使用<code>sigaction(sig, &amp;act, &amp;oact)</code>系统调用，<code>act</code>为指定的操作，而<code>old_act</code>用来记录以前的信号。  </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/04/27/深入理解信号/" data-id="cj5nn6mm1003jo43fagyuejs1" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-深入理解进程地址空间" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/04/25/深入理解进程地址空间/" class="article-date">
+  <time datetime="2017-04-25T13:40:00.000Z" itemprop="datePublished">2017-04-25</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/25/深入理解进程地址空间/">深入理解进程地址空间</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="线性区"><a href="#线性区" class="headerlink" title="线性区"></a>线性区</h4><p>与内核中的内存分配不同，进程对内存的请求，被认为是不紧迫的。因此内核使用了一种新的资源，也就是<strong>线性区</strong>。应用程序申请动态内存时，并没有直接获得请求的页框，而是仅仅获得了一个新的<strong>线性区</strong>使用权。进程的地址空间，就是由所有的“线性区”来表示的，它的所有信息放在<code>mm_struct</code>当中（也就是我们在task_struct当中看到的），定义在mm_types.h当中。<br><code>mm_struct</code>包含了一个<code>vm_area_struct *mmap</code>，它也就是进程所拥有的所有线性区的链表。来看看vm_area_struct的结构：</p>
+<pre><code>vm_area_struct{
+    struct mm_struct *vm_mm;//指向线性区所在的mm_struct
+    unsigned long vm_start;    //线性区的起始地址
+    unsigned long vm_end;    //线性区的结束地址
+
+    struct vm_area_struct *vm_next, *vm_prev;
+    pgprot_t vm_page_prot;//线性区的访问权限
+    unsigned long vm_flags;//标志位
+
+    struct{
+        struct rb_node rb;
+        unsigned long rb_subtree_last;
+    }shared;
+    struct list_head anno_vma_chain;
+    struct anon_vma *anon_vma;
+    //以上均为链接到反映射所使用的数据结构
+
+    const struct vm_operations_struct *vm_ops;
+    //处理这个结构体的函数指针
+
+    unsigned long vm_pgoff;
+    struct file *vm_file;
+    void *vm_private_data;
+    //与映射文件、back store相关
+
+}
+</code></pre><p>线性区的组织方式如下。在内核中，查找包含制定线性地址的线性区是一个很频繁的操作，而进程的线性区可能有很多个，那么直接在链表上进行查找、插入会十分的麻烦。所以<code>mm_struct</code>当中有一个<code>rb_root</code>结构，它把所有的线性区组织了起来。<br>我们知道，内存的管理是由<code>page</code>作为一个最小单元的，那么页和线性区是什么关系呢？每个线性区都是一组连续的页构成的。<code>vm_flags</code>中存放的启示就是和页相关的信息：比如这个页的读写权限，是否可以共享，是否映射一个可执行文件等。<code>vm_page_prot</code>会被用来初始化一个新的页表项的值。<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/%E7%BA%BF%E6%80%A7%E5%8C%BA.gif?raw=true" alt="">  </p>
+<h4 id="线性区的查找、分配、释放"><a href="#线性区的查找、分配、释放" class="headerlink" title="线性区的查找、分配、释放"></a>线性区的查找、分配、释放</h4><p>假设给了一个虚拟地址addr，如何找到对应的vm_area_struct呢？这就需要在<code>rb_root</code>红黑树进行相应的搜索。<code>find_vma</code>函数就完成了这个工作，不过它会首先check之前最后访问的线性区，如果不在这个缓存中，再进行红黑树的查找。<code>get_unmapped_area</code>则会获取一个满足要求的空闲线性区。  </p>
+<p>线性区的分配调用了<code>do_mmap</code>函数（在内核符号表中也能查到）。实际上我们所调用的<code>mmap</code>最后都会走向这个函数。</p>
+<pre><code>unsigned long do_mmap(struct file *file, unsigned long addr,
+        unsigned long len, unsigned long prot,
+        unsigned long flags, vm_flags_t vm_flags,
+        unsigned long pgoff, unsigned long *populate,
+        struct list_head *uf)
+</code></pre><p>如果指定一个<code>file</code>，则是把文件映射到内存中去，<code>offset</code>是偏移量；<code>addr</code>是希望从哪个地址开始查找一个空闲的区间。<code>len</code>则是线性区的长度。<code>vm_flags</code>指定了线性区的标志，而<code>flags</code>则是页的权限。具体的映射相关的工作由<code>mmap_region</code>函数来完成。  </p>
+<p>（1）参数的检查和设置；<br>（2）获取新线性区的线性地址区间<code>get_unmmaped_area</code>；<br>（3）检查是否超过了地址空间的限制；<br>（4）如果有必要，会把旧的页映射关系给清除掉；<br>（5）如果可以，调用<code>vma_merge</code>直接把原来的vma进行拓展；<br>（6）调用<code>kmem_cache_alloc()</code>位新的线性区分配一个<code>vma_area_struct()</code>；<br>（7）调用<code>vma_link()</code>把新的线性区插入到线性区链表、红黑树中；  </p>
+<p>而释放线性地址区间是由<code>do_munmap()</code>来完成的。它可能会涉及把一个线性区拆分为两个较小区的操作，也即<code>split_vma</code>所完成的工作。  </p>
+<h4 id="缺页异常的处理"><a href="#缺页异常的处理" class="headerlink" title="缺页异常的处理"></a>缺页异常的处理</h4><p>缺页异既可能是由进程地址空间还没有分配物理页框引起的，又可能是由变成错误所引起的异常。所以linux的缺页异常处理，必须能够对各种情况进行处理，而我们前面所说的vm_area_struct正方便了这个处理的过程。<code>do_page_fault</code>是缺页中断的服务程序，它把引起缺页的线性地址和当前进程的线性地址比较，并选择适当方法去处理这个异常。<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/pagefualt.gif?raw=true" alt="">  </p>
+<p>缺页异常之所以复杂，是因为它涉及到内核态、用户态、中断等内容。<code>do_page_fault</code>接受两个参数：<code>pt__regs *regs</code>和<code>unsigned long error_code</code>。前者是异常发生时，寄存器的值；而error_code则说明了异常产生的状态：（1）访问了不存在的页（2）由读访问或执行访问引起（3）异常发生在内核态或用户态。这里，<code>do_page_fault</code>首先获取cr2寄存器的值，也即异常发生的地址，然后调用<code>__do_page_fault</code>。  </p>
+<pre><code>static noinline void
+__do_page_fault(struct pt_regs *regs, unsigned long error_code,
+    unsigned long address)
+{
+struct vm_area_struct *vma;
+struct task_struct *tsk;
+struct mm_struct *mm;
+int fault, major = 0;
+unsigned int flags = FAULT_FLAG_ALLOW_RETRY | FAULT_FLAG_KILLABLE;
+
+tsk = current;
+mm = tsk-&gt;mm;
+
+//mmio不应该发生缺页
+if (unlikely(kmmio_fault(regs, address)))
+    return;
+
+//缺页异常发生在内核态
+if (unlikely(fault_in_kernel_space(address))) {
+    if (!(error_code &amp; (PF_RSVD | PF_USER | PF_PROT))) {
+        //缺页是否发生在vmalloc区
+        //主要从内核页表向进程页表同步数据
+        if (vmalloc_fault(address) &gt;= 0)
+            return;
+
+        if (kmemcheck_fault(regs, address, error_code))
+            return;
+    }
+
+    //由陈旧TLB造成的异常，TLB没有flush，就flush TLB
+    if (spurious_fault(error_code, address))
+        return;
+
+    return;
+}
+
+//这里是内核出现错误的情况
+if (unlikely(smap_violation(error_code, regs))) {
+    bad_area_nosemaphore(regs, error_code, address, NULL);
+    return;
+}
+
+//异常处于用户态
+
+//处于中断，没有用户上下文，属于错误情况
+if (unlikely(faulthandler_disabled() || !mm)) {
+    bad_area_nosemaphore(regs, error_code, address, NULL);
+    return;
+}
+
+//开中断，因为cr2已经被保存了
+if (user_mode(regs)) {
+    local_irq_enable();
+    error_code |= PF_USER;
+    flags |= FAULT_FLAG_USER;
+} else {
+    if (regs-&gt;flags &amp; X86_EFLAGS_IF)
+        local_irq_enable();
+}
+
+//读取产生异常的原因  
+if (error_code &amp; PF_WRITE)
+    flags |= FAULT_FLAG_WRITE;
+if (error_code &amp; PF_INSTR)
+    flags |= FAULT_FLAG_INSTRUCTION;
+
+
+if (unlikely(!down_read_trylock(&amp;mm-&gt;mmap_sem))) {
+    //异常发生在内核上下文，只能是异常表中预先定义好的异常
+    if ((error_code &amp; PF_USER) == 0 &amp;&amp;
+        !search_exception_tables(regs-&gt;ip)) {
+        bad_area_nosemaphore(regs, error_code, address, NULL);
+        return;
+    }
+retry:
+    //如果在用户态、或者异常表中有对应的处理，说明不是内核异常
+    down_read(&amp;mm-&gt;mmap_sem);
+} else {
+    might_sleep();
+}
+
+//在当前进程地址空间中，寻找发生异常的地址对应的VMA
+vma = find_vma(mm, address);
+//没有找到？说明是一个错误情况，要发出信号
+if (unlikely(!vma)) {
+    bad_area(regs, error_code, address);
+    return;
+}
+//确认地址在有效的范围之内，是一个正常的缺页异常
+if (likely(vma-&gt;vm_start &lt;= address))
+    goto good_area;
+//异常不是堆栈区紧挨的区且没有VMA
+if (unlikely(!(vma-&gt;vm_flags &amp; VM_GROWSDOWN))) {
+    bad_area(regs, error_code, address);
+    return;
+}
+
+if (error_code &amp; PF_USER) {
+    //超过了栈顶的范围
+    if (unlikely(address + 65536 + 32 * sizeof(unsigned long) &lt; regs-&gt;sp)) {
+        bad_area(regs, error_code, address);
+        return;
+    }
+}
+
+//需要拓展堆栈的情况
+if (unlikely(expand_stack(vma, address))) 
+    bad_area(regs, error_code, address);
+    return;
+}
+
+//终于，是一个正常的缺页异常，要进行调页
+good_area:
+if (unlikely(access_error(error_code, vma))) {
+    bad_area_access_error(regs, error_code, address, vma);
+    return;
+}
+
+//分配物理内存，正常的处理函数
+//1:请求调页
+//2:COW
+//3:页在交换分区
+fault = handle_mm_fault(vma, address, flags);
+major |= fault &amp; VM_FAULT_MAJOR;
+
+//发送信号
+up_read(&amp;mm-&gt;mmap_sem);
+if (unlikely(fault &amp; VM_FAULT_ERROR)) {
+    mm_fault_error(regs, error_code, address, vma, fault);
+    return;
+}
+
+//兼容环境的检查
+check_v8086_mode(regs, address, tsk);
+}
+</code></pre><p>可以看到，在处理正常的缺页异常之前，linux实际上已经做了很多检查了。<code>handle_mm_fault()</code>中，进一步调用了<code>__hanle_mm_fault()</code>。这个函数进行了一些页表的计算工作，然后把工作交给了<code>handle_pte_fualt</code>来处理。这是由于pte是最后一级页表项了，它的处理自然要特殊一些：  </p>
+<pre><code>static int handle_pte_fault(struct vm_fault *vmf)
+{
+    pte_t entry;
+
+    if (unlikely(pmd_none(*vmf-&gt;pmd))) {
+        //暂时不填充pte，也许会申请大页
+        vmf-&gt;pte = NULL;
+    } else {
+        if (pmd_devmap_trans_unstable(vmf-&gt;pmd))
+            return 0;                
+
+        //设置pte
+        vmf-&gt;pte = pte_offset_map(vmf-&gt;pmd, vmf-&gt;address);
+        vmf-&gt;orig_pte = *vmf-&gt;pte;
+
+        barrier();
+        if (pte_none(vmf-&gt;orig_pte)) {
+            pte_unmap(vmf-&gt;pte);
+            vmf-&gt;pte = NULL;
+        }
+    }
+
+    //页表项不存在的情况
+    //如果是非匿名页，那么就要把文件映射的内容读入映射页
+    //如果是匿名页（堆栈），则分配全0的页
+    if (!vmf-&gt;pte) {
+        if (vma_is_anonymous(vmf-&gt;vma))
+            return do_anonymous_page(vmf);
+        else
+            return do_fault(vmf);
+    }
+
+    //如果页不在内存中，但是页表项存在，说明这个页被换出了，现在应被换入
+    if (!pte_present(vmf-&gt;orig_pte))
+        return do_swap_page(vmf);
+
+    vmf-&gt;ptl = pte_lockptr(vmf-&gt;vma-&gt;vm_mm, vmf-&gt;pmd);
+    spin_lock(vmf-&gt;ptl);
+    entry = vmf-&gt;orig_pte;
+    if (unlikely(!pte_same(*vmf-&gt;pte, entry)))
+        goto unlock;
+
+    //写时复制的情况，这时要把页标识为脏页
+    //如果有多个进程拥有这个页，那么写时复制就是有必要的
+    //此时分配新的页框，并把内容复制到新的页框中去
+    if (vmf-&gt;flags &amp; FAULT_FLAG_WRITE) {
+        if (!pte_write(entry))
+            return do_wp_page(vmf);
+        entry = pte_mkdirty(entry);
+    }
+
+    entry = pte_mkyoung(entry);
+
+    if (ptep_set_access_flags(vmf-&gt;vma, vmf-&gt;address, vmf-&gt;pte, entry,
+                vmf-&gt;flags &amp; FAULT_FLAG_WRITE)) {
+        update_mmu_cache(vmf-&gt;vma, vmf-&gt;address, vmf-&gt;pte);
+    } else {
+                    if (vmf-&gt;flags &amp; FAULT_FLAG_WRITE)
+            flush_tlb_fix_spurious_fault(vmf-&gt;vma, vmf-&gt;address);
+    }
+
+unlock:
+    pte_unmap_unlock(vmf-&gt;pte, vmf-&gt;ptl);
+    return 0;
+}
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/04/25/深入理解进程地址空间/" data-id="cj5nn6mm8003vo43ff2d5jks8" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-深入理解内存管理" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/04/20/深入理解内存管理/" class="article-date">
+  <time datetime="2017-04-20T03:40:00.000Z" itemprop="datePublished">2017-04-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/20/深入理解内存管理/">深入理解内存管理</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="页框管理与伙伴系统"><a href="#页框管理与伙伴系统" class="headerlink" title="页框管理与伙伴系统"></a>页框管理与伙伴系统</h4><p>这里的内存管理，指的是内核如何分配（为自己）动态内存。linux把页框作为一个管理的基本单位，用数据结构<code>page</code>对其进行描述。而所有的<code>page</code>则放在一个<code>mem_map</code>数组当中，进行管理。但计算机存在着一些限制，因此linux把内存划分为了几个管理区，包括ZONE_DMA、ZONE_NORMAL、ZONE_HIGHMEM等；而对页框的分配和释放，也是按照分区来进行管理的：<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/%E9%A1%B5%E6%A1%86%E5%88%86%E9%85%8D.jpg?raw=true" alt=""><br>在每个分区之内，页框由<strong>伙伴系统</strong>来进行处理。伙伴系统主要是为了解决“外碎片”的问题：当请求和释放不断发生的时候，就很有可能导致操作系统中发生存在空闲的小块页框，但是没有大块连续页框的问题。伙伴系统把空闲页分组成11个块链表，分别包含1，2，4，6,…,1024个连续的页框。每当有两个连续的大小为b的页框出现时（并且起始地址满足一个倍数条件），它们就被视为伙伴，伙伴系统就会把它们合并成大小为2b的页框。在页分配时，如果当前大小b的<code>free_list</code>中找不到空闲的页框，就会从2b的链表中寻找空闲页块，并且进行分割，将它分为两个大小为b的页块。<br>每个伙伴系统，管理的是<code>mem_map</code>的一个子集。在管理区描述符中，有一个<code>struct free_area</code>，它用来辅助伙伴系统：  </p>
+<pre><code>struct free_area {
+    struct list_head        free_list[MIGRATE_TYPES];
+    unsigned long           nr_free;
+}; 
+</code></pre><p><code>free_list</code>是用来连接空闲页的链表数组，而nr_free则是当前内存区中空闲页块的个数。  </p>
+<h4 id="反碎片"><a href="#反碎片" class="headerlink" title="反碎片"></a>反碎片</h4><p>当然，上面说到的只是最基本的伙伴系统，但它并没有完全解决碎片的问题。linux中还采用了一种反碎片的机制，它根据已内存页的类型来工作：<br>（1）不可移动页：在内存中有固定的位置，不能移动到其他地方（kernel的大多数内存页）<br>（2）可移动页：用户空间的页，只要更新页表项即可<br>（3）可回收页：在内存缺少时，可以进行回收的页，例如从文件映射的页<br>（以及一些其他类型）<br>如果根据页的可移动性，将其进行分组，避免可回收页和不可回收页的交叉组织（例如在可移动页中间有不可移动页），并且在某个类型的页分配失败时，会从备用列表中寻找相应的页，这个顺序定义在page_alloc.c当中。 </p>
+<h4 id="内存分配方法"><a href="#内存分配方法" class="headerlink" title="内存分配方法"></a>内存分配方法</h4><p>分配内存通常可以调用一下几个函数：<br>alloc_pages/alloc_page：分配若干个页，返回第一个struct page<br>get_zeroed_page：分配一个struct page，并且将内存填0<br>get_free_pages/get_free_page：返回值是虚拟地址<br>get_dma_pages：分配一个适用于DMA的页<br>还有一些基于伙伴系统的方法，它们可能会借助页表进行映射，例如vmalloc，kmalloc。<br>内存分配时，通常要指定一个掩码<code>gfp_mask</code>，它定义了页所位于的区域、页在I/O和vfs上的操作，以及对分配操作的规定（阻塞、I/O、文件系统等）。</p>
+<p>释放不再使用的页，同样可以采用struct page或者虚拟地址作为参数：<br>free_page/free_pages：以struct page为参数<br>__free_page/__free_pages：以虚拟地址为参数  </p>
+<h4 id="页框高速缓存"><a href="#页框高速缓存" class="headerlink" title="页框高速缓存"></a>页框高速缓存</h4><p>（为了避免混淆，我把所有硬件的高速缓存称为cache）<br>内核经常会请求、释放单个页框，为了提高系统的性能，每个内存管理区都有一个每CPU的页框高速缓存，它包含一些预先分配的页框，能够用来满足CPU发出的单个页框请求。注意，这个页框高速缓存，和硬件上的cache的概念不同，但它们有一点小小的关联。由于每个CPU有自己的cache，那么假设一个进程刚刚释放了一个页，那么这个页就有很大概率还在cache当中。页框高速缓存保存热页（刚释放的，很可能在cache当中的页）和冷页（释放时间比较长的页）。其实对于分配热页来说，很好理解：用在cache中的页可以减少开销；但如果说是DMA设备使用，就要分配冷页了，因为它不会用到cache。  </p>
+<h4 id="slab分配器"><a href="#slab分配器" class="headerlink" title="slab分配器"></a>slab分配器</h4><p>前面所说的伙伴系统，是用“页”为单位来进行，显然太大了；所以需要把页进一步拆分，变成更小的单位。slab分配器不仅仅提供小内存块，它还作为一个缓存使用，主要是针对那些经常分配、释放的对象：例如内核中的<code>fs_struct</code>数据结构，可能经常会分配和释放；那么slab就将释放的内存块保存在一个列表里面，而不是返回给伙伴系统。这样一来，再次分配新的内存块时，就不需要经过伙伴系统了，而且这些内存块还很可能在cache里面。<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/slab%E5%88%86%E9%85%8D%E5%99%A8.png?raw=true =500x400" alt=""><br>slab分配器包含几个部分：高速缓存<code>kmem_cache</code>，slab，以及slab中所包含的对象。每个高速缓存只负责一种对象类型，它由多个<code>slab</code>构成。<code>kmem_cache</code>当中有三个slab链表，分别对应用尽的slab、部分空闲的slab，和空闲的slab，还有一个<code>array_cache *</code>数组，它保存cpu最后释放的那些很可能处于“热”状态的对象。<br>而对于每个slab，则组织了一系列的object；它包含了空闲对象，正在使用的对象。那么为什么不直接用<code>kmem_cache</code>管理对象，要增加出<code>slab</code>这一层呢？这明显是为了更好的管理内存：通过<code>slab</code>，可以让内存的使用更平均，或者能够更好的管理空闲的页。<br>在新版本的内核中，<code>slab</code>由<code>kmem_cache_node</code>来管理，它包含3个链表<code>slabs_partial</code>，<code>slabs_full</code>和<code>slabs_free</code>。每个slab是一个或多个连续页帧的集合，每个objects由链表串联，现在slab中的object直接由<code>page</code>中的<code>freelist</code>来管理了。  </p>
+<pre><code>struct kmem_cache_node {
+spinlock_t list_lock;
+
+#ifdef CONFIG_SLAB
+struct list_head slabs_partial;    /* partial list first, better asm code */
+struct list_head slabs_full;
+struct list_head slabs_free;
+unsigned long free_objects;
+unsigned int free_limit;
+unsigned int colour_next;    /* Per-node cache coloring */
+struct array_cache *shared;    /* shared per node */
+struct alien_cache **alien;    /* on other nodes */
+unsigned long next_reap;    /* updated without locking */
+int free_touched;        /* updated without locking */
+#endif
+
+#ifdef CONFIG_SLUB
+unsigned long nr_partial;
+struct list_head partial;
+#ifdef CONFIG_SLUB_DEBUG
+atomic_long_t nr_slabs;
+atomic_long_t total_objects;
+struct list_head full;
+#endif
+#endif
+
+};
+</code></pre><p><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/slab%E7%AE%A1%E7%90%86.png?raw=true =500x350" alt="">  </p>
+<p>值得一提的是，<code>kmalloc</code>的实现也是也是基于slab来实现的，它包含一个数组，存放了一些用于不同长度的slab缓存，这也就是我们所说的“内存池”。  </p>
+<h4 id="slab着色"><a href="#slab着色" class="headerlink" title="slab着色"></a>slab着色</h4><p>slab着色与颜色并没有关系，它要解决的问题与硬件高速缓存有关。硬件高速缓存倾向于把大小一样的对象放在高速缓存内的相同便宜位置；而不同slab当中相同偏移量的对象，就会映射在高速缓存的同一行当中；这样高速缓存可能就会频繁的对同一高速缓存行进行更新，从而造成性能损失。<br>slab着色就是给每个slab分配一个随机的“颜色”，把它作为slab中对象需要移动的特定偏移量来使用，这样对象就会被放置到不同的缓存行。  </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/04/20/深入理解内存管理/" data-id="cj5nn6mm1003lo43fj40go4tt" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-深入理解进程与调度" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/04/15/深入理解进程与调度/" class="article-date">
+  <time datetime="2017-04-15T13:40:00.000Z" itemprop="datePublished">2017-04-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/15/深入理解进程与调度/">深入理解进程与调度</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="进程、线程、轻量级进程"><a href="#进程、线程、轻量级进程" class="headerlink" title="进程、线程、轻量级进程"></a>进程、线程、轻量级进程</h4><p>进程是程序执行的一个实例，也是操作系统分配资源（CPU、内存）的对象，而线程是CPU执行和调度的最小单位。轻量级进程是linux中实现线程的方式，其本质也是一个进程，它与一个内核线程相关联，因此可以像普通程序一样被调度，但它只有最小的执行和调度信息（与普通程序比很“轻量”）。<br>在linux内核中，并没有线程的概念，每一个执行的实体，都是用linux的PCB：  <code>task_struct</code>来表示，它包含了进程的所有信息。进程的状态、内存、文件系统等信息，都放在这个结构体当中。  </p>
+<h4 id="进程创建"><a href="#进程创建" class="headerlink" title="进程创建"></a>进程创建</h4><p>在linux当中，进程的创建都是通过子进程的方式来实现的。当然，并不是每个子进程都需要拷贝父进程的所有资源，因此linux也提供了三种不同的机制，来实现进程创建的问题：<br>（1）写时复制技术，允许父子进程读相同的物理页，只要两者中有一个试图写一个物理页时，就把这个页的内容拷贝到一个新的物理页中去，并分配给正在写的进程。<br>（2）轻量级进程允许父子进程共享内核中的页表、打开文件表等信息。<br>（3）vfork允许子进程共享副进程的内存地址空间，并通过阻塞父进程的方式防止数据被父进程修改。<br>linux中，通过这几个系统调用来完成进程的创建：<code>fork</code>、<code>vfork</code>、<code>clone</code>。那么为什么它们有什么区别呢？<br>sys_fork：创造的子进程是父进程的完整副本，复制所有的内容，运用了写时复制技术；<br>sys_vfork：创造的进程和副进程共享内存地址空间，并且子进程先于副进程运行；<br>sys_clone：创建线程，pthread库会间接地调用它；  </p>
+<h4 id="进程调度"><a href="#进程调度" class="headerlink" title="进程调度"></a>进程调度</h4><p>进程调度，首先要对进程对状态有一个基本的了解。<code>task_struct</code>当中，<code>state</code>标识了一个进程的运行状态。  </p>
+<p><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E8%BF%9B%E7%A8%8B/%E8%BF%9B%E7%A8%8B%E7%8A%B6%E6%80%81.jpg?raw=true" alt=""></p>
+<p>linux中的进程调度，采用的是一种多级反馈队列的算法。首先，在linux中，进程可以被分为三类：（1）需要经常跟用户交互的<strong>交互式进程</strong>；（2）不必与用户交互，经常在后台运行的<strong>批处理进程</strong>；（3）有很强调度需要的实时进程。根据进程类型的不同，linux用多级队列的形式，去组织待调度的程序，并且动态地调整进程的优先级。进程的调度按照这样一个优先级进行：SCHED_FIFO，SCHED_RR，SHED_NORMAL。<br>那么进程的优先级是如何表示的呢？每个进程都有一个静态优先级，和一个动态优先级。静态优先级决定了进程的基本时间片；而动态优先级是调度新进程来运行时，所使用的数，它会根据进程的睡眠时间来进行改变。除此之外linux还用它来判断一个进程是交互式进程，还是批处理进程。<br>在linux当中，所有处于TASK_RUNNING状态（运行，或者就绪）的进程，会被放在一个<code>rq</code>（运行队列runqueue）中，它是一个每CPU变量。  </p>
+<h4 id="调度过程"><a href="#调度过程" class="headerlink" title="调度过程"></a>调度过程</h4><p>进程的调度，是通过时钟来触发的。时钟会调用一个函数：<code>scheduler_tick()</code>。这个函数会通过调用，<code>curr-&gt;sched_class-&gt;task_tick</code>，也即根据当前进程的调度器类型，进行调度：如果是实时的进程，那么根据它调度的类型为SCHED_RR/SCHED_FIFO进行处理；如果是公平队列中的进程，就根据动态优先级和时间片的情况进行调度。<br><code>schedule()</code>函数完成具体的调度过程。这个函数可以在进程不能获得必需的资源时直接调用，也可以在进程用完时间片，或者被抢占时延迟调用。<br>如果说要唤醒一个睡眠或停止的进程，则会调用<code>try_to_wake_up()</code>函数，它把进程状态设置为TASK_RUNNING，并把进程插入<code>rq</code>。  </p>
+<h4 id="进程切换"><a href="#进程切换" class="headerlink" title="进程切换"></a>进程切换</h4><p>在<code>schedule()</code>进行调度时，会发生进程的切换。该过程包括两部分：切换页全局目录和切换内核态堆栈与硬件上下文。<br>这里，我们先关注第二部分：在进程切换时，内核态的堆栈和硬件上下文发生了什么。这个工作由<code>switch_to()</code>宏来完成，它是一段汇编代码，并且接受3个参数：prev，next和last，它们都是<code>task_struct</code>。这里last是一个输出的变量，它用来保存切换之前的进程<code>task_struct</code>。这时因为在切换之后，<code>ebp</code>的值变了，所以prev和next都变成新的进程中的值了，这时就要把prev给修改掉，因此<code>schedule()</code>中调用的实际上是：  </p>
+<pre><code>switch_to(prev, next, prev);
+</code></pre><p>这里，把<code>next</code>中的栈地址装入<code>rsp</code>，就完成了切换。因为内核在next的内核栈上开始了操作。<strong>进程切换的一部分就是内核栈的切换</strong>；随后，内核跳转到<code>__switch_to()</code>函数继续执行。这个函数从完成保存和加载FPU、MMX、XMM、段寄存器（<strong>以及硬件上下文的切换</strong>），将TLS装入GDT表等一系列任务，最后返回schedule()中继续执行；在此之后进程还要修改<code>rq</code>的内容。  </p>
+<h4 id="补充：僵死进程-守护进程"><a href="#补充：僵死进程-守护进程" class="headerlink" title="补充：僵死进程/守护进程"></a>补充：僵死进程/守护进程</h4><p>僵死进程：在进程退出时，它并没有真正的被销毁，其进程描述符还在内核中；必须由父进程调用<code>wait()</code>或者<code>waitpid()</code>系统调用，来为它收尸。如果说父进程没有做这件事情，那么进程描述符就会一直在内核中，他就是一个僵死进程。<br>守护进程：linux系统中常见的后台服务进程，它和任何终端无关，脱离了终端的控制；它也是一个常见的孤儿进程，其父进程是init。  </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/04/15/深入理解进程与调度/" data-id="cj5nn6mm7003so43fi1x3xyv5" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-深入理解I:O体系结构（二）" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/04/11/深入理解I:O体系结构（二）/" class="article-date">
+  <time datetime="2017-04-11T03:40:00.000Z" itemprop="datePublished">2017-04-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/11/深入理解I:O体系结构（二）/">深入理解I/O体系结构（二）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="块设备的驱动"><a href="#块设备的驱动" class="headerlink" title="块设备的驱动"></a>块设备的驱动</h4><p>和字符设备类似，操作系统中的块设备，也是以文件的形式来访问。这里有一个很拗口的问题：磁盘是一个块设备，块设备有一个块设备文件。那么访问块设备文件和访问普通的磁盘上的文件有什么关系呢？<br>不论是块设备文件还是普通的文件，它们都是通过VFS来统一访问的。只不过对于一个普通文件，它可能已经在RAM中了（高速缓存机制），因此它的访问可能会直接在RAM中进行；但如果说要修改磁盘上的内容，或者文件内容不在RAM中，则也会间接地，通过块设备文件进行访问。这个驱动模型可以用这样一个图表示：<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E7%A3%81%E7%9B%98IO/%E5%9D%97%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8.png?raw=true" alt=""><br>这里我们只考虑最底层的情况：内核从块设备读取数据。为了从块设备中读取数据，内核必须知道数据的物理位置，而这正是<strong>映射层</strong>的工作。映射层的工作包括两步：（1）根据文件所在文件系统的块，将文件拆分成块，然后内核能够确定请求数据所在的块号；（2）映射层调用文件系统具体的函数，找到数据在磁盘上的位置，也就是完成文件块号，到逻辑块号的映射关系。<br>随后的工作在<strong>通用块层</strong>进行，内核在这一层，启动I/O操作。通常一个I/O操作对应一组连续的块，我们把它称为<code>bio</code>，它用来搜集底层需要的信息。<br><strong>I/O调度层</strong>负责根据内核中的各种策略，把待处理的I/O数据传送请求，进行归类。它的作用是把物理介质上相邻的数据请求，进行合并，一并处理。<br>最后一层也就是通过块设备的驱动来完成了，它向I/O接口发送适当的命令，从而进行实际的数据传送。</p>
+<h4 id="通用块层"><a href="#通用块层" class="headerlink" title="通用块层"></a>通用块层</h4><p>通用块层负责处理所有块设备的请求，其核心数据结构就是<code>bio</code>。它代表<strong>一次块设备I/O请求</strong>。</p>
+<pre><code>struct bio {
+struct bio        *bi_next;        //请求队列中的下一个bio
+struct block_device    *bi_bdev;    //块设备描述符指针
+unsigned long        bi_flags;    /* status, command, etc */
+unsigned long        bi_rw;        //rw位
+
+struct bvec_iter    bi_iter;    
+
+unsigned int        bi_phys_segments;//合并后有多少个段
+
+unsigned int        bi_seg_front_size;
+unsigned int        bi_seg_back_size;
+
+atomic_t        bi_remaining;//剩余的bio_vec
+
+bio_end_io_t        *bi_end_io;//bio结束的回调函数
+
+void            *bi_private;
+
+unsigned short        bi_vcnt;    //bio中biovec的数量
+
+unsigned short        bi_max_vecs;//最多能有多少个
+
+atomic_t        bi_cnt;        //结构体的使用计数
+
+struct bio_vec        *bi_io_vec;    //bio_vec数组
+};  
+</code></pre><p>在这个数据结构中，还包含了一个<code>bio_vec</code>。这是什么意思呢？在linux中，相邻数据块被称为一个段，每个<code>bio_vec</code>对应一个内存页中的段。在io操作期间，bio是会一直更新的，其中的<code>bi_iter</code>用来在数组中遍历，按每个段来执行下一步的操作。<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E7%A3%81%E7%9B%98IO/biovec.gif?raw=true" alt="">  </p>
+<p>那么当通用块层收到一个I/O请求操作时，会发生什么呢？首先内核会为这次操作分配<code>bio</code>描述符，并对它进行填充。随后通用块层会调用<code>generic_make_request</code>，这个函数的作用很明确：它会进行一系列检查和设置，保证bio中的信息是<strong>针对整个磁盘，而不是磁盘分区的</strong>；随后获取这个块设备相关的请求队列q，调用<code>q-&gt;make_request_fn</code>，把bio插入请求队列中去。  </p>
+<h4 id="I-O调度层"><a href="#I-O调度层" class="headerlink" title="I/O调度层"></a>I/O调度层</h4><p>在块设备上，每个I/O请求操作都是异步处理的，通用块层的请求会被加入块设备的请求队列中，每个块设备都会单独地进行I/O的调度，这样能够有效提高磁盘的性能。<br>前面提到，通用块层会调用一个<code>q-&gt;make_request_fn</code>，向I/O调度程序发送一个请求，该函数会进一步调用<code>__make_request()</code>。这个函数的目的，就是把<code>bio</code>放进请求队列当中：（1）如果请求队列是空的，就构造一个新的请求插入；（2）如果请求队列不是空的，但是<code>bio</code>不能合并（不能合并到某个请求的头和尾），也构造一个新的请求插入；（3）请求队列不是空的，并且<code>bio</code>可以合并，就合并到对应的请求中去。注意，bio，请求和请求队列的关系如下：  </p>
+<pre><code>-- request_queue
+        |-- request1
+                |-- bio0
+        |-- request2
+                |-- bio1
+                |-- bio2
+</code></pre><p>而I/O的调度，就是对请求队列进行排序，针对磁盘的特点，降低寻道的次数。这里说说几个常见的算法：<br>（1）CFQ完全公平队列：默认的调度算法，完全公平排队。每个进程/线程都单独创建一个队列，并且用上面提到的策略进行管理。队列间采用时间片的方式来分配I/O。<br>（2）Deadline最后期限算法：在电梯调度的基础上，根据读写请求的“最后期限”进行排序，并通过读期限短于写期限来保证写操作不被饿死。<br>（3）预期I/O算法：与最后期限类似，但是在读操作时，会预先判断当前的进程是否马上会有读操作，并且优先地进行处理。<br>（4）NOOP：适用于固态硬盘，不进行任何优化。  </p>
+<p> 总而言之，I/O调度层的作用，就是把请求的队列重新排序，并逐个交给块设备驱动程序进行处理。</p>
+<h4 id="块设备驱动程序"><a href="#块设备驱动程序" class="headerlink" title="块设备驱动程序"></a>块设备驱动程序</h4><p>I/O调度层排序好的请求，会由块设备的驱动程序来处理。同样，块设备也遵循着我们前面提到的驱动程序模型：块设备对应一个<code>device</code>，而驱动程序对应了一个<code>device_driver</code>。对于块设备来说，驱动程序也要通过<code>register_blkdev()</code>注册一个设备号。随后，驱动程序要初始化<code>gendisk</code>描述符，以及它所包含的设备操作表<code>fops</code>。在此之后，是“请求队列”的初始化，以及中断程序的设置：要为设备注册IRQ线。最后要把磁盘注册到内核（<code>add_disk</code>）,并把它激活。<br>当一个块设备文件被<code>open()</code>时，内核同样也要为它初始化操作。对于块设备来说，其默认的文件操作如下：</p>
+<pre><code>const struct file_operations def_blk_fops = {
+.open        = blkdev_open,
+.release    = blkdev_close,
+.llseek        = block_llseek,
+.read        = new_sync_read,
+.write        = new_sync_write,
+.read_iter    = blkdev_read_iter,
+.write_iter    = blkdev_write_iter,
+.mmap        = generic_file_mmap,
+.fsync        = blkdev_fsync,
+.unlocked_ioctl    = block_ioctl,
+#ifdef CONFIG_COMPAT
+.compat_ioctl    = compat_blkdev_ioctl,
+#endif
+.splice_read    = generic_file_splice_read,
+.splice_write    = iter_file_splice_write,
+};
+</code></pre><p><code>dentry_open()</code>方法会调用<code>blkdev_open()</code>。它（1）首先会获取块设备的描述符：如果块设备已经打开，则可以通过inode-&gt;i_bdev直接获取，否则则需要根据设备号去查找块设备描述符。（2）获取块设备相关的<code>gendisk</code>地址，<code>get_gendisk</code>是通过设备号来找到gendisk的。（3）如果是第一次打开块设备，则要根据它是整盘还是分区，进行相应的设置和初始化。（4）如果不是第一次打开，只需要按需要执行自定义的<code>open()</code>函数就行了。  </p>
+<h4 id="补充：I-O的监控方式"><a href="#补充：I-O的监控方式" class="headerlink" title="补充：I/O的监控方式"></a>补充：I/O的监控方式</h4><p>（1）轮询：CPU重复检查设备的状态寄存器，直到寄存器的值表明I/O操作已经完成了。<br>（2）中断：设备发出中断信号，告知I/O操作已经完成了，数据放在对应的端口，当数据缓冲满了时，由CPU去取，CPU需要控制数据传输的过程。<br>（3）DMA：由CPU的DMA电路来辅助数据的传输，CPU不需要参与内存和IO之间的传输过程，只需要通过DMA的中断来获取信息。DMA能够在所有数据处理完时才通知CPU处理。  </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/04/11/深入理解I:O体系结构（二）/" data-id="cj5nn6mlz003go43ffinsakih" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-深入理解I:O体系结构（一）" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/04/10/深入理解I:O体系结构（一）/" class="article-date">
+  <time datetime="2017-04-10T03:40:00.000Z" itemprop="datePublished">2017-04-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/10/深入理解I:O体系结构（一）/">深入理解I/O体系结构（一）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="I-O体系结构"><a href="#I-O体系结构" class="headerlink" title="I/O体系结构"></a>I/O体系结构</h4><p>虚拟文件系统利用底层函数，调用每个设备的操作，那么这些操作是如何在设备上执行的，操作系统又是如何知道设备的操作是什么的呢？这些是由操作系统决定的。<br>我们知道，操作系统的工作，是依赖于数据通路的，它们让信息得以在CPU、RAM、I/O设备之间传递。这些数据通路称为<strong>总线</strong>。这就包括数据总线（PCI、ISA、EISA、SCSI等）、地址总线、控制总线。I/O总线，指的就是用于CPU和I/O设备之间通信的<strong>数据总线</strong>。I/O体系的通用结构如图所示：  </p>
+<p><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E7%A3%81%E7%9B%98IO/IO%E7%BB%93%E6%9E%84.png?raw=true =600x400" alt="">  </p>
+<p>那么CPU是如何通过I/O总线和I/O设备交互呢？这首先得从内存和外设的编址方式说起。第一种是“独立编址”，也就是内存和外设分开编址，I/O端口有独立的地址空间，这也被称为<strong>I/O映射方式</strong>。每个连接到I/O总线上的设备，都分配了自己的I/O地址集（在I/O地址空间中），它被称为I/O端口。<code>in</code>、<code>out</code>等指令用语CPU对I/O端口进行读写。在执行其中一条指令时，CPU使用地址总线选择所请求的I/O端口，使用数据总线在CPU寄存器和端口之间传送数据。这种方式编码逻辑清晰，速度快，但空间有限。<br>第二种是“统一编址”，也被称为<strong>内存映射方式</strong>，I/O端口还可以被映射到内存地址空间（这也正是现代硬件设备倾向于使用的方式），这样CPU就可以通过对内存操作的指令，来访问I/O设备，并且和DMA结合起来。这种方式更加统一，易于使用。它实际上使用了<code>ioremap()</code>。<strong>自从PCI总线出现后，不论采用I/O映射还是内存映射方式，都需要将I/O端口映射到内存地址空间</strong>。  </p>
+<p>每个I/O设备的I/O端口都是一组寄存器：控制寄存器、状态寄存器、输入寄存器和输出寄存器。内核会纪录分配给每个硬件设备的I/O端口。    </p>
+<h4 id="设备驱动程序模型"><a href="#设备驱动程序模型" class="headerlink" title="设备驱动程序模型"></a>设备驱动程序模型</h4><p>在内核中，设备不仅仅需要完成相应的操作，还要对其电源管理、资源分配、生命周期等等行为进行统一的管理。因此，内核建立了一个统一的设备模型，提取设备操作的共同属性，进行抽象，并且为添加设备、安装驱动提供统一的接口。它们本身并不代表具体的对象，只是用来维持对象间的层次关系。<br>这里首先要提的是<strong>sysfs</strong>文件系统。和/proc类似，安装于/sys目录，其目的是表现出设备驱动程序模型间的层次关系。在驱动程序模型当中，有三种重要的数据结构（旧版本），自上到下分别是<code>subsystem</code>、<code>kset</code>、<code>kobject</code>。如果要理解这个模型中，每个数据结构的作用，就必须理解它们和操作系统中的什么东西相对应。它们均对应着<strong>/sys中的目录</strong>。<code>kobject</code>是这个对象模型中，所有对象的基类。<code>kset</code>本身首先是一个<code>kobject</code>，而它又承担着一个<code>kobject</code>容器的作用，它把<code>kobject</code>组织成有序的目录；subsys则是更高的一层抽象，它本身首先是一个<code>kset</code>。驱动、总线、设备都能够用设备驱动程序模型中的对象表示。   </p>
+<h4 id="设备驱动程序模型中的组件"><a href="#设备驱动程序模型中的组件" class="headerlink" title="设备驱动程序模型中的组件"></a>设备驱动程序模型中的组件</h4><p>设备驱动程序模型建立在几个基本数据结构之上，它们描述了总线、设备、设备驱动器等等。这里，我们来看看它们的数据结构。首先，<code>device</code>用来描述设备驱动程序模型中的设备。  </p>
+<pre><code>struct device {
+struct device        *parent;//父设备
+struct kobject kobj;        //对应的kobject
+const char        *init_name; //初始化名
+
+const struct device_type *type;//设备的类型
+
+struct mutex        mutex;    //驱动的互斥量
+
+struct bus_type    *bus;        //设备在什么类型的总线
+struct device_driver *driver;    //设备的驱动
+
+void        *driver_data;    //驱动私有数据指针
+struct dev_pm_info    power;
+struct dev_pm_domain    *pm_domain;
+//dma相关变量
+u64        *dma_mask;            
+u64        coherent_dma_mask;    
+unsigned long    dma_pfn_offset;
+struct device_dma_parameters *dma_parms;
+struct list_head    dma_pools;    
+struct dma_coherent_mem    *dma_mem; 
+
+dev_t            devt;    //dev目录下的描述符
+u32            id;    
+
+spinlock_t        devres_lock;
+struct list_head    devres_head;
+
+struct klist_node    knode_class;
+struct class        *class;    //类
+
+void    (*release)(struct device *dev);//释放设备描述符时候的回调函数
+};
+</code></pre><p>首先，可以看到<code>device</code>中包含有一个<code>kobject</code>，还包含有它相关驱动对象。所有的device对象，全部收集在devices_kset中，它对应着/sys/devices中。设备的引用计数则是由kobject来完成的。device还会被嵌入到一个更大的描述符中，例如<code>pci_dev</code>，它除了包含<code>dev</code>之外，还有PCI所特有的一些数据结构。<code>device_add</code>完成了新的device的添加工作。我注意到，<code>error = bus_add_device(dev);</code>，也就是说device的添加会把它和bus关联起来。  </p>
+<hr>
+<p>再来看看驱动程序的结构。其数据结构为<code>device_driver</code>。相对于设备的数据结构来说，它相对较为简单：对于每个设备驱动，都有几个通用的方法，分别用语处理热插拔、即插即用、电源管理、探查设备等。同样，驱动也会被嵌入到一个更大的描述符中，例如<code>pci_driver</code>。  </p>
+<pre><code>struct device_driver {
+const char        *name;        //驱动名
+struct bus_type        *bus;    //总线描述符
+
+struct module        *owner;
+const char        *mod_name;    //模块名
+
+bool suppress_bind_attrs;    /* disables bind/unbind via sysfs */
+
+const struct of_device_id    *of_match_table;
+const struct acpi_device_id    *acpi_match_table;
+
+int (*probe) (struct device *dev);        //探测设备
+int (*remove) (struct device *dev);    //移除设备
+void (*shutdown) (struct device *dev);    //断电方法
+int (*suspend) (struct device *dev, pm_message_t state);//低功率
+int (*resume) (struct device *dev);    //恢复方法
+const struct attribute_group **groups;
+
+const struct dev_pm_ops *pm;    //电源管理的操作
+
+struct driver_private *p;
+};
+</code></pre><p>为什么这里没有<code>kobject</code>呢？它实际上保存在了<code>driver_private</code>当中，这个结构和device_driver是双向链接的。  </p>
+<pre><code>struct driver_private {
+struct kobject kobj;
+struct klist klist_devices;
+struct klist_node knode_bus;
+struct module_kobject *mkobj;
+struct device_driver *driver;
+};  
+</code></pre><p>driver的添加，通过调用<code>driver_register()</code>来完成，它同样包含一个函数：<code>bus_add_driver()</code>，也就是将driver添加到某个bus。  </p>
+<hr>
+<p>再来看看总线的结构。bus是连接device和driver的桥梁，bus中的很多代码，都是为了让device找到driver来设计的。总线的数据结构如下：  </p>
+<pre><code>struct bus_type {
+const char        *name;
+const char        *dev_name;
+struct device        *dev_root;
+struct device_attribute    *dev_attrs;    /* use dev_groups instead */
+const struct attribute_group **bus_groups;
+const struct attribute_group **dev_groups;
+const struct attribute_group **drv_groups;
+//检查驱动是否支持特定设备
+int (*match)(struct device *dev, struct device_driver *drv);    //回调事件，在kobject状态改变时调用
+int (*uevent)(struct device *dev, struct kobj_uevent_env *env);
+//探测设备
+int (*probe)(struct device *dev);
+//从总线移除设备
+int (*remove)(struct device *dev);
+//掉电
+void (*shutdown)(struct device *dev);    
+
+int (*online)(struct device *dev);
+int (*offline)(struct device *dev);
+
+//改变电源状态和恢复
+int (*suspend)(struct device *dev, pm_message_t state);
+int (*resume)(struct device *dev);
+
+const struct dev_pm_ops *pm;
+
+const struct iommu_ops *iommu_ops;
+
+struct subsys_private *p;
+struct lock_class_key lock_key;
+};
+</code></pre><p>同样，总线也有一个<code>subsys_private</code>，它保存了kobject。<code>but_type</code>中定义了一系列的方法。例如，当内核检查一个给定的设备是否可以由给定的驱动程序处理时，就会执行<code>match</code>方法。可以用<code>bus_for_each_drv()</code>和<code>bus_for_each_dev()</code>函数分别循环扫描drivers和device两个链表中的所有元素，来进行match。   </p>
+<h4 id="设备文件"><a href="#设备文件" class="headerlink" title="设备文件"></a>设备文件</h4><p>设备驱动程序使得硬件设备，能以特定方式，响应控制设备的编程接口（一组规范的VFS函数，open，read，lseek，ioctl等），这些函数都是由驱动程序来具体实现的。在设备文件上发出的系统调用，都会由内核转化为对应的设备驱动程序函数，因此设备驱动必须被注册，也即构造一个<code>device_driver</code>，并且加入到设备驱动程序模型中。在注册时，内核会试图进行一次match。注意，这个注册的过程基本<code>driver_register</code>通常不会在驱动中直接调用，但我们但驱动通常都会间接的调用它来完成注册。<br>遵循linux“一切皆文件”的原则，I/O设备同样可以当作设备文件来处理，它和磁盘上的普通文件的交互方式一样，例如都可以通过<code>write()</code>系统调用写入数据。设备文件可以通过<code>mknod()</code>节点来创建，它们保存在/dev/目录下。<br>linux当中，硬件设备可以花费为两种：字符设备和块设备。其中，块设备指的是可以随机访问的设备，例如硬盘、软盘等；而字符设备则指的是声卡、键盘这样的设备。设备文件同样在VFS当中，但它的索引节点没有指向磁盘数据的指针，相反地它对应一个标识符（包含一个主设备号和一个次设备号）。VFS会在设备文件打开时，改变一个设备文件的缺省文件操作，让它去调用和设备相关的操作。</p>
+<h4 id="字符设备驱动程序"><a href="#字符设备驱动程序" class="headerlink" title="字符设备驱动程序"></a>字符设备驱动程序</h4><p>这里我们以字符设备驱动程序为例。首先，字符设备的驱动，在linux系统中，是以<code>cdev</code>结构来表示的：</p>
+<pre><code>struct cdev {
+struct kobject kobj;
+struct module *owner;
+const struct file_operations *ops;
+struct list_head list;    //包括的inode的devices
+dev_t dev;
+unsigned int count;
+};
+</code></pre><p>现在让我们回顾一下inode的数据结构：</p>
+<pre><code>struct inode {
+    ...
+    union {
+    struct pipe_inode_info    *i_pipe;
+    struct block_device    *i_bdev;
+    struct cdev        *i_cdev;
+};
+    ...
+}
+</code></pre><p>我们看到了<code>cdev</code>指针的影子，可见cdev和inode确实是直接相关的。要实现驱动，首先就要对cdev进行初始化，注册字符设备。驱动的安装，首先要分配cdev结构体、申请设备号并初始化cdev。注意，驱动程序是如何和刚才我们所说的设备驱动模型建立联系的呢？实际上在初始化cdev的时候，就调用了<code>kobject_init()</code>，在模型中添加了一个<code>kobject</code>。<br>随后，驱动要注册cdev，也即调用<code>cdev_add()</code>函数。这个工作主要是由<code>kobj_map()</code>来实现的，它是一个数组。对于每一类设备，都有一个全局变量，例如字符设备的<code>cdev_map</code>，块设备的<code>bdev_map</code>。最后要进行硬件资源的初始化。  </p>
+<pre><code>int cdev_add(struct cdev *p, dev_t dev, unsigned count)
+{
+    int error;
+
+    p-&gt;dev = dev;
+    p-&gt;count = count;
+
+    error = kobj_map(cdev_map, dev, count, NULL,
+             exact_match, exact_lock, p);
+    if (error)
+        return error;
+
+    kobject_get(p-&gt;kobj.parent);
+
+    return 0;
+}  
+</code></pre><p>kobj_map的结构如下，它用来保存设备号和kobject的对应关系</p>
+<pre><code>struct kobj_map {
+    struct probe {
+        struct probe *next;
+        dev_t dev;
+        unsigned long range;
+        struct module *owner;
+        kobj_probe_t *get;
+        int (*lock)(dev_t, void *);
+        void *data;
+    } *probes[255];
+    struct mutex *lock;
+};
+</code></pre><p><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E7%A3%81%E7%9B%98IO/kobjmap.jpg?raw=true" alt="">  </p>
+<p>不过到现在为止，我们都还没有说明，程序在访问字符设备时，是如何去调用正确的方法的。我们曾提到过，<code>open()</code>系统调用会改变字符文件对象的f_op字段，将默认文件操作替换为驱动的操作。在字符设备文件创建时，会调用<code>init_special_inode</code>来进行索引节点对象的初始化。其inode的操作(def_chr_fops)只包含一个默认的文件打开操作，也即<code>chrdev_open</code>。它会根据inode，首先利用<code>cdev_map</code>，找到对应的kobject，随后再进一步找到cdev，然后从中提取出文件操作的函数<code>fops</code>，并把它填充到file当中去。    </p>
+<pre><code>static int chrdev_open(struct inode *inode, struct file *filp)
+{
+    const struct file_operations *fops;
+    struct cdev *p;
+    struct cdev *new = NULL;
+    int ret = 0;
+
+    spin_lock(&amp;cdev_lock);
+    p = inode-&gt;i_cdev;
+    if (!p) {
+        struct kobject *kobj;
+        int idx;
+        spin_unlock(&amp;cdev_lock);
+        kobj = kobj_lookup(cdev_map, inode-&gt;i_rdev, &amp;idx);//获取对应的kobject
+        if (!kobj)
+            return -ENXIO;
+        new = container_of(kobj, struct cdev, kobj);
+        spin_lock(&amp;cdev_lock);
+        /* Check i_cdev again in case somebody beat us to it while
+           we dropped the lock. */
+        p = inode-&gt;i_cdev;
+        if (!p) {
+            inode-&gt;i_cdev = p = new;
+            list_add(&amp;inode-&gt;i_devices, &amp;p-&gt;list);//将device加入到cdev的list中去
+            new = NULL;
+        } else if (!cdev_get(p))
+            ret = -ENXIO;
+    } else if (!cdev_get(p))
+        ret = -ENXIO;
+    spin_unlock(&amp;cdev_lock);
+    cdev_put(new);
+    if (ret)
+        return ret;
+
+    ret = -ENXIO;
+    fops = fops_get(p-&gt;ops)
+    if (!fops)
+        goto out_cdev_put;
+
+    replace_fops(filp, fops);//替换file当中的fops      
+    return ret;
+}
+</code></pre><p>这里很奇怪的是，我们并没有看到类似前面提到的<code>driver_register()</code>、<code>device_register()</code>这样的函数。实际上这里并没有真正创建一个设备，而只是说创建了一个接口，所以有这样一个这个问题：<a href="http://blog.csdn.net/luckywang1103/article/details/47860805" target="_blank" rel="external">为什么cdev_add没有产生设备节点？</a>对于这个问题，我们应该理解为<code>cdev</code>和<code>driver/device</code>二者是配套工作的，cdev用来和用户交互，而device则是内核中的结构。<br>另一个问题是，在上面的过程中，似乎没有提及设备文件的创建。实际上，作为一个rookie，那么设备文件常常是用<code>mknod</code>命令手动创建的。当然，linux自然也提供了自动创建的借口，那就是利用udev来实现，调用<code>device_create()</code>函数。<br>当然，这个例子只是为了说明，操作系统的驱动程序是如何工作的，为什么对I/O设备的操作可以抽象成对设备文件的操作，程序在操作I/O文件时，是如何使用正确的操作的。  </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/04/10/深入理解I:O体系结构（一）/" data-id="cj5nn6mlz003eo43fkaezfzos" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-IDAPython-advance1" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/04/05/IDAPython-advance1/" class="article-date">
+  <time datetime="2017-04-05T13:40:00.000Z" itemprop="datePublished">2017-04-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/05/IDAPython-advance1/">IDAPython:进阶（一）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="IDAPython-进阶（一）"><a href="#IDAPython-进阶（一）" class="headerlink" title="IDAPython:进阶（一）"></a>IDAPython:进阶（一）</h4><h4 id="Instruction-feature"><a href="#Instruction-feature" class="headerlink" title="Instruction feature"></a>Instruction feature</h4><p>在IDAPython中，时常可以看到使用<code>insn.get_canon_feature()</code>来获取指令“特性”。这里，<code>instruc_t</code>类中包含有两个变量，<code>name</code>和<code>feature</code>，其中<code>feature</code>是一系列的指令特征位。 </p>
+<h4 id="IDA-SDK"><a href="#IDA-SDK" class="headerlink" title="IDA SDK"></a>IDA SDK</h4><p>IDA SDK分为很多hpp，不过它的文档不是特别友好，这里我把比较重要的header的作用给列出来，方便日后进行分析和使用：  </p>
+<ul>
+<li>area:程序中地址范围的集合，它表示一段连续的地址范围，由起始地址和终止地址来表示，例如程序中的segments就是用area来表示的，它在IDA的数据库当中，是采用B树的形式来保存的。  </li>
+<li>bitrange:用来管理一段连续bits的容器，类似一个数组。  </li>
+<li>bytes:处理byte特性的函数，在程序中，每个byte都被识别成一个32-bit的值，他被IDA称为<code>flags</code>。对于bits和flags，都只能通过特定的函数去修改、访问。flags被保存在*.id1这样的文件当中。  </li>
+<li>diskio:IDA的文件IO函数，通常不使用标准的C来进行I/O，而使用这个hpp当中的函数。  </li>
+<li>entry:处理entry入口的函数，每个entry包含有地址、名称、序号。  </li>
+<li>fixup:处理地址、偏移量的修正等。  </li>
+<li>frame:处理栈桢，包括参数、返回值、保存的寄存器和局部变量等。  </li>
+<li>funcs:处理反汇编程序的函数，函数由多个chunk组成。  </li>
+<li>idp:包含IDP模块的接口，包括有目标的汇编器，以及当前处理器的信息。例如判断一条指令是否为jmp、ret等，都可以使用这种方式。</li>
+<li>lines:处理反汇编text line的生成。</li>
+<li>name:处理命名，给一个特定地址命名等，但是指令和数据的中间是不能命名的。  </li>
+<li>netnode:database的底层接口，程序被以B树的形式保存，而B树的信息则是存放在netnode当中的。  </li>
+<li>offset:用来处理offset的函数，一个操作数可能自身，或者一部分表示了程序中的偏移量。  </li>
+<li>search:中间层的搜索函数，包括寻找数据、代码等。  </li>
+<li>segments:用来和程序中段进行交互的函数，IDA需要程序中的所有地址，属于一个segment(每个地址都必须属于一个segment)，如果地址不属于一个segment，那么这些bytes不能被转换为指令、不能用有名字、不能拥有注释。每个segment都有一个selector。  </li>
+<li>ua:处理程序指令的反汇编。它包含两种函数，第一类是通过kernel来反汇编，第二类是通过IDP模块来反汇编，它们是“helper”。反汇编可以分为三步：分析、仿真、转化为文字。  </li>
+<li>xref:处理交叉引用的情况。包括有CODE和DATA的引用。  </li>
+</ul>
+<h4 id="获取文件名"><a href="#获取文件名" class="headerlink" title="获取文件名"></a>获取文件名</h4><p>SDK提供了两个api，idaapi.get_root_filename能够用来获取当前的文件名，而idaapi.get_input_file_path能够用来获取包含路径的文件名。这两个函数定义在nalt当中。  </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/04/05/IDAPython-advance1/" data-id="cj5nn6mk8001ho43fu940r5sy" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/系统安全/">系统安全</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-IDAPython" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/04/05/IDAPython/" class="article-date">
+  <time datetime="2017-04-05T13:40:00.000Z" itemprop="datePublished">2017-04-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/05/IDAPython/">IDAPython：入门</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="取地址"><a href="#取地址" class="headerlink" title="取地址"></a>取地址</h4><p><code>ScreenEA()</code>和<code>here()</code>是最常用的取地址函数，它们会返回一个整数值。<br><code>MaxEA()</code>和<code>MinxEA()</code>可以用来取最大和最小地址。<br><code>GetDisasm()</code> <code>GetMnem()</code> <code>GetOpand()</code> 可以用来取某个地址中的指令、操作符、操作数等。  </p>
+<h4 id="遍历：Segments，Functions-and-Instructions"><a href="#遍历：Segments，Functions-and-Instructions" class="headerlink" title="遍历：Segments，Functions,and Instructions"></a>遍历：Segments，Functions,and Instructions</h4><p>IDAPython的强大之处在于迭代。从<code>Segments()</code>开始是一个好的选择。这段代码能够遍历所有的segments。</p>
+<pre><code>for seg in idautils.Segments():
+    print idc.SegName(seg),    idc.SegStart(seg),    idc.SegEnd(seg)
+</code></pre><p>同理的，对于Functions的遍历，可以有：</p>
+<pre><code>for func in idautils.Functions():
+    print hex(func), idc.GetFunctionName(func)
+</code></pre><p>这里，<code>Functions()</code>是可以添加范围的，例如<code>Functions(start_addr, end_addr)</code>，而<code>get_func()</code>返回的函数，则还具有<code>startEA</code>和<code>endEA</code>属性，也即起起始和结束地址。这里，<code>get_func()</code>实际上是返回了一个类。<code>dir(class)</code>能够返回这个类中的成员。<br><code>idc.NextFunction(ea)</code>和<code>idc.PrevFunction(ea)</code>能够用来访问毗邻的两个函数。这里，<code>ea</code>只要是某个函数边界中的任何一个地址就可以了。利用这种方式来遍历也存在问题，如果不是函数的话，那么代码块会被IDA跳过。那么如果想在函数中遍历指令怎么办呢？<code>idc.NextHead</code>会帮你找到下一条指令。但这依赖于函数的边界，而且可能被jump影响。更好的方式是使用<code>idautils.FuncItems(ea)</code>，来遍历function当中的地址。<br>一旦知道了一个function，就可以遍历其中的指令。idautils.FuncItems(ea)返回的是一个指向<code>list</code>的迭代器。这个<code>list</code>包含了每一条指令的起始地址。以下是一个综合的应用，它输出一段代码中的非直接跳转。    </p>
+<pre><code>for func in idautils.Functions():
+    flags = idc.GetFunctionFlags(func)
+    if flags &amp; FUNC_LIB or flags &amp; FUNC_THUNK:
+        continue
+    dism_addr = list(idautils.FuncItems(func)) 
+    for line in dism_addr:
+        m = idc.GetMnem(line)
+        if m == &apos;call&apos; or m == &apos;jmp&apos;:
+            op = idc.GetOpType(line, 0) 
+            if op == o_reg:
+                print &quot;0x%x %s&quot; % (line, idc.GetDisasm(line))
+</code></pre><p>这里，<code>GetOpType</code>会返回一个整型值，它能被用来查看一个操作数是否为寄存器，内存引用。  </p>
+<h4 id="Operands"><a href="#Operands" class="headerlink" title="Operands"></a>Operands</h4><p>前面也有提到，<code>GetOpType</code>能够用来获取操作数的类型。一共有这些类型：<br><code>o_void</code>表示不包含操作数<br><code>o_reg</code>表示一个通用寄存器<br><code>o_mem</code>表示直接内存引用<br><code>o_phrase</code>操作数包含基址寄存器+偏移寄存器<br><code>o_displ</code>操作数是由一个寄存器和一个偏移量组成的<br><code>o_imm</code>操作数直接是一个整型数<br><code>o_far</code>和<code>o_near</code>在x86和x86_64下均不常见。指用立即数表示的far/near地址<br><code>idaapi.decode_insn()</code>可用来对某个地址的指令进行解码。而<code>idaapi.cmd</code>则能用来提取指令中的各部分结构。  </p>
+<h4 id="Searching"><a href="#Searching" class="headerlink" title="Searching"></a>Searching</h4><p>前文已经提到了一些搜索的方式，但有些时候可能会需要搜索一些特定的bytes序列，比如<code>0x55 0x8b 0xec</code>，这时就需要利用到<code>FindBinary</code>，对对应的格式进行搜索。其具体形式为<code>FindBinary(ea, flag, searchstr, radix)</code>。这其中，searchstr也即所搜索的pattern。radix是和CPU相关的，可以不写。  </p>
+<pre><code>addr = MinEA()
+for x in range(0,5):
+    addr = idc.FindBinary(addr, SEARCH_DOWN|SEARCH_NEXT, pattern);
+    if addr != idc.BADADDR:
+        print hex(addr), idc.Getdisasm(addr)
+</code></pre><p>与之类似的，还有<code>FindText(ea, flag, y, x, searchstr)</code>，这个函数可以用来搜索一些字符串，例如一些变量中的内容可能是一些特定的字符串，就可以利用这个函数进行搜索。此外，还有<code>isCode()</code>和<code>isData()</code>，<code>isTail()</code>，<code>isUnknown()</code>等函数，来判断一个地址的属性。<code>FindCode()</code>能够找到下一个被标记为代码的地址；而<code>FindData()</code>则能够返回下一个被标记为数据的地址。与之类似的<code>FindUnexplored()</code>，<code>FindExplored()</code>则是搜索下一个未识别／识别的地址。<code>FindImmediate()</code>则是找到特定的立即数。<br>不过，并不是每一次都需要对data/code进行搜索的。有时候，我们已经知道了code或者data的位置了，只是需要选择对应的内容进行分析。这时就可以用<code>SelStart()``SelEnd()</code>等一系列的函数。<br>对于数据、代码，还可以对其原始格式进行访问，也即它们的二进制形式。这些数据可以用<code>Byte()``Word()``Dword()``Qword()``GetFloat()``GetDouble()</code>来获取。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/04/05/IDAPython/" data-id="cj5nn6mka001lo43frnc5dygx" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IDA-pro/">IDA pro</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/静态分析/">静态分析</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+  <nav id="page-nav">
+    <a class="extend prev" rel="prev" href="/">&laquo; __('prev')</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/3/">__('next') &raquo;</a>
+  </nav>
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GCC/">GCC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/I-O/">I/O</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDA-pro/">IDA pro</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KVM/">KVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ocaml/">Ocaml</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PID-namespace/">PID namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/QEMU/">QEMU</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SGX/">SGX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/binutils/">binutils</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/container/">container</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/intel/">intel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kvm/">kvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux内核/">linux内核</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/llvm/">llvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/">memory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/namespace/">namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/server/">server</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/x64-assembly/">x64 assembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/x86-64/">x86-64</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/二进制/">二进制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内存安全/">内存安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/底层安全/">底层安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/文件系统/">文件系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/浏览器安全/">浏览器安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/爬虫/">爬虫</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/硬件/">硬件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/系统安全/">系统安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译器/">编译器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译安全/">编译安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚函数/">虚函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟化/">虚拟化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/链接器/">链接器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/静态分析/">静态分析</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/GCC/" style="font-size: 17.14px;">GCC</a> <a href="/tags/I-O/" style="font-size: 11.43px;">I/O</a> <a href="/tags/IDA-pro/" style="font-size: 10px;">IDA pro</a> <a href="/tags/KVM/" style="font-size: 10px;">KVM</a> <a href="/tags/Ocaml/" style="font-size: 11.43px;">Ocaml</a> <a href="/tags/PID-namespace/" style="font-size: 10px;">PID namespace</a> <a href="/tags/QEMU/" style="font-size: 10px;">QEMU</a> <a href="/tags/SGX/" style="font-size: 12.86px;">SGX</a> <a href="/tags/binutils/" style="font-size: 10px;">binutils</a> <a href="/tags/chrome/" style="font-size: 10px;">chrome</a> <a href="/tags/container/" style="font-size: 10px;">container</a> <a href="/tags/intel/" style="font-size: 11.43px;">intel</a> <a href="/tags/kvm/" style="font-size: 10px;">kvm</a> <a href="/tags/linux/" style="font-size: 20px;">linux</a> <a href="/tags/linux内核/" style="font-size: 12.86px;">linux内核</a> <a href="/tags/llvm/" style="font-size: 10px;">llvm</a> <a href="/tags/memory/" style="font-size: 10px;">memory</a> <a href="/tags/namespace/" style="font-size: 11.43px;">namespace</a> <a href="/tags/nginx/" style="font-size: 11.43px;">nginx</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/server/" style="font-size: 11.43px;">server</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/x64-assembly/" style="font-size: 11.43px;">x64 assembly</a> <a href="/tags/x86-64/" style="font-size: 10px;">x86-64</a> <a href="/tags/二进制/" style="font-size: 10px;">二进制</a> <a href="/tags/内存安全/" style="font-size: 10px;">内存安全</a> <a href="/tags/底层安全/" style="font-size: 10px;">底层安全</a> <a href="/tags/操作系统/" style="font-size: 18.57px;">操作系统</a> <a href="/tags/文件系统/" style="font-size: 10px;">文件系统</a> <a href="/tags/浏览器安全/" style="font-size: 10px;">浏览器安全</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a> <a href="/tags/硬件/" style="font-size: 10px;">硬件</a> <a href="/tags/系统安全/" style="font-size: 12.86px;">系统安全</a> <a href="/tags/编译器/" style="font-size: 11.43px;">编译器</a> <a href="/tags/编译安全/" style="font-size: 15.71px;">编译安全</a> <a href="/tags/虚函数/" style="font-size: 10px;">虚函数</a> <a href="/tags/虚拟化/" style="font-size: 14.29px;">虚拟化</a> <a href="/tags/链接器/" style="font-size: 10px;">链接器</a> <a href="/tags/静态分析/" style="font-size: 12.86px;">静态分析</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/07/28/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2017/07/15/浅谈GCC编译优化/">浅谈GCC编译优化</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/27/虚函数，原理和攻击方式/">从虚函数的实现，到虚表劫持攻击</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/19/编译链中的一环，静态链接详解/">编译链中的一环，静态链接详解</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/09/Hack gcc：添加新的函数/">Hack GCC，在编译时构造新的函数</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

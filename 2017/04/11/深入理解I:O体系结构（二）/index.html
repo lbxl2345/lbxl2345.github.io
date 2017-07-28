@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>深入理解I/O体系结构（二） | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="块设备的驱动和字符设备类似，操作系统中的块设备，也是以文件的形式来访问。这里有一个很拗口的问题：磁盘是一个块设备，块设备有一个块设备文件。那么访问块设备文件和访问普通的磁盘上的文件有什么关系呢？不论是块设备文件还是普通的文件，它们都是通过VFS来统一访问的。只不过对于一个普通文件，它可能已经在RAM中了（高速缓存机制），因此它的访问可能会直接在RAM中进行；但如果说要修改磁盘上的内容，或者文件内容">
+<meta name="keywords" content="linux,操作系统">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入理解I&#x2F;O体系结构（二）">
+<meta property="og:url" content="http://yoursite.com/2017/04/11/深入理解I:O体系结构（二）/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="块设备的驱动和字符设备类似，操作系统中的块设备，也是以文件的形式来访问。这里有一个很拗口的问题：磁盘是一个块设备，块设备有一个块设备文件。那么访问块设备文件和访问普通的磁盘上的文件有什么关系呢？不论是块设备文件还是普通的文件，它们都是通过VFS来统一访问的。只不过对于一个普通文件，它可能已经在RAM中了（高速缓存机制），因此它的访问可能会直接在RAM中进行；但如果说要修改磁盘上的内容，或者文件内容">
+<meta property="og:image" content="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E7%A3%81%E7%9B%98IO/%E5%9D%97%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8.png?raw=true">
+<meta property="og:image" content="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E7%A3%81%E7%9B%98IO/biovec.gif?raw=true">
+<meta property="og:updated_time" content="2017-07-28T09:04:47.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深入理解I&#x2F;O体系结构（二）">
+<meta name="twitter:description" content="块设备的驱动和字符设备类似，操作系统中的块设备，也是以文件的形式来访问。这里有一个很拗口的问题：磁盘是一个块设备，块设备有一个块设备文件。那么访问块设备文件和访问普通的磁盘上的文件有什么关系呢？不论是块设备文件还是普通的文件，它们都是通过VFS来统一访问的。只不过对于一个普通文件，它可能已经在RAM中了（高速缓存机制），因此它的访问可能会直接在RAM中进行；但如果说要修改磁盘上的内容，或者文件内容">
+<meta name="twitter:image" content="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E7%A3%81%E7%9B%98IO/%E5%9D%97%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8.png?raw=true">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-深入理解I:O体系结构（二）" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/04/11/深入理解I:O体系结构（二）/" class="article-date">
+  <time datetime="2017-04-11T03:40:00.000Z" itemprop="datePublished">2017-04-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      深入理解I/O体系结构（二）
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="块设备的驱动"><a href="#块设备的驱动" class="headerlink" title="块设备的驱动"></a>块设备的驱动</h4><p>和字符设备类似，操作系统中的块设备，也是以文件的形式来访问。这里有一个很拗口的问题：磁盘是一个块设备，块设备有一个块设备文件。那么访问块设备文件和访问普通的磁盘上的文件有什么关系呢？<br>不论是块设备文件还是普通的文件，它们都是通过VFS来统一访问的。只不过对于一个普通文件，它可能已经在RAM中了（高速缓存机制），因此它的访问可能会直接在RAM中进行；但如果说要修改磁盘上的内容，或者文件内容不在RAM中，则也会间接地，通过块设备文件进行访问。这个驱动模型可以用这样一个图表示：<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E7%A3%81%E7%9B%98IO/%E5%9D%97%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8.png?raw=true" alt=""><br>这里我们只考虑最底层的情况：内核从块设备读取数据。为了从块设备中读取数据，内核必须知道数据的物理位置，而这正是<strong>映射层</strong>的工作。映射层的工作包括两步：（1）根据文件所在文件系统的块，将文件拆分成块，然后内核能够确定请求数据所在的块号；（2）映射层调用文件系统具体的函数，找到数据在磁盘上的位置，也就是完成文件块号，到逻辑块号的映射关系。<br>随后的工作在<strong>通用块层</strong>进行，内核在这一层，启动I/O操作。通常一个I/O操作对应一组连续的块，我们把它称为<code>bio</code>，它用来搜集底层需要的信息。<br><strong>I/O调度层</strong>负责根据内核中的各种策略，把待处理的I/O数据传送请求，进行归类。它的作用是把物理介质上相邻的数据请求，进行合并，一并处理。<br>最后一层也就是通过块设备的驱动来完成了，它向I/O接口发送适当的命令，从而进行实际的数据传送。</p>
+<h4 id="通用块层"><a href="#通用块层" class="headerlink" title="通用块层"></a>通用块层</h4><p>通用块层负责处理所有块设备的请求，其核心数据结构就是<code>bio</code>。它代表<strong>一次块设备I/O请求</strong>。</p>
+<pre><code>struct bio {
+struct bio        *bi_next;        //请求队列中的下一个bio
+struct block_device    *bi_bdev;    //块设备描述符指针
+unsigned long        bi_flags;    /* status, command, etc */
+unsigned long        bi_rw;        //rw位
+
+struct bvec_iter    bi_iter;    
+
+unsigned int        bi_phys_segments;//合并后有多少个段
+
+unsigned int        bi_seg_front_size;
+unsigned int        bi_seg_back_size;
+
+atomic_t        bi_remaining;//剩余的bio_vec
+
+bio_end_io_t        *bi_end_io;//bio结束的回调函数
+
+void            *bi_private;
+
+unsigned short        bi_vcnt;    //bio中biovec的数量
+
+unsigned short        bi_max_vecs;//最多能有多少个
+
+atomic_t        bi_cnt;        //结构体的使用计数
+
+struct bio_vec        *bi_io_vec;    //bio_vec数组
+};  
+</code></pre><p>在这个数据结构中，还包含了一个<code>bio_vec</code>。这是什么意思呢？在linux中，相邻数据块被称为一个段，每个<code>bio_vec</code>对应一个内存页中的段。在io操作期间，bio是会一直更新的，其中的<code>bi_iter</code>用来在数组中遍历，按每个段来执行下一步的操作。<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E7%A3%81%E7%9B%98IO/biovec.gif?raw=true" alt="">  </p>
+<p>那么当通用块层收到一个I/O请求操作时，会发生什么呢？首先内核会为这次操作分配<code>bio</code>描述符，并对它进行填充。随后通用块层会调用<code>generic_make_request</code>，这个函数的作用很明确：它会进行一系列检查和设置，保证bio中的信息是<strong>针对整个磁盘，而不是磁盘分区的</strong>；随后获取这个块设备相关的请求队列q，调用<code>q-&gt;make_request_fn</code>，把bio插入请求队列中去。  </p>
+<h4 id="I-O调度层"><a href="#I-O调度层" class="headerlink" title="I/O调度层"></a>I/O调度层</h4><p>在块设备上，每个I/O请求操作都是异步处理的，通用块层的请求会被加入块设备的请求队列中，每个块设备都会单独地进行I/O的调度，这样能够有效提高磁盘的性能。<br>前面提到，通用块层会调用一个<code>q-&gt;make_request_fn</code>，向I/O调度程序发送一个请求，该函数会进一步调用<code>__make_request()</code>。这个函数的目的，就是把<code>bio</code>放进请求队列当中：（1）如果请求队列是空的，就构造一个新的请求插入；（2）如果请求队列不是空的，但是<code>bio</code>不能合并（不能合并到某个请求的头和尾），也构造一个新的请求插入；（3）请求队列不是空的，并且<code>bio</code>可以合并，就合并到对应的请求中去。注意，bio，请求和请求队列的关系如下：  </p>
+<pre><code>-- request_queue
+        |-- request1
+                |-- bio0
+        |-- request2
+                |-- bio1
+                |-- bio2
+</code></pre><p>而I/O的调度，就是对请求队列进行排序，针对磁盘的特点，降低寻道的次数。这里说说几个常见的算法：<br>（1）CFQ完全公平队列：默认的调度算法，完全公平排队。每个进程/线程都单独创建一个队列，并且用上面提到的策略进行管理。队列间采用时间片的方式来分配I/O。<br>（2）Deadline最后期限算法：在电梯调度的基础上，根据读写请求的“最后期限”进行排序，并通过读期限短于写期限来保证写操作不被饿死。<br>（3）预期I/O算法：与最后期限类似，但是在读操作时，会预先判断当前的进程是否马上会有读操作，并且优先地进行处理。<br>（4）NOOP：适用于固态硬盘，不进行任何优化。  </p>
+<p> 总而言之，I/O调度层的作用，就是把请求的队列重新排序，并逐个交给块设备驱动程序进行处理。</p>
+<h4 id="块设备驱动程序"><a href="#块设备驱动程序" class="headerlink" title="块设备驱动程序"></a>块设备驱动程序</h4><p>I/O调度层排序好的请求，会由块设备的驱动程序来处理。同样，块设备也遵循着我们前面提到的驱动程序模型：块设备对应一个<code>device</code>，而驱动程序对应了一个<code>device_driver</code>。对于块设备来说，驱动程序也要通过<code>register_blkdev()</code>注册一个设备号。随后，驱动程序要初始化<code>gendisk</code>描述符，以及它所包含的设备操作表<code>fops</code>。在此之后，是“请求队列”的初始化，以及中断程序的设置：要为设备注册IRQ线。最后要把磁盘注册到内核（<code>add_disk</code>）,并把它激活。<br>当一个块设备文件被<code>open()</code>时，内核同样也要为它初始化操作。对于块设备来说，其默认的文件操作如下：</p>
+<pre><code>const struct file_operations def_blk_fops = {
+.open        = blkdev_open,
+.release    = blkdev_close,
+.llseek        = block_llseek,
+.read        = new_sync_read,
+.write        = new_sync_write,
+.read_iter    = blkdev_read_iter,
+.write_iter    = blkdev_write_iter,
+.mmap        = generic_file_mmap,
+.fsync        = blkdev_fsync,
+.unlocked_ioctl    = block_ioctl,
+#ifdef CONFIG_COMPAT
+.compat_ioctl    = compat_blkdev_ioctl,
+#endif
+.splice_read    = generic_file_splice_read,
+.splice_write    = iter_file_splice_write,
+};
+</code></pre><p><code>dentry_open()</code>方法会调用<code>blkdev_open()</code>。它（1）首先会获取块设备的描述符：如果块设备已经打开，则可以通过inode-&gt;i_bdev直接获取，否则则需要根据设备号去查找块设备描述符。（2）获取块设备相关的<code>gendisk</code>地址，<code>get_gendisk</code>是通过设备号来找到gendisk的。（3）如果是第一次打开块设备，则要根据它是整盘还是分区，进行相应的设置和初始化。（4）如果不是第一次打开，只需要按需要执行自定义的<code>open()</code>函数就行了。  </p>
+<h4 id="补充：I-O的监控方式"><a href="#补充：I-O的监控方式" class="headerlink" title="补充：I/O的监控方式"></a>补充：I/O的监控方式</h4><p>（1）轮询：CPU重复检查设备的状态寄存器，直到寄存器的值表明I/O操作已经完成了。<br>（2）中断：设备发出中断信号，告知I/O操作已经完成了，数据放在对应的端口，当数据缓冲满了时，由CPU去取，CPU需要控制数据传输的过程。<br>（3）DMA：由CPU的DMA电路来辅助数据的传输，CPU不需要参与内存和IO之间的传输过程，只需要通过DMA的中断来获取信息。DMA能够在所有数据处理完时才通知CPU处理。  </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/04/11/深入理解I:O体系结构（二）/" data-id="cj5nn6mlz003go43ffinsakih" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/04/15/深入理解进程与调度/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          深入理解进程与调度
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/04/10/深入理解I:O体系结构（一）/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">深入理解I/O体系结构（一）</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GCC/">GCC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/I-O/">I/O</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDA-pro/">IDA pro</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KVM/">KVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ocaml/">Ocaml</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PID-namespace/">PID namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/QEMU/">QEMU</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SGX/">SGX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/binutils/">binutils</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/container/">container</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/intel/">intel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kvm/">kvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux内核/">linux内核</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/llvm/">llvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/">memory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/namespace/">namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/server/">server</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/x64-assembly/">x64 assembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/x86-64/">x86-64</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/二进制/">二进制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内存安全/">内存安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/底层安全/">底层安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/文件系统/">文件系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/浏览器安全/">浏览器安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/爬虫/">爬虫</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/硬件/">硬件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/系统安全/">系统安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译器/">编译器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译安全/">编译安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚函数/">虚函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟化/">虚拟化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/链接器/">链接器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/静态分析/">静态分析</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/GCC/" style="font-size: 17.14px;">GCC</a> <a href="/tags/I-O/" style="font-size: 11.43px;">I/O</a> <a href="/tags/IDA-pro/" style="font-size: 10px;">IDA pro</a> <a href="/tags/KVM/" style="font-size: 10px;">KVM</a> <a href="/tags/Ocaml/" style="font-size: 11.43px;">Ocaml</a> <a href="/tags/PID-namespace/" style="font-size: 10px;">PID namespace</a> <a href="/tags/QEMU/" style="font-size: 10px;">QEMU</a> <a href="/tags/SGX/" style="font-size: 12.86px;">SGX</a> <a href="/tags/binutils/" style="font-size: 10px;">binutils</a> <a href="/tags/chrome/" style="font-size: 10px;">chrome</a> <a href="/tags/container/" style="font-size: 10px;">container</a> <a href="/tags/intel/" style="font-size: 11.43px;">intel</a> <a href="/tags/kvm/" style="font-size: 10px;">kvm</a> <a href="/tags/linux/" style="font-size: 20px;">linux</a> <a href="/tags/linux内核/" style="font-size: 12.86px;">linux内核</a> <a href="/tags/llvm/" style="font-size: 10px;">llvm</a> <a href="/tags/memory/" style="font-size: 10px;">memory</a> <a href="/tags/namespace/" style="font-size: 11.43px;">namespace</a> <a href="/tags/nginx/" style="font-size: 11.43px;">nginx</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/server/" style="font-size: 11.43px;">server</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/x64-assembly/" style="font-size: 11.43px;">x64 assembly</a> <a href="/tags/x86-64/" style="font-size: 10px;">x86-64</a> <a href="/tags/二进制/" style="font-size: 10px;">二进制</a> <a href="/tags/内存安全/" style="font-size: 10px;">内存安全</a> <a href="/tags/底层安全/" style="font-size: 10px;">底层安全</a> <a href="/tags/操作系统/" style="font-size: 18.57px;">操作系统</a> <a href="/tags/文件系统/" style="font-size: 10px;">文件系统</a> <a href="/tags/浏览器安全/" style="font-size: 10px;">浏览器安全</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a> <a href="/tags/硬件/" style="font-size: 10px;">硬件</a> <a href="/tags/系统安全/" style="font-size: 12.86px;">系统安全</a> <a href="/tags/编译器/" style="font-size: 11.43px;">编译器</a> <a href="/tags/编译安全/" style="font-size: 15.71px;">编译安全</a> <a href="/tags/虚函数/" style="font-size: 10px;">虚函数</a> <a href="/tags/虚拟化/" style="font-size: 14.29px;">虚拟化</a> <a href="/tags/链接器/" style="font-size: 10px;">链接器</a> <a href="/tags/静态分析/" style="font-size: 12.86px;">静态分析</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/07/28/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2017/07/15/浅谈GCC编译优化/">浅谈GCC编译优化</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/27/虚函数，原理和攻击方式/">从虚函数的实现，到虚表劫持攻击</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/19/编译链中的一环，静态链接详解/">编译链中的一环，静态链接详解</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/09/Hack gcc：添加新的函数/">Hack GCC，在编译时构造新的函数</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

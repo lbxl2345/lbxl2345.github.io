@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>内存攻击与保护 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="memory corruptionStep 1: 一个指针变成非法的指针第一种:越过它所引用的对象的边界(out-of-bounds pointer)，spatial error第二种:它所指向的对象已经被释放(dangling pointer)，temporal error    Bugs lead to Out-of-bounds:    allocation failure –&amp;gt; nu">
+<meta name="keywords" content="底层安全,二进制">
+<meta property="og:type" content="article">
+<meta property="og:title" content="内存攻击与保护">
+<meta property="og:url" content="http://yoursite.com/2016/12/05/memory-war/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="memory corruptionStep 1: 一个指针变成非法的指针第一种:越过它所引用的对象的边界(out-of-bounds pointer)，spatial error第二种:它所指向的对象已经被释放(dangling pointer)，temporal error    Bugs lead to Out-of-bounds:    allocation failure –&amp;gt; nu">
+<meta property="og:updated_time" content="2017-07-28T09:04:47.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="内存攻击与保护">
+<meta name="twitter:description" content="memory corruptionStep 1: 一个指针变成非法的指针第一种:越过它所引用的对象的边界(out-of-bounds pointer)，spatial error第二种:它所指向的对象已经被释放(dangling pointer)，temporal error    Bugs lead to Out-of-bounds:    allocation failure –&amp;gt; nu">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-memory-war" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/12/05/memory-war/" class="article-date">
+  <time datetime="2016-12-05T09:40:00.000Z" itemprop="datePublished">2016-12-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      内存攻击与保护
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="memory-corruption"><a href="#memory-corruption" class="headerlink" title="memory corruption"></a>memory corruption</h4><p>Step 1: 一个指针变成非法的指针<br>第一种:越过它所引用的对象的边界(out-of-bounds pointer)，<strong>spatial error</strong><br>第二种:它所指向的对象已经被释放(dangling pointer)，<strong>temporal error</strong>  </p>
+<hr>
+<p><strong>Bugs lead to Out-of-bounds:</strong>  </p>
+<ol>
+<li>allocation failure –&gt; null pointer  </li>
+<li>过多的增／减 array pointer –&gt; buffer overflow/underflow  </li>
+<li>indexing bugs –&gt; pointer 指向任意位置</li>
+</ol>
+<p>Bugs lead to dangling:<br>objects释放了，但指向它的指针没有释放<br>(大多数objects在堆上，但堆栈上多objects如果用了全局的pointer，也会出现dangling pointer)   </p>
+<hr>
+<p>Step 2: dereferences the pointer<br>dereferences the pointer: 读/写  </p>
+<hr>
+<p>Step 3: corruption/leakage of data<br><strong>Out-Of-Bounds</strong><br>1 read from memory<br>pointer指向了攻击者控制的位置，那么取的值就被攻击者操纵了</p>
+<pre><code>- 指针指向控制相关的数据，现在攻击者将它指向了恶意的转移目标 --&gt; divert control-flow
+- 指针指向输出数据，现在攻击者将它指向了一些隐私数据 --&gt; leaks information  
+</code></pre><p>2 write to memory<br>pointer指向写的地址，那么攻击者就能够篡改内存中的任意数据  </p>
+<pre><code>- 篡改一个控制相关的变量，例如vtable，返回地址 --&gt; divert control-flow  
+- 篡改一个输出的地址(另一个指针) --&gt; leaks information  
+</code></pre><p><strong>Dangling  pointer</strong><br>由deallocated object释放的memory，会被另一个object重新使用，而两种object的type是不同的，因此新的object会被解释为旧的object。<br>1 read from memory<br>旧的object的vpointer –&gt;  divert control-flow<br>新的object中敏感数据可用旧的object输出 –&gt; leaks information<br>2 write to memory<br>旧的object在栈上 –&gt;  divert control-flow(return address)<br>double-free leads to double-alloc –&gt; arbitraty wirtes  </p>
+<hr>
+<h4 id="attack-type"><a href="#attack-type" class="headerlink" title="attack type"></a>attack type</h4><p><strong>控制流劫持</strong>:divert control-flow<br><strong>data-only攻击</strong>:gain more control,gain privileges<br><strong>Information leak</strong>：leaks information  </p>
+<hr>
+<h4 id="Protections"><a href="#Protections" class="headerlink" title="Protections"></a>Protections</h4><p>Probabilistic: Randomization/encryption<br>Deterministic: Memory Safety/Control-flow Integrity<br>其中Deterministic protections又可以分为hardware/software两种<br>其中，software的方法，可以通过静态/动态两种插桩方式来实现。  </p>
+<h5 id="Probabilitic-Methods"><a href="#Probabilitic-Methods" class="headerlink" title="Probabilitic Methods"></a>Probabilitic Methods</h5><p>Probabilitic Method依赖于随机化，包括有:<br>Address Space Randomization:代码和数据段的位置，在W⊕X后，主要应用于code<br>Data Space Randomization:对所有的变量进行加密  </p>
+<h5 id="Deterministic-Methods"><a href="#Deterministic-Methods" class="headerlink" title="Deterministic Methods"></a>Deterministic Methods</h5><p><strong>Memory Safety</strong><br>空间安全-指针边界:指针能指向的地址范围<br>空间安全-对象边界:对象的地址范围，比指针边界的兼容性更好<br>时序安全-特殊的allocators:申请内存时避免use-after-free，例如只使用相同类型的memory<br>时序安全-基于对象:在shadow memory中标记释放内存，但如果这段内存被重新申请则无效<br>时序安全-基于指针:在内存释放/申请时，更新指针信息  </p>
+<h4 id="Generic-Attatck-Defenses"><a href="#Generic-Attatck-Defenses" class="headerlink" title="Generic Attatck Defenses"></a>Generic Attatck Defenses</h4><p><strong>Data Integrity</strong><br>不关注时序安全，只保护memory写，不保护memory读。<br>safe objects integrity:分析出不安全的指针和对象，利用shadow memory记录对应关系<br>points-to sets integrity:分析出不安全的指针和对象，限制其points-to set的对应关系<br><strong>Data-Flow Integrity</strong><br>通过检查read指令，检测任何数据的corruption(上一次write是否合法)，同样使用ID和set的方式。  </p>
+<h4 id="Control-Flow-Hijack-Defenses"><a href="#Control-Flow-Hijack-Defenses" class="headerlink" title="Control-Flow Hijack Defenses"></a>Control-Flow Hijack Defenses</h4><p><strong>Code Pointer Integrity</strong><br>防止Code Pointer被篡改，例如对Code pointer进行加密等。<br><strong>Control Flow Integrity</strong><br>动态return integrity:对返回值进行保护，如shadow stacks。<br>static CFI:求出控制流转移的集合，在运行时检查控制流转移是否合法。  </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/12/05/memory-war/" data-id="cj5nn6ml8002co43fddkikw9z" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/二进制/">二进制</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/底层安全/">底层安全</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/12/27/Chrome浏览器安全/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Chrome隔离/SOP策略
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/11/24/linux-sgx-sdk/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">SGX SDK相关</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GCC/">GCC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/I-O/">I/O</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDA-pro/">IDA pro</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KVM/">KVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ocaml/">Ocaml</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PID-namespace/">PID namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/QEMU/">QEMU</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SGX/">SGX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/binutils/">binutils</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/container/">container</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/intel/">intel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kvm/">kvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux内核/">linux内核</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/llvm/">llvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/">memory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/namespace/">namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/server/">server</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/x64-assembly/">x64 assembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/x86-64/">x86-64</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/二进制/">二进制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内存安全/">内存安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/底层安全/">底层安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/文件系统/">文件系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/浏览器安全/">浏览器安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/爬虫/">爬虫</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/硬件/">硬件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/系统安全/">系统安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译器/">编译器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译安全/">编译安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚函数/">虚函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟化/">虚拟化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/链接器/">链接器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/静态分析/">静态分析</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/GCC/" style="font-size: 17.14px;">GCC</a> <a href="/tags/I-O/" style="font-size: 11.43px;">I/O</a> <a href="/tags/IDA-pro/" style="font-size: 10px;">IDA pro</a> <a href="/tags/KVM/" style="font-size: 10px;">KVM</a> <a href="/tags/Ocaml/" style="font-size: 11.43px;">Ocaml</a> <a href="/tags/PID-namespace/" style="font-size: 10px;">PID namespace</a> <a href="/tags/QEMU/" style="font-size: 10px;">QEMU</a> <a href="/tags/SGX/" style="font-size: 12.86px;">SGX</a> <a href="/tags/binutils/" style="font-size: 10px;">binutils</a> <a href="/tags/chrome/" style="font-size: 10px;">chrome</a> <a href="/tags/container/" style="font-size: 10px;">container</a> <a href="/tags/intel/" style="font-size: 11.43px;">intel</a> <a href="/tags/kvm/" style="font-size: 10px;">kvm</a> <a href="/tags/linux/" style="font-size: 20px;">linux</a> <a href="/tags/linux内核/" style="font-size: 12.86px;">linux内核</a> <a href="/tags/llvm/" style="font-size: 10px;">llvm</a> <a href="/tags/memory/" style="font-size: 10px;">memory</a> <a href="/tags/namespace/" style="font-size: 11.43px;">namespace</a> <a href="/tags/nginx/" style="font-size: 11.43px;">nginx</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/server/" style="font-size: 11.43px;">server</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/x64-assembly/" style="font-size: 11.43px;">x64 assembly</a> <a href="/tags/x86-64/" style="font-size: 10px;">x86-64</a> <a href="/tags/二进制/" style="font-size: 10px;">二进制</a> <a href="/tags/内存安全/" style="font-size: 10px;">内存安全</a> <a href="/tags/底层安全/" style="font-size: 10px;">底层安全</a> <a href="/tags/操作系统/" style="font-size: 18.57px;">操作系统</a> <a href="/tags/文件系统/" style="font-size: 10px;">文件系统</a> <a href="/tags/浏览器安全/" style="font-size: 10px;">浏览器安全</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a> <a href="/tags/硬件/" style="font-size: 10px;">硬件</a> <a href="/tags/系统安全/" style="font-size: 12.86px;">系统安全</a> <a href="/tags/编译器/" style="font-size: 11.43px;">编译器</a> <a href="/tags/编译安全/" style="font-size: 15.71px;">编译安全</a> <a href="/tags/虚函数/" style="font-size: 10px;">虚函数</a> <a href="/tags/虚拟化/" style="font-size: 14.29px;">虚拟化</a> <a href="/tags/链接器/" style="font-size: 10px;">链接器</a> <a href="/tags/静态分析/" style="font-size: 12.86px;">静态分析</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/07/28/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2017/07/15/浅谈GCC编译优化/">浅谈GCC编译优化</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/27/虚函数，原理和攻击方式/">从虚函数的实现，到虚表劫持攻击</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/19/编译链中的一环，静态链接详解/">编译链中的一环，静态链接详解</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/09/Hack gcc：添加新的函数/">Hack GCC，在编译时构造新的函数</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

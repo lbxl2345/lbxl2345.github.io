@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>RTL，类型和操作数 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="RTXrtx(RTL expression)，也即一个RTL的表达式。在coretypes.h中，其被定义为struct rtx_def *rtx，也即一个指向rtx_def的指针。那么rtx_def是一个什么结构呢？它同样定义在rtl.h当中： struct GTY((chain_next (&amp;quot;RTX_NEXT (&amp;amp;%h)&amp;quot;),     chain_prev (&amp;qu">
+<meta name="keywords" content="编译安全,GCC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RTL，类型和操作数">
+<meta property="og:url" content="http://yoursite.com/2017/05/07/gcc rtx/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="RTXrtx(RTL expression)，也即一个RTL的表达式。在coretypes.h中，其被定义为struct rtx_def *rtx，也即一个指向rtx_def的指针。那么rtx_def是一个什么结构呢？它同样定义在rtl.h当中： struct GTY((chain_next (&amp;quot;RTX_NEXT (&amp;amp;%h)&amp;quot;),     chain_prev (&amp;qu">
+<meta property="og:updated_time" content="2017-07-28T09:04:47.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RTL，类型和操作数">
+<meta name="twitter:description" content="RTXrtx(RTL expression)，也即一个RTL的表达式。在coretypes.h中，其被定义为struct rtx_def *rtx，也即一个指向rtx_def的指针。那么rtx_def是一个什么结构呢？它同样定义在rtl.h当中： struct GTY((chain_next (&amp;quot;RTX_NEXT (&amp;amp;%h)&amp;quot;),     chain_prev (&amp;qu">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-gcc rtx" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/05/07/gcc rtx/" class="article-date">
+  <time datetime="2017-05-07T13:40:00.000Z" itemprop="datePublished">2017-05-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      RTL，类型和操作数
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="RTX"><a href="#RTX" class="headerlink" title="RTX"></a>RTX</h4><p>rtx(RTL expression)，也即一个RTL的表达式。在<code>coretypes.h</code>中，其被定义为<code>struct rtx_def *rtx</code>，也即一个指向rtx_def的指针。那么rtx_def是一个什么结构呢？它同样定义在rtl.h当中：</p>
+<pre><code>struct GTY((chain_next (&quot;RTX_NEXT (&amp;%h)&quot;),
+    chain_prev (&quot;RTX_PREV (&amp;%h)&quot;), variable_size)) rtx_def {
+  /* 表达式类型 */
+  ENUM_BITFIELD(rtx_code) code: 16;
+
+  /* 表达式包含值的类型 */
+  ENUM_BITFIELD(machine_mode) mode : 8;
+
+  /* 一系列位段，在不同情况下表示不同含义*/
+  unsigned int jump : 1;
+
+  unsigned int call : 1;
+
+  unsigned int unchanging : 1;
+
+  unsigned int volatil : 1;
+
+  unsigned int in_struct : 1;
+
+  unsigned int used : 1;
+
+  unsigned frame_related : 1;
+
+  unsigned return_val : 1;
+
+  /* rtx的第一个操作数，操作数的个数和类型是在code域中定义的*/
+  union u {
+    rtunion fld[1];
+    HOST_WIDE_INT hwint[1];
+    struct block_symbol block_sym;
+    struct real_value rv;
+    struct fixed_value fv;
+  } GTY ((special (&quot;rtx_def&quot;), desc (&quot;GET_CODE (&amp;%0)&quot;))) u;
+};
+</code></pre><p><a href="https://dmalcolm.fedorapeople.org/gcc/2013-10-31/doxygen/html/structrtx__def.html" target="_blank" rel="external">https://dmalcolm.fedorapeople.org/gcc/2013-10-31/doxygen/html/structrtx__def.html</a>中对每个位段进行了更详细的描述。</p>
+<p>其中，rtx所包含的所有可能情况，都包含在了rtl.def当中；注意这里rtx和insn其实有一些微妙的关系：rtx表示一条中间指令的时候，它是一个insn；rtx不一定是insn，但insn一定是rtx。</p>
+<h4 id="RTL：对象"><a href="#RTL：对象" class="headerlink" title="RTL：对象"></a>RTL：对象</h4><p>如果想在RTL阶段上，进行编译的优化，那么首先就必须好好了解RTL。RTL使用五种类型的对象： expressions、integers、wide integers、strings和vectors。其中，RTX是最为重要的的一个，它是一个C数据结构，通常用指针的形式来调用，也就是前面所提到的rtx。<br>interger和wide integer分别对应着机器上的整型和长整型。string则是一串非空的字符；vector则包含指向任意数量expression的指针，用[…]的形式来表示，并用空格分割。expressions被称为RTX code，它定义在rtl.def当中，其含义是与机器无关的。一个rtx的code部分，可以用<code>GET_CODE(x)</code>来获取，并且可以用<code>PUTCODE(x, newcode)</code>来替换。<br>expression code决定了：表达式所包含的操作数个数、它们是什么类型的objdect。RTL不像Lisp，不能通过operand自身来确定它是什么类型的object，而必须知道它的上下文（例如一个subreg code，它的第一个操作数被当成表达式，而第二个被认为是一个整型；又例如plus code，两个operands都被当成了表达式）。expression写作：()，包含表达式类型、flags、机器码等，以及用空格分割的操作数。  </p>
+<h4 id="RTL：类和格式"><a href="#RTL：类和格式" class="headerlink" title="RTL：类和格式"></a>RTL：类和格式</h4><p>expression code可被归为许多类，它们用<strong>一个字符</strong>来表示，<code>GET_RTX_CLASS(code)</code>能够用来获取RTX代码的类型，这些类定义在<code>rtl.def</code>当中。<br>RTX_OBJ：表示一个具体的object，例如REG/MEM/SYMBOL等<br>RTX_CONST_OBJ：表示一个常量object<br>RTX_COMPARE：表示不对称的比较，例如GEU/LT。<br>RTX_COMM_COMPARE：表示对称的比较。(表示满足交换律的)<br>RTX_UNARY：一元的算数操作，例如NEG、NOT、ABS、类型转换等<br>RTX_COMM_ARITH：满足交换律的二进制操作，例如PLUS、AND。<br>RTX_BIN_ARITH：不满足交换律的二进制操作，例如MINUX、DIV。<br>RTX_BITFIELD_OPS：位操作，包含ZERO_EXTRACT，SIGH_EXTRACT。<br>RTX_TERBARY：其他有三个输入的操作，例如IF_THEN_ELSE。<br>RTX_INSN：表示整条INSN，包括INSN、JUMP_INSN、CALL_INSN。<br>RTX_MATCH：表示insns当中的matches，例如MATCH_DUP。<br>RTX_AUTOINC：表示寻址时的自增，例如POST_INC。<br>RTX_EXTRA：所有其它的codes。<br>这些class，能够让expression code采用很方便的方式来表示，比如subreg直接可以表示为’ei’。<br><code>GET_RTX_LENGTH(code)</code>和<code>GET_RTX_FORMAT(code)</code>分别会返回操作数的数量，以及格式(简写，例如一个比较的操作写成ee)  </p>
+<h4 id="访问操作数"><a href="#访问操作数" class="headerlink" title="访问操作数"></a>访问操作数</h4><p>通过宏定义，可以访问一个表达式的操作数，包含<code>XEXP</code>、<code>XINT</code>、<code>XWINT</code>、<code>XSTR</code>。这些宏都包含了两个参数：其一是一个RTX，其二是从0开始数的操作数编号。例如<code>XEXP(x,2)</code>访问了x的第二个操作数(作为expression来访问)。<code>XINT(x,2)</code>访问了x的第二个操作数(作为integer来访问)。<br>使用者必须自己根据expression code来判断每个操作数是什么类型的。而对vector的访问则更复杂，<code>XVEC</code>能够获取vector指针，而<code>XVECEXP</code>和<code>XVECLEN</code>可以用来访问一个vector的元素和长度。<br>对于某些的RTL节点，还有一些特殊的操作数访问方式。例如MEM、REG、SYMBOL_REF都能够用来获取不同的相关信息。</p>
+<h4 id="Machine-Modes"><a href="#Machine-Modes" class="headerlink" title="Machine Modes"></a>Machine Modes</h4><p>Machine Modes描述了数据对象的大小，以及它的表现形式。Machine mode以枚举的形式来表示，machine_mode，定义在machmode.def当中。每个RTL表达式，都包含有一个machine mode的区域。在dump文件、机器描述中，RTL的machine mode被写在表达式的后面，用一个冒号分隔。<br>在GCC中，insn相当于rtx的组合。例如，</p>
+<pre><code>insn: mov ax, 8
+rtx: ax
+rtx: 8
+rtx: mov ax, 8
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/05/07/gcc rtx/" data-id="cj5nn6mkr0022o43f1sjw1291" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译安全/">编译安全</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/05/10/RTL详解/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          RTL，指令和运算，识别特定指令
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/05/05/GCC插件编写/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">GCC插件：注册、编译和使用</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GCC/">GCC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/I-O/">I/O</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDA-pro/">IDA pro</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KVM/">KVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ocaml/">Ocaml</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PID-namespace/">PID namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/QEMU/">QEMU</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SGX/">SGX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/binutils/">binutils</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/container/">container</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/intel/">intel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kvm/">kvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux内核/">linux内核</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/llvm/">llvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/">memory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/namespace/">namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/server/">server</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/x64-assembly/">x64 assembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/x86-64/">x86-64</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/二进制/">二进制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内存安全/">内存安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/底层安全/">底层安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/文件系统/">文件系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/浏览器安全/">浏览器安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/爬虫/">爬虫</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/硬件/">硬件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/系统安全/">系统安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译器/">编译器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译安全/">编译安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚函数/">虚函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟化/">虚拟化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/链接器/">链接器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/静态分析/">静态分析</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/GCC/" style="font-size: 17.14px;">GCC</a> <a href="/tags/I-O/" style="font-size: 11.43px;">I/O</a> <a href="/tags/IDA-pro/" style="font-size: 10px;">IDA pro</a> <a href="/tags/KVM/" style="font-size: 10px;">KVM</a> <a href="/tags/Ocaml/" style="font-size: 11.43px;">Ocaml</a> <a href="/tags/PID-namespace/" style="font-size: 10px;">PID namespace</a> <a href="/tags/QEMU/" style="font-size: 10px;">QEMU</a> <a href="/tags/SGX/" style="font-size: 12.86px;">SGX</a> <a href="/tags/binutils/" style="font-size: 10px;">binutils</a> <a href="/tags/chrome/" style="font-size: 10px;">chrome</a> <a href="/tags/container/" style="font-size: 10px;">container</a> <a href="/tags/intel/" style="font-size: 11.43px;">intel</a> <a href="/tags/kvm/" style="font-size: 10px;">kvm</a> <a href="/tags/linux/" style="font-size: 20px;">linux</a> <a href="/tags/linux内核/" style="font-size: 12.86px;">linux内核</a> <a href="/tags/llvm/" style="font-size: 10px;">llvm</a> <a href="/tags/memory/" style="font-size: 10px;">memory</a> <a href="/tags/namespace/" style="font-size: 11.43px;">namespace</a> <a href="/tags/nginx/" style="font-size: 11.43px;">nginx</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/server/" style="font-size: 11.43px;">server</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/x64-assembly/" style="font-size: 11.43px;">x64 assembly</a> <a href="/tags/x86-64/" style="font-size: 10px;">x86-64</a> <a href="/tags/二进制/" style="font-size: 10px;">二进制</a> <a href="/tags/内存安全/" style="font-size: 10px;">内存安全</a> <a href="/tags/底层安全/" style="font-size: 10px;">底层安全</a> <a href="/tags/操作系统/" style="font-size: 18.57px;">操作系统</a> <a href="/tags/文件系统/" style="font-size: 10px;">文件系统</a> <a href="/tags/浏览器安全/" style="font-size: 10px;">浏览器安全</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a> <a href="/tags/硬件/" style="font-size: 10px;">硬件</a> <a href="/tags/系统安全/" style="font-size: 12.86px;">系统安全</a> <a href="/tags/编译器/" style="font-size: 11.43px;">编译器</a> <a href="/tags/编译安全/" style="font-size: 15.71px;">编译安全</a> <a href="/tags/虚函数/" style="font-size: 10px;">虚函数</a> <a href="/tags/虚拟化/" style="font-size: 14.29px;">虚拟化</a> <a href="/tags/链接器/" style="font-size: 10px;">链接器</a> <a href="/tags/静态分析/" style="font-size: 12.86px;">静态分析</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/07/28/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2017/07/15/浅谈GCC编译优化/">浅谈GCC编译优化</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/27/虚函数，原理和攻击方式/">从虚函数的实现，到虚表劫持攻击</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/19/编译链中的一环，静态链接详解/">编译链中的一环，静态链接详解</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/09/Hack gcc：添加新的函数/">Hack GCC，在编译时构造新的函数</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

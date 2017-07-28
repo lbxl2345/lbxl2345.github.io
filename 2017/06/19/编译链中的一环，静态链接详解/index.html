@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>编译链中的一环，静态链接详解 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="GCC的工作，到生成汇编代码为止。剩下的工作，交给了Binutils来完成：assembler和static linker。最近详细地研究了一下linker的工作过程。linker主要完成的是静态链接，目标文件合并的工作。例如，把多个.o文件合并成一个可执行文件。   两步链接两步链接指的是：    空间与地址的分配链接器会首先扫描所有的输入文件，获得各个段的长度、属性和位置，将段合并；并将输入目">
+<meta name="keywords" content="链接器,binutils">
+<meta property="og:type" content="article">
+<meta property="og:title" content="编译链中的一环，静态链接详解">
+<meta property="og:url" content="http://yoursite.com/2017/06/19/编译链中的一环，静态链接详解/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="GCC的工作，到生成汇编代码为止。剩下的工作，交给了Binutils来完成：assembler和static linker。最近详细地研究了一下linker的工作过程。linker主要完成的是静态链接，目标文件合并的工作。例如，把多个.o文件合并成一个可执行文件。   两步链接两步链接指的是：    空间与地址的分配链接器会首先扫描所有的输入文件，获得各个段的长度、属性和位置，将段合并；并将输入目">
+<meta property="og:updated_time" content="2017-07-28T09:04:47.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="编译链中的一环，静态链接详解">
+<meta name="twitter:description" content="GCC的工作，到生成汇编代码为止。剩下的工作，交给了Binutils来完成：assembler和static linker。最近详细地研究了一下linker的工作过程。linker主要完成的是静态链接，目标文件合并的工作。例如，把多个.o文件合并成一个可执行文件。   两步链接两步链接指的是：    空间与地址的分配链接器会首先扫描所有的输入文件，获得各个段的长度、属性和位置，将段合并；并将输入目">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-编译链中的一环，静态链接详解" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/06/19/编译链中的一环，静态链接详解/" class="article-date">
+  <time datetime="2017-06-19T13:40:00.000Z" itemprop="datePublished">2017-06-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      编译链中的一环，静态链接详解
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>GCC的工作，到生成汇编代码为止。剩下的工作，交给了Binutils来完成：assembler和static linker。最近详细地研究了一下linker的工作过程。<br>linker主要完成的是静态链接，目标文件合并的工作。例如，把多个.o文件合并成一个可执行文件。  </p>
+<h4 id="两步链接"><a href="#两步链接" class="headerlink" title="两步链接"></a>两步链接</h4><p>两步链接指的是：  </p>
+<ol>
+<li>空间与地址的分配<br>链接器会首先扫描所有的输入文件，获得各个段的长度、属性和位置，将段合并；并将输入目标文件中的符号表合并为全局符号表。  </li>
+<li>符号解析与重定位<br>使用上一步中收集到的信息，进行符号解析和重定位，调整代码中的地址等。这一步也是链接过程的核心，特别是重定位过程。<br>链接器首先获取各个段的虚拟地址；在确定段的虚拟地址之后，也就能确定各个符号的虚拟地址了。  </li>
+</ol>
+<h4 id="重定位与符号解析"><a href="#重定位与符号解析" class="headerlink" title="重定位与符号解析"></a>重定位与符号解析</h4><p>在完成空间和地址的分配之后，链接器开始进行符号解析和重定位的过程。在链接之前，各个段中的符号地址，都是以0为基地址的，对于未知的地址，也通通用0进行替代。编译器在编译时，对于不知道的符号地址，全部用一个假值替代，把真正的工作留给链接器去做。<br>而链接器在分配了虚拟地址之后，就可以修正每一个需要重定位的入口。这个工作是借助于重定位表来实现的。重定位表包括：<strong>重定位入口</strong>（也就是需要重定位的地方），<strong>偏移</strong>表示入口在被重定位的段中的位置。<br>在x86_64下，重定位表的结构也很简单（定义在elf.h当中）：  </p>
+<pre><code>typedef struct{
+    Elf64_Addr r_offset;
+    Elf64_Xword r_info;
+}Elf64_Rel;
+
+typedef struct{
+    Elf64_Addr r_offset;
+    Elf64_Xword r_info;
+    ELF64_Sxword r_addend;
+}Elf64_Rela
+</code></pre><p>这里，<code>r_offset</code>是重定位入口，相对于段起始的偏移；<code>r_info</code>则是重定位入口的类型和符号。其低位表示重定位入口的类型；高位表示重定位入口的符号，在符号表中的下标。（不同处理器的格式不一样）<br>符号解析则是为符号的重定位提供帮助，根据多个目标文件中的符号表，生成全局符号表，找到相应的符号并进行重定位。对于未定义的符号，链接器都应该能在全局符号表中找到，否则就报出符号未定义的错误。<br>PS：x86_64只使用Elf64_Rela。  </p>
+<h4 id="指令修正"><a href="#指令修正" class="headerlink" title="指令修正"></a>指令修正</h4><p>在x86_64中，call、jmp、mov、lea等指令的寻址方式千差万别。对于重定位来说，修正指令的寻址方式定义在binutils/elfcpp/x86_64.h当中。这其中主要包括：<code>R_X86_64_64</code>和<code>R_X86_64_PC32</code>两种。这是因为X86_64上，相对寻址依然只支持32位（实际上这也很科学；因为一个可执行文件通常不会有4G那么大）。<br>两种寻址方式的修正方法分别为：<code>符号地址 + 保存在被修正位置的值</code>和<code>符号地址 + 保存在被修正位置的值  - 被修正的位置相对于段开始的偏移量</code>  </p>
+<h4 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h4><h6 id="第一步：初始化，parsing-command-line-amp-script-file"><a href="#第一步：初始化，parsing-command-line-amp-script-file" class="headerlink" title="第一步：初始化，parsing command line &amp; script file"></a>第一步：初始化，parsing command line &amp; script file</h6><p>linker的入口，在ldmain.c当中(通常在链接的时候，通过编译器内部直接进行调用)。首先，linker会调用bfd库，识别二进制文件的格式，生成各个段的描述符，并且转换为<code>canonical form</code>。（例如linker中的符号表识别工作，就是首先由BFD来进行分析和转化，然后linker直接在<code>canonical form</code>上进行操作，再由BFD来进行输出）因此在ldmain.c的<code>main</code>中，首先进行的也是bfd的初始化<code>bfd_init</code>。随后linker进行了一系列的设置，包括路径，回调函数、初始化，加载插件、读取命令、linker script等。  </p>
+<h6 id="第二步：文件和符号的加载"><a href="#第二步：文件和符号的加载" class="headerlink" title="第二步：文件和符号的加载"></a>第二步：文件和符号的加载</h6><p>随后，<code>lang_process</code>中，linker会对每个输入文件进行处理。对于每个输入文件，linker都会分配一个bfd，对输入文件进行扫描，识别出其中的符号。首先<code>open_input_bfds</code>为所有文件建立了bfd，随后载入文件中的所有符号。每个符号对应一个<code>bfd_link_hash_entry</code>，它们保存在<code>bfd_link_hash_table</code>当中。<code>bfd_link_add_symbols</code>将符号添加到hash_table当中。  </p>
+<h6 id="第三步：输入文件的分析和合并"><a href="#第三步：输入文件的分析和合并" class="headerlink" title="第三步：输入文件的分析和合并"></a>第三步：输入文件的分析和合并</h6><p>在链接的第一部分完成后，第二部分开始前，链接器首先调用了<code>ldctor_build_sets</code>函数，它主要为C++中的constructor/dectructor提供支持。随后链接器<code>lang_do_memory_region</code>计算出内存区域（它们保存在<code>lang_memory_region_list</code>当中）。再通过<code>lang_common</code>处理全局符号，将它们添加到对应的section，移除没有被使用的sections等。随后链接器建立输入section和输出section之间的映射关系，并且将文件的section合并，以及设置段的属性等。  </p>
+<h6 id="第四步：重定位"><a href="#第四步：重定位" class="headerlink" title="第四步：重定位"></a>第四步：重定位</h6><p>第四步是符号的重定位工作。这里<code>lang_size_section</code>首先获取所有section的大小，然后<code>lang_set_startof</code>会修正section的大小和位置。在确定了sections的信息之后，就可以对符号进行重定位了，这便是<code>lang_do_assignments</code>和<code>ldexp_finalize_syms</code>的工作。它们会按照前面提到的方法，对符号进行重定位。最后链接器还会检查符号和section的正确性。  </p>
+<h6 id="第五步：交给bfd，输出文件"><a href="#第五步：交给bfd，输出文件" class="headerlink" title="第五步：交给bfd，输出文件"></a>第五步：交给bfd，输出文件</h6><p>在完成重定位之后，如果没有出现异常，linker就把工作交给bfd了。<code>ldwrite</code>负责把链接好的文件输出。完成一些清理工作后，整个链接过程就结束了。  </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/06/19/编译链中的一环，静态链接详解/" data-id="cj5nn6mmc0042o43fr3u9x1sq" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/binutils/">binutils</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/链接器/">链接器</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/06/27/虚函数，原理和攻击方式/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          从虚函数的实现，到虚表劫持攻击
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/06/09/Hack gcc：添加新的函数/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Hack GCC，在编译时构造新的函数</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GCC/">GCC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/I-O/">I/O</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDA-pro/">IDA pro</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KVM/">KVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ocaml/">Ocaml</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PID-namespace/">PID namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/QEMU/">QEMU</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SGX/">SGX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/binutils/">binutils</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/container/">container</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/intel/">intel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kvm/">kvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux内核/">linux内核</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/llvm/">llvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/">memory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/namespace/">namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/server/">server</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/x64-assembly/">x64 assembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/x86-64/">x86-64</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/二进制/">二进制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内存安全/">内存安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/底层安全/">底层安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/文件系统/">文件系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/浏览器安全/">浏览器安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/爬虫/">爬虫</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/硬件/">硬件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/系统安全/">系统安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译器/">编译器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译安全/">编译安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚函数/">虚函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟化/">虚拟化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/链接器/">链接器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/静态分析/">静态分析</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/GCC/" style="font-size: 17.14px;">GCC</a> <a href="/tags/I-O/" style="font-size: 11.43px;">I/O</a> <a href="/tags/IDA-pro/" style="font-size: 10px;">IDA pro</a> <a href="/tags/KVM/" style="font-size: 10px;">KVM</a> <a href="/tags/Ocaml/" style="font-size: 11.43px;">Ocaml</a> <a href="/tags/PID-namespace/" style="font-size: 10px;">PID namespace</a> <a href="/tags/QEMU/" style="font-size: 10px;">QEMU</a> <a href="/tags/SGX/" style="font-size: 12.86px;">SGX</a> <a href="/tags/binutils/" style="font-size: 10px;">binutils</a> <a href="/tags/chrome/" style="font-size: 10px;">chrome</a> <a href="/tags/container/" style="font-size: 10px;">container</a> <a href="/tags/intel/" style="font-size: 11.43px;">intel</a> <a href="/tags/kvm/" style="font-size: 10px;">kvm</a> <a href="/tags/linux/" style="font-size: 20px;">linux</a> <a href="/tags/linux内核/" style="font-size: 12.86px;">linux内核</a> <a href="/tags/llvm/" style="font-size: 10px;">llvm</a> <a href="/tags/memory/" style="font-size: 10px;">memory</a> <a href="/tags/namespace/" style="font-size: 11.43px;">namespace</a> <a href="/tags/nginx/" style="font-size: 11.43px;">nginx</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/server/" style="font-size: 11.43px;">server</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/x64-assembly/" style="font-size: 11.43px;">x64 assembly</a> <a href="/tags/x86-64/" style="font-size: 10px;">x86-64</a> <a href="/tags/二进制/" style="font-size: 10px;">二进制</a> <a href="/tags/内存安全/" style="font-size: 10px;">内存安全</a> <a href="/tags/底层安全/" style="font-size: 10px;">底层安全</a> <a href="/tags/操作系统/" style="font-size: 18.57px;">操作系统</a> <a href="/tags/文件系统/" style="font-size: 10px;">文件系统</a> <a href="/tags/浏览器安全/" style="font-size: 10px;">浏览器安全</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a> <a href="/tags/硬件/" style="font-size: 10px;">硬件</a> <a href="/tags/系统安全/" style="font-size: 12.86px;">系统安全</a> <a href="/tags/编译器/" style="font-size: 11.43px;">编译器</a> <a href="/tags/编译安全/" style="font-size: 15.71px;">编译安全</a> <a href="/tags/虚函数/" style="font-size: 10px;">虚函数</a> <a href="/tags/虚拟化/" style="font-size: 14.29px;">虚拟化</a> <a href="/tags/链接器/" style="font-size: 10px;">链接器</a> <a href="/tags/静态分析/" style="font-size: 12.86px;">静态分析</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/07/28/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2017/07/15/浅谈GCC编译优化/">浅谈GCC编译优化</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/27/虚函数，原理和攻击方式/">从虚函数的实现，到虚表劫持攻击</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/19/编译链中的一环，静态链接详解/">编译链中的一环，静态链接详解</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/09/Hack gcc：添加新的函数/">Hack GCC，在编译时构造新的函数</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

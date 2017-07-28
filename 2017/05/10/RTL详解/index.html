@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>RTL，指令和运算，识别特定指令 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="运算RTL中的运算，采用一种很直观、简单的方式来进行描述。通常，表达式都会借助于m mode。运算包含有算术、比较、向量操作、Bit域、类型转换等。   Side Effect 表达式之前所说的表达式代码，通常表示的是值，而非某种行为。但机器指令，只有在对机器的状态产生了改变时，才会有意义；因此对于这些对寄存器、执行状态产生影响的过程，是有对应的表达式的，被称为side effect表达式。一条指">
+<meta name="keywords" content="编译安全,GCC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RTL，指令和运算，识别特定指令">
+<meta property="og:url" content="http://yoursite.com/2017/05/10/RTL详解/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="运算RTL中的运算，采用一种很直观、简单的方式来进行描述。通常，表达式都会借助于m mode。运算包含有算术、比较、向量操作、Bit域、类型转换等。   Side Effect 表达式之前所说的表达式代码，通常表示的是值，而非某种行为。但机器指令，只有在对机器的状态产生了改变时，才会有意义；因此对于这些对寄存器、执行状态产生影响的过程，是有对应的表达式的，被称为side effect表达式。一条指">
+<meta property="og:updated_time" content="2017-07-28T09:04:47.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RTL，指令和运算，识别特定指令">
+<meta name="twitter:description" content="运算RTL中的运算，采用一种很直观、简单的方式来进行描述。通常，表达式都会借助于m mode。运算包含有算术、比较、向量操作、Bit域、类型转换等。   Side Effect 表达式之前所说的表达式代码，通常表示的是值，而非某种行为。但机器指令，只有在对机器的状态产生了改变时，才会有意义；因此对于这些对寄存器、执行状态产生影响的过程，是有对应的表达式的，被称为side effect表达式。一条指">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-RTL详解" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/05/10/RTL详解/" class="article-date">
+  <time datetime="2017-05-10T13:40:00.000Z" itemprop="datePublished">2017-05-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      RTL，指令和运算，识别特定指令
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="运算"><a href="#运算" class="headerlink" title="运算"></a>运算</h4><p>RTL中的运算，采用一种很直观、简单的方式来进行描述。通常，表达式都会借助于m mode。运算包含有算术、比较、向量操作、Bit域、类型转换等。  </p>
+<h4 id="Side-Effect-表达式"><a href="#Side-Effect-表达式" class="headerlink" title="Side Effect 表达式"></a>Side Effect 表达式</h4><p>之前所说的表达式代码，通常表示的是值，而非某种行为。但机器指令，只有在对机器的状态产生了改变时，才会有意义；因此对于这些对寄存器、执行状态产生影响的过程，是有对应的表达式的，被称为side effect表达式。<br>一条指令的主体，一定是这些side effect之一；而之前表示值的表达式代码，只是作为它们的操作数出现的。<br>set lval x：表示将x的止保存在lval当中。lval表示一个能够存放值的位置。它们包括（仅列出了比较常用的一部分）：<br>return/simple_return：表述函数返回。<br>call function nargs：表示函数调用。<br>clobber x，表示不可预期的，可能的存储，将不可描述的值保存到x，必须为一个<code>reg</code>，<code>scratch</code>，<code>parallel</code>或者<code>mem</code>。说明x的值可能被修改（也就是说值会被改变？）<br>use x：x的值被使用。x必须为寄存器。<br>parallel：并行发生的side effects。<br>cond_exec [cond expr]：条件执行的表达式。<br>sequence [insns]：顺序执行的insn序列。<br>除此之外，还有一些和内存地址有关的side effects，例如pre_dec:m x表示x减少一个标准值，其中m必须是指针的对应machine mode。例如(mem:DF (pre_dec:SI (reg:SI 39)))表示，减少伪寄存器39的值(减少DFMODE的大小)并且把结果作为一个DFMODE值。  </p>
+<h4 id="指令"><a href="#指令" class="headerlink" title="指令"></a>指令</h4><p>一个函数的代码的RTL形式，是保存在一个双向链表当中的，它被称为insns。insn是具有特殊代码的表达式，它们不作它用，其中一部分是用来生成真实的代码的，另一部分表示jump table，或者jump的labels。<br>insn除了自身特定的数据之外，每一个insn还必须有一个独有的id－number，用来和当前函数中其他的insns进行区分，并且和其他的insns进行串联。在每个insns中，都有这样三个区域，分别用INSN_UID，PREV_INSN，NEXT_INSN这三个宏定义来取值。<br>insn一定包含有如下的某一类表达式代码：<br>insn：非jump/call的代码。<br>jump_insn：可能会造成跳转的指令，包括ret。<br>call_insn：可能进行函数调用的指令。call_insn也包含有一个域，CALL_INSN_FUNCTION_USAGE，它包含有一个链表，它记录了call调用所调用函数所需要利用的寄存器、内存地址等。<br>code_label：表示jump_insn能够跳转到的label。它包含两个特殊的域，分别是CODE_LABEL_NUMBER和LABEL_NUSES，后者只在jump优化阶段结束之后，它包含目前这个函数中，该label被使用了多少次。<br>jump_table_data：用来保存jumptable，位于tablejump_p insn之后。<br>barrier：放在非条件jump指令之后。<br>note：表示额外的调试信息。<br>debug_insn：用来track的伪代码。  </p>
+<h4 id="insn，jump-insn-call-insn"><a href="#insn，jump-insn-call-insn" class="headerlink" title="insn，jump_insn,call_insn"></a>insn，jump_insn,call_insn</h4><p>这几类指令都含有额外的域：<br>PATTERN(i)：这条指令的side effect表达式。<br>INSN_CODE(i)：一个integer，表示了这个insn机器描述的pattern，但通常一般不会做匹配，因此一般都是－1，尤其是对于use，clobber，asm_inpu，addr_vec和addr_diff_vec表达式而言。<br>LOG_LINK：insn_list链表，记录了instructions和basic block的依赖关系。只被schedulers和combine使用。<br>REG_NOTES：一个链表，记录了和寄存器有关的信息。具体的，宏REG_NOTE_KIND返回了register note的类型。而PUT_REG_NOTE_KIND则用来修改类型。  </p>
+<h4 id="一个例子"><a href="#一个例子" class="headerlink" title="一个例子"></a>一个例子</h4><p>那么，不妨来看看在gcc里面，一个insn到底是如何表示的：</p>
+<pre><code>(insn 21
+      20
+      22
+      6 
+      (set (reg:SI 59 [ D.1238 ])
+           (mem/c/i:SI (plus:SI (reg/f:SI 54 virtual-stack-vars)
+                                (const_int -8 [0xfffffffffffffff8])) [0 sum+0 S4 A32]))
+      /home/kito/sum.c:7
+      -1
+      (nil))
+</code></pre><p>把它和”iuuBeiie”对应起来，那么其实也就是一对一的关系，这里解释的很到位：  </p>
+<pre><code>(insn 21 # 1. i
+      20 # 2. u
+      22 # 3. u
+      6  # 4. B
+      (set (reg:SI 59 [ D.1238 ])
+           (mem/c/i:SI (plus:SI (reg/f:SI 54 virtual-stack-vars)
+                                (const_int -8 [0xfffffffffffffff8])) [0 sum+0 S4 A32])) # 5. e
+      /home/kito/sum.c:7 # i
+      -1 # 6. i
+      (nil)) # 7. e
+</code></pre><p>i 代表该 INSN 的 uid<br>u 上一道 INSN 的 uid<br>u 下一道 INSN 的 uid<br>B Basic Block的 编号<br>e 该 INSN 的主要內容, 例如上面那道指令所描述的是從内存读取一個值到寄存器中<br>i 该 INSN 对应源码的位置<br>i 放 RTL pattern Name<br>e 放 REG_NOTES 主要和寄存器有关   </p>
+<p>其中，这个<code>“iuuBeiie”</code>是打印的格式，每个字符的含义定义在rtl.c当中。这里，我比较关心的’e’指的是一个rtl表达式。再来看一个例子。call_insn对应的输出是<code>“iuuBeiiee”</code>，其输出为：</p>
+<pre><code>(call_insn    16 #1. i
+            15 #2. u
+            17 #3. u
+            2  #4. B
+            (call (mem:QI (symbol_ref:DI (&quot;printf&quot;)[flags 0x41] &lt;function_decl 0x7f1fd042e100 printf&gt;)[0 __builtin_printf S1 A8]) const_int 0 [0])))) #5. e
+            hello.c:12 #6. i
+            649     #7. i
+            (nil)    #8. i
+            (expr_list (use (reg:QI 0 ax))
+                (expr_list:DI (use (reg:DI 5 di))
+                    (expr_list:SI (use (reg:SI 4 si))
+                        (nil)))))    #9. e
+)
+</code></pre><p>和普通的insn相比，多出来的一项expr_list，是一个链表，它包含了用来传递参数的寄存器、内存的信息。  </p>
+<h4 id="RTL中的寄存器"><a href="#RTL中的寄存器" class="headerlink" title="RTL中的寄存器"></a>RTL中的寄存器</h4><p>从GCC官方的说明来看，RTL和llvm一样，首先是假设“有无限个寄存器”的，这也就是说，在RTL代码中，必然会有伪寄存器存在。在编译过程中，这些伪寄存器，要么被替换为真实的、硬件寄存器，要么被替换为内存引用。我也为此困扰过：那么在翻译时，是如何确定RTL具体对应的机器码的呢？RTL既然是一个和机器相关的语言，那么寄存器的选择，应该与最后的指令生成无关了。<br>其实这个问题是在gcc内置的rtl pass当中解决了。具体的，<code>register alloction</code>这个（准确的说是一系列）pass，它保证了所有的伪寄存器被清除了，其方式正是将它们替换为硬件寄存器、常量或者栈上的值。这也就是说，假设想要做一些和寄存器的选择相关的优化，最好是在这个过程之后去做。<br>在这个过程之后，rtx中的<code>reg</code>就表示的是实实在在的寄存器了。而相对的，<code>subregs</code>也不存在了，而<code>mem</code>毫无疑问也就表示了对表达式addr所示地址的主内存进行引用。其中<code>mem:m addr alias</code>中，m描述的是被访问内存单元的大小，alias代表这个引用点别名集合，只有引用相同内存地址的项，才会放在一个别名集合里面。  </p>
+<h4 id="RTL，读取内存"><a href="#RTL，读取内存" class="headerlink" title="RTL，读取内存"></a>RTL，读取内存</h4><p>既然知道<code>mem:m addr alias</code>用来引用内存，那么<code>addr</code>这个东西到底是怎么表示的？它是用一个寄存器来保存指针吗？还是用一个变量名称呢？首先我们来看看有哪些表达式会读取内存吧：<br><strong>副作用表达式</strong><br><code>set lval x</code>，表示将x对值放到由lval表示的地方。那么如果x是一个<code>mem</code>，无疑是会对内存进行引用的。<br><code>parallel [x0 x1 ...]</code>，多个并行执行的副作用，那么其中的每一个<code>set</code>都会发生内存的引用。<br><strong>算术表达式</strong><br>在RTL中，算术表达式并不会改变一个值，它只是一个单独的运算，代表一个结果。举个例子，如果是一个<code>ADD</code>指令，那么它实际上在RTL中是通过一个parallel来表示，这个parallel包括了<code>plus</code>，还包含了<code>set</code>，只不过在汇编阶段生成的只是一条指令而已。所以说其实RTL里面的parallel，并不是说的概念上的并行，而是说某些表达式，会同时发生、生效。<br>在<code>mem:m addr alias</code>当中，mem既可以是寄存器中存储的地址，也可以是常量指针中的地址。  </p>
+<h4 id="指令的遍历"><a href="#指令的遍历" class="headerlink" title="指令的遍历"></a>指令的遍历</h4><p>在GCC，所有的pass，都是以函数为粒度来进行调用的。它是一种“run on function”的机制。在gcc内部，当前处理的函数用<code>cfun</code>来进行访问。<br>而指令，是由特殊的rtx表达式：<code>insn</code>来表示的。那么如何访问每一条指令呢？我个人认为，首先遍历基本块，随后再在基本块的内部进行遍历，是更为有效的。也就是这样的方式：</p>
+<pre><code>FOR_EACH_BB_FN(bb, cfun){
+    FOR_BB_INSNS(bb, insn){
+        ...    //handle insn
+    }
+}
+</code></pre><p>但是，INSN中其实还包含有<code>note</code>，如果只想留下<code>insn</code>，那么用<code>INSN_P(insn)</code>进行过滤就可以。这样一来，剩下的就只有<code>insn</code>、<code>jump_insn</code>、<code>call_insn</code>三种情况了（还有<code>debug_insn</code>，这里不考虑这种情况）。这三种情况，实际上还可以用宏继续细分判断，分别是<code>JUMP_P</code>，<code>CALL_P</code>，<code>NONJUMP_INSN_P</code>。  </p>
+<h4 id="需要关注哪些指令？"><a href="#需要关注哪些指令？" class="headerlink" title="需要关注哪些指令？"></a>需要关注哪些指令？</h4><p>这里，我想定义的内存读取，指的是“通过一个指针，从内存中取值，并且把它放在寄存器当中”，当然这个取值可能会在计算之后放在寄存器中，例如<code>ADD</code>，也可能是通过<code>MOV</code>直接放到寄存器里面。无论如何，只要涉及到访问内容的数据（通过指针实现），并且结果被放到了寄存器中，这个行为就被认为是内存读取了。<br>当然，在RTL中，指令还没有那么的直观。那么如何识别出这些指令呢？首先，有一点是可以肯定的，那就是实际上只有<code>nonjump_insn</code>会产生这些指令。我在分析之后，发现：<code>jump_insn</code>、<code>call_insn</code>，即使是间接跳转的（比如c++里面，常常可以见到的vpointer），它们其实也只是代表控制流转移的过程而已，其指针的提取、计算，其实都是放在这条指令之前的<code>insn</code>中去执行的。  </p>
+<h4 id="指令中的内存读取"><a href="#指令中的内存读取" class="headerlink" title="指令中的内存读取"></a>指令中的内存读取</h4><p>下一步，就是从这些指令中，把真正的指令读取给提取出来。对应一个insn，它的输出格式是<code>&quot;iuuBeiie&quot;</code>，其中，e也即rtx表达式。在输出的时候，这部分表示的是这个insn的实际代码。<code>GET_CODE</code>能够用来提取出insn的代码部分，其实它只是一个<code>enum</code>：<code>#define GET_CODE(RTX) ((enum rtx_code) (RTX)-&gt;code)</code>，而<code>PATTERN</code>则是获取这个insn的副作用。这里，不应该被其名字所迷惑：因为<code>GET_CODE</code>不过是获取rtx code的类型，它和这个insn的内容，反而没有联系；相反，<code>PATTERN</code>则说明了这个insn会带来什么副作用，也就是对值的影响。<br>在看了<code>var-tracking.c</code>和<code>gcse.c</code>当中的源码之后，我注意到一条<code>set</code>指令中的<code>src</code>和<code>dest</code>，实际上都可以用宏提取，也即<code>rtx src = SET_SRC(PATTERN(insn))</code>和<code>rtx dest = SET_DEST(PATTERN(insn))</code>。<br>而PATTERN的代码类型其实也很有限。在<code>var-tracking</code>之后，实际上<code>sequence</code>也已经被去除了。那么实际上我们需要关注的PATTERN也就只有两种：分别是<code>set</code>和<code>parallel</code>。（实际上还有一种，那就是<code>asm_input</code>，这里先不予考虑）<br>那么对于<code>insn</code>，也就只有两种情况，一是一个单独的<code>set</code>，二是一个<code>parallel</code>，它可能包含了很多条<code>insn</code>，那么其中的指令就要逐条分析了。<br>注意：在gcc 5.0之后点版本，专门的数据结构rtx_insn表示一条指令，而不是用rtx来一概而论了。  </p>
+<h4 id="SET的分析"><a href="#SET的分析" class="headerlink" title="SET的分析"></a>SET的分析</h4><p>一个<code>set val x</code>，其lval可以是<code>reg</code>，<code>mem</code>，<code>pc</code>，<code>parallel</code>或者<code>cc0</code>。其中，<code>parallel</code>用来表示一个函数通过多个寄存器来返回一个结构体的情况，这里不用关注这个情况，只需要关注lval是<code>reg</code>，而x是<code>mem</code>的情况。（目前只考虑了这个最基本的情况）<br>对于<code>x</code>来说，set的源操作数可能是一个内存地址，还可能是一个表达式的，比如加减乘除、位操作等。  </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/05/10/RTL详解/" data-id="cj5nn6mkn001uo43frxe04eom" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译安全/">编译安全</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/05/12/Hack GCC，修改二进制文件中函数的顺序/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Hack GCC，改变函数的顺序
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/05/07/gcc rtx/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">RTL，类型和操作数</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GCC/">GCC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/I-O/">I/O</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDA-pro/">IDA pro</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KVM/">KVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ocaml/">Ocaml</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PID-namespace/">PID namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/QEMU/">QEMU</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SGX/">SGX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/binutils/">binutils</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/container/">container</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/intel/">intel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kvm/">kvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux内核/">linux内核</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/llvm/">llvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/">memory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/namespace/">namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/server/">server</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/x64-assembly/">x64 assembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/x86-64/">x86-64</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/二进制/">二进制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内存安全/">内存安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/底层安全/">底层安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/文件系统/">文件系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/浏览器安全/">浏览器安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/爬虫/">爬虫</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/硬件/">硬件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/系统安全/">系统安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译器/">编译器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译安全/">编译安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚函数/">虚函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟化/">虚拟化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/链接器/">链接器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/静态分析/">静态分析</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/GCC/" style="font-size: 17.14px;">GCC</a> <a href="/tags/I-O/" style="font-size: 11.43px;">I/O</a> <a href="/tags/IDA-pro/" style="font-size: 10px;">IDA pro</a> <a href="/tags/KVM/" style="font-size: 10px;">KVM</a> <a href="/tags/Ocaml/" style="font-size: 11.43px;">Ocaml</a> <a href="/tags/PID-namespace/" style="font-size: 10px;">PID namespace</a> <a href="/tags/QEMU/" style="font-size: 10px;">QEMU</a> <a href="/tags/SGX/" style="font-size: 12.86px;">SGX</a> <a href="/tags/binutils/" style="font-size: 10px;">binutils</a> <a href="/tags/chrome/" style="font-size: 10px;">chrome</a> <a href="/tags/container/" style="font-size: 10px;">container</a> <a href="/tags/intel/" style="font-size: 11.43px;">intel</a> <a href="/tags/kvm/" style="font-size: 10px;">kvm</a> <a href="/tags/linux/" style="font-size: 20px;">linux</a> <a href="/tags/linux内核/" style="font-size: 12.86px;">linux内核</a> <a href="/tags/llvm/" style="font-size: 10px;">llvm</a> <a href="/tags/memory/" style="font-size: 10px;">memory</a> <a href="/tags/namespace/" style="font-size: 11.43px;">namespace</a> <a href="/tags/nginx/" style="font-size: 11.43px;">nginx</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/server/" style="font-size: 11.43px;">server</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/x64-assembly/" style="font-size: 11.43px;">x64 assembly</a> <a href="/tags/x86-64/" style="font-size: 10px;">x86-64</a> <a href="/tags/二进制/" style="font-size: 10px;">二进制</a> <a href="/tags/内存安全/" style="font-size: 10px;">内存安全</a> <a href="/tags/底层安全/" style="font-size: 10px;">底层安全</a> <a href="/tags/操作系统/" style="font-size: 18.57px;">操作系统</a> <a href="/tags/文件系统/" style="font-size: 10px;">文件系统</a> <a href="/tags/浏览器安全/" style="font-size: 10px;">浏览器安全</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a> <a href="/tags/硬件/" style="font-size: 10px;">硬件</a> <a href="/tags/系统安全/" style="font-size: 12.86px;">系统安全</a> <a href="/tags/编译器/" style="font-size: 11.43px;">编译器</a> <a href="/tags/编译安全/" style="font-size: 15.71px;">编译安全</a> <a href="/tags/虚函数/" style="font-size: 10px;">虚函数</a> <a href="/tags/虚拟化/" style="font-size: 14.29px;">虚拟化</a> <a href="/tags/链接器/" style="font-size: 10px;">链接器</a> <a href="/tags/静态分析/" style="font-size: 12.86px;">静态分析</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/07/28/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2017/07/15/浅谈GCC编译优化/">浅谈GCC编译优化</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/27/虚函数，原理和攻击方式/">从虚函数的实现，到虚表劫持攻击</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/19/编译链中的一环，静态链接详解/">编译链中的一环，静态链接详解</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/09/Hack gcc：添加新的函数/">Hack GCC，在编译时构造新的函数</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
