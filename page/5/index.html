@@ -48,9 +48,9 @@
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
@@ -60,149 +60,6 @@
 </header>
       <div class="outer">
         <section id="main">
-  
-    <article id="post-爬虫入门" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/05/13/爬虫入门/" class="article-date">
-  <time datetime="2016-05-13T09:40:00.000Z" itemprop="datePublished">2016-05-13</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/05/13/爬虫入门/">初学爬虫</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h3><p>爬虫，就是伪造一个用户身份，通过URL去访问某个网页，将这个网页上的某些感兴趣的内容，利用正则式的方式提取出来。对于google，baidu的搜索部门，爬虫可以说是核心技术之一。</p>
-<h3 id="python-spider"><a href="#python-spider" class="headerlink" title="python spider"></a>python spider</h3><p>python为实现基本的爬虫，提供了十分方便的模块。通常利用urllib来实现简单的爬虫。首先确定访问的url，然后对这个url生成一个request。request并不仅仅是一个简单的访问请求，它可以采用post，get等方式，来实现数据的提交。</p>
-<pre><code>request = urllib2.Request(url, data, headers)
-response = urllib2.urlopen(request)
-print response.read()
-</code></pre><p>post和get的一个差别在于，get的方式是直接以链接形式访问，链接中包含了所有参数。这里简单写一下爬虫中，post和get的使用。</p>
-<pre><code>values = {&quot;username&quot;: &quot;user&quot;, &quot;password&quot;: &quot;pass&quot;}
-#post
-data = urlencode(values)
-request = urllib2.Request(url, data)
-#get
-url = url + &quot;?&quot; + data
-request = urllib2.Request(url)
-</code></pre><p>某些情况下，需要设置访问的headers，才能对网页进行正常的访问。例如防盗链，服务器有时候会检查headers的referer是不是自己。headers是放在request之中的。除了在初始化的时候赋值，还可以添加headers。</p>
-<pre><code>＃设置headers
-headers = { &apos;User-Agent&apos; : &apos;Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)&apos;,&apos;Referer&apos;:&apos;http://www.zhihu.com/articles&apos; }  
-request = urllib2.Request(url, data, headers)
-request.add_header(&apos;cache-control&apos;, &apos;no-cache&apos;)
-</code></pre><h3 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h3><p>正则表达式是用来提取网页中感兴趣部分的工具。当然，首先自己要对网页源代码有所了解才行。这里列出一个python正则式的匹配规则.<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E7%88%AC%E8%99%AB/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F.png?raw=true"><br>python中自带了re模块，提供了对于正则表达式的支持。其中，最重要的是re.compile方法。</p>
-<pre><code>pattern = re.compile(&apos;string&apos;);
-</code></pre><p>compile提供一个匹配模式pattern。re中提供了其他的方法，可以根据pattern，在目标中进行匹配/操作。  </p>
-<pre><code>re.match(pattern, string[, flags])
-re.search(pattern, string[, flags])
-re.split(pattern, string[, maxsplit])
-re.findall(pattern, string[, flags])
-re.finditer(pattern, string[, flags])
-re.sub(pattern, repl, string[, count])
-re.subn(pattern, repl, string[, count])
-</code></pre><h3 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h3><p>爬虫主要会遇到两种Error，URLError和HTTPError。利用try-except来捕捉相应的异常。</p>
-<pre><code>#URLError
-try:
-    urllib2.urlopen(request)
-except urllib2.URLError, e:
-    print e.reason
-</code></pre><p>HTTPError会对应一些状态码，例如404，400等。HTTPError实例化后会有一个code属性，也就是这个相关的错误号。</p>
-<pre><code>#HTTPError
-try:
-    urllib2.urlopen(rep)
-except urllib2.HTTPError, e:
-    print e.code
-    print e.reason
-</code></pre><p>如果捕获到了HTTPError，还可以加入hasattr，提前对属性进行判断：  </p>
-<pre><code>except urllib2.URLError, e:
-if hasattr(e,&quot;code&quot;):
-    print e.code
-if hasattr(e,&quot;reason&quot;):
-    print e.reason
-</code></pre><h3 id="使用cookie"><a href="#使用cookie" class="headerlink" title="使用cookie"></a>使用cookie</h3><p>某些网站为了辨别用户身份，进行session跟踪，需要储存cookie在用户本地终端上。这样一来，某些网站需要登录后才能访问某个页面，此时就需要利用Urllib2库保存我们登陆的Cookie，然后再抓取其他页面。<br>获取一个URL时，需要使用一个opener。之前使用的urlopen，实际上是opener的一个特殊实例。对于cookie，python也提供了支持的模块，cookielib。使用cookie分为两个部分，首先是把cookie保存到文件，第二是从文件中获取cookie并访问。cookie保存的过程如下：  </p>
-<pre><code>#创建MozillaCookieJar实例对象，保存cookie
-cookie = cookielib.MozillaCookieJar(filename)
-#利用HTTPCookieProcessor创建一个cookie处理器
-handler = urllib2.HTTPCookieProcessor(cookie)
-req = urllib2.Request(&quot;http://www.baidu.com&quot;)
-#利用urllib2的buile_opener创建一个opener
-opener = urllib2.build_opener(handler)
-response = opener.open(req)
-#保存cookie到文件
-cookie.save()
-</code></pre><p>从文件中获取Cookie并访问的过程如下：</p>
-<pre><code>cookie = cookielib.MozillaCookieJar()
-#读取cookie到变量
-cookie.load(&apos;cookie.txt&apos;)
-req = urllib2.Request(&quot;http://www.baidu.com&quot;)
-handler = urllib2.HTTPCookieProcessor(cookie)
-opener =  urllib2.build_opener(handler)
-response = opener.open(req)
-</code></pre><h3 id="小例子"><a href="#小例子" class="headerlink" title="小例子"></a>小例子</h3><p>做了一个小爬虫，用来统计豆瓣电影TOP250名中，前166名的评分总和。这里运用了一些python中的相关知识。  </p>
-<p>import urllib<br>import urllib2<br>import re<br>class DBPC:</p>
-<pre><code>def __init__(self,baseUrl):
-    self.baseURL = baseURL
-
-def getPage(self,pageNum):
-#python中全局变量的声明
-    global count
-    global sum
-    try:
-        url = self.baseURL + &apos;?start=&apos; + str(pageNum * 25) + &apos;&amp;filter=&apos;
-        request = urllib2.Request(url)
-        response = urllib2.urlopen(request)
-        #指定编码格式，并获取内容
-        content = response.read().decode(&apos;utf-8&apos;)
-        #获取规则
-        pattern = re.compile(&apos;&lt;span class=&quot;rating_num&quot; property=&quot;v:average&quot;&gt;(\d\.\d)&lt;/span&gt;&apos;)
-        #利用findall匹配所有
-        items = re.findall(pattern, content)
-        #通过循环逐个得出
-        for item in items:
-            print count ,item
-            count += 1
-            if count &gt; 167:
-                break
-            else:
-                sum += float(item)
-    except urllib2.URLError, e:
-         if hasattr(e,&quot;reason&quot;):
-            print e.reason
-            return None
-
-count = 1
-sum = 0
-baseURL = &apos;https://movie.douban.com/top250&apos;
-dbpc = DBPC(baseURL)
-for i in range(7):
-    dbpc.getPage(i)
-print sum
-</code></pre>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/05/13/爬虫入门/" data-id="cj5nn6mm9003xo43fukdtpjpf" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/爬虫/">爬虫</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
   
     <article id="post-virtio" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
@@ -237,7 +94,7 @@ print sum
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/05/06/virtio/" data-id="cj5nn6mlp002wo43f3lwmc7m7" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/05/06/virtio/" data-id="cj5nn89a9002voc3f6xim9pjz" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/虚拟化/">虚拟化</a></li></ul>
@@ -287,7 +144,7 @@ print sum
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/05/05/I:O体系结构/" data-id="cj5nn6mk9001ko43fes49wtrg" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/05/05/I:O体系结构/" data-id="cj5nn898z001hoc3fbg28ubja" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/I-O/">I/O</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
@@ -341,7 +198,7 @@ struct files_struct *files;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/04/28/linux文件系统/" data-id="cj5nn6mkz0029o43fuxbqpzej" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/04/28/linux文件系统/" data-id="cj5nn899k0028oc3fhpg74jck" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/文件系统/">文件系统</a></li></ul>
@@ -387,7 +244,7 @@ struct files_struct *files;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/04/21/操作系统寻址/" data-id="cj5nn6mlt0036o43fw20ciaf7" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/04/21/操作系统寻址/" data-id="cj5nn89ae0037oc3f9k8t0q6p" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/memory/">memory</a></li></ul>
@@ -435,7 +292,7 @@ struct files_struct *files;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/04/20/shell小记/" data-id="cj5nn6mlm002to43fitq2idgw" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/04/20/shell小记/" data-id="cj5nn89a2002noc3frjqx8uwl" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell/">shell</a></li></ul>
@@ -526,7 +383,7 @@ struct files_struct *files;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/03/22/GCC内联汇编笔记/" data-id="cj5nn6mjv0018o43flbtboxj7" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/03/22/GCC内联汇编笔记/" data-id="cj5nn898j0014oc3fw7whm869" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/x64-assembly/">x64 assembly</a></li></ul>
@@ -756,7 +613,7 @@ func (e, f, s, g, h, ld, m, y, n, i, j, k);
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/03/21/x64函数参数的传递/" data-id="cj5nn6mlq002zo43fmekz8wzy" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/03/21/x64函数参数的传递/" data-id="cj5nn89aa002xoc3f9r7v6b3o" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/x86-64/">x86-64</a></li></ul>
@@ -838,7 +695,7 @@ group = www-data
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/03/14/nginx笔记2/" data-id="cj5nn6mlg002mo43fspfd3ug9" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/03/14/nginx笔记2/" data-id="cj5nn899z002ioc3fipw98u7p" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/">nginx</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/server/">server</a></li></ul>
@@ -976,7 +833,7 @@ server_name example.com www.example.com;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/03/11/nginx笔记1/" data-id="cj5nn6mlc002ho43fx1xmiw49" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/03/11/nginx笔记1/" data-id="cj5nn899y002goc3fnr2yve4p" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/">nginx</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/server/">server</a></li></ul>
@@ -988,10 +845,112 @@ server_name example.com www.example.com;
 
 
   
+    <article id="post-寒假小结" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/02/17/寒假小结/" class="article-date">
+  <time datetime="2016-02-17T06:16:04.000Z" itemprop="datePublished">2016-02-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/02/17/寒假小结/">寒假小结.md</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="时间安排-amp-进展"><a href="#时间安排-amp-进展" class="headerlink" title="时间安排&amp;进展"></a>时间安排&amp;进展</h4><p>春节休息八天，其余时间学习。<br>实验室的工作：  </p>
+<ol>
+<li>掌握了glibc中切换到程序时的代码位置。  </li>
+<li>按照预想情况，切换EPT时会产生错误的缺页。  </li>
+<li>通过syscall在汇编代码中加入了输出语句，来证明切换确实执行了。  </li>
+<li>虽然切换完成了，但是仍存在错误的缺页。  </li>
+</ol>
+<h4 id="glibc：程序的入口"><a href="#glibc：程序的入口" class="headerlink" title="glibc：程序的入口"></a>glibc：程序的入口</h4><p>glibc中的csu/libc-start.c中，完成了从动态链接器到程序入口的工作。其中程序的入口和执行位于函数LIBC_START_MAIN(这个函数就是执行文件中都会有的libc_start_main)。该函数实现了应用程序的init、finit、main等工作，因此在这个函数中进行切换是较为直接的。具体到程序的入口来说，</p>
+<pre><code>result = main (argc, argv, __environ MAIN_AUXVEC_PARAM);
+</code></pre><p>这句话就完成了程序的执行，程序执行完成后会回到这里执行。可以在此实现EPT的切换，但仍然会不可避免的使得某些页放在错误的EPT中。</p>
+<h4 id="x64汇编：字符串输出"><a href="#x64汇编：字符串输出" class="headerlink" title="x64汇编：字符串输出"></a>x64汇编：字符串输出</h4><p>我想通过输出一些字符的方式，来验证一段trampoline是否执行了。和之前学的x86汇编不太一样的是，x64虽然支持32位的int中断方式，但使用这种方式地址也只能使用32位。x64采用的新的方法是syscall。</p>
+<pre><code>mov rax, n    ;rax存放系统调用号
+...
+syscall        ;执行syscall
+</code></pre><p>这里采用把一个特定的字符(串)存放在栈里，然后利用1号syscall输出字符串到控制台，然后回复栈的方法，实现在trampoline里面输出信息，来帮助进行一些调试的工作。具体的代码（省略了寄存器的保护和恢复）如下：</p>
+<pre><code>back[pos++] = 0x48;    //mov rax, 0x1
+back[pos++] = 0xc7;
+back[pos++] = 0xc0;
+back[pos++] = 0x01;
+back[pos++] = 0x00;
+back[pos++] = 0x00;
+back[pos++] = 0x00;
+back[pos++] = 0x48;    //mov rdi, 0x1
+back[pos++] = 0xc7;
+back[pos++] = 0xc7;
+back[pos++] = 0x01;
+back[pos++] = 0x00;
+back[pos++] = 0x00;
+back[pos++] = 0x00;
+back[pos++] = 0x48;    //mov rsi, rsp
+back[pos++] = 0x89;
+back[pos++] = 0xe6;
+back[pos++] = 0x48;    //mov rdx, 0x1
+back[pos++] = 0xc7;
+back[pos++] = 0xc2;
+back[pos++] = 0x01;
+back[pos++] = 0x00;
+back[pos++] = 0x00;
+back[pos++] = 0x00;
+back[pos++] = 0x0f;    //syscall
+back[pos++] = 0x05;
+back[pos++] = 0x48;    //add rsp, 0x8
+back[pos++] = 0x83;
+back[pos++] = 0xc4;
+back[pos++] = 0x08;
+</code></pre><h4 id="Hexo"><a href="#Hexo" class="headerlink" title="Hexo"></a>Hexo</h4><p>闲暇时间里，用hexo在github pages上搭了这个博客。一直觉得对我们来说有个博客来放平时的收获是很不错的。Hexo确实十分简单，但这里还是有些东西值得记一下。<br>首先在node.js的安装中，我发现nvm命令没有被定义，这是因为没有执行这么一句：</p>
+<pre><code class="bash">$ <span class="built_in">source</span> ~/.nvm/nvm.sh
+</code></pre>
+<p>在安装node.js之后，hexo本身的搭建和生成就很简单了，至于与git的关联，只需要在_config.yml中，最后加上</p>
+<pre><code>deploy:
+      type: git
+      repository: git@github.com:lbxl2345/lbxl2345.github.io.git
+      branch: master
+</code></pre><p>然后  </p>
+<pre><code class="bash">$ hexo deploy
+</code></pre>
+<p>就能够将它直接发布到github提供的主页上了。<br>发布文章也很方便：  </p>
+<pre><code class="bash">$ hexo new [layout] &lt;title&gt;
+</code></pre>
+<p>这里layout可以选择默认和自定义的布局(都存放在source/_post)文件夹中。<br>在进行修改之后，要进行文件生成，然后再进行发布。</p>
+<pre><code class="bash">$ hexo generate
+$ hexo deploy
+</code></pre>
+<p>可见使用起来确实很方便。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/02/17/寒假小结/" data-id="cj5nn89ac0032oc3f5y6oqbsf" class="article-share-link">Partager</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/x64-assembly/">x64 assembly</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
 
 
   <nav id="page-nav">
-    <a class="extend prev" rel="prev" href="/page/4/">&laquo; __('prev')</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/6/">__('next') &raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/4/">&laquo; __('prev')</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span>
   </nav>
 </section>
         
@@ -1002,7 +961,7 @@ server_name example.com www.example.com;
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
+    <h3 class="widget-title">Mot-clés</h3>
     <div class="widget">
       <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GCC/">GCC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/I-O/">I/O</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDA-pro/">IDA pro</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KVM/">KVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ocaml/">Ocaml</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PID-namespace/">PID namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/QEMU/">QEMU</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SGX/">SGX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/binutils/">binutils</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/container/">container</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/intel/">intel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kvm/">kvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux内核/">linux内核</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/llvm/">llvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/">memory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/namespace/">namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/server/">server</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/x64-assembly/">x64 assembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/x86-64/">x86-64</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/二进制/">二进制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内存安全/">内存安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/底层安全/">底层安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/文件系统/">文件系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/浏览器安全/">浏览器安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/爬虫/">爬虫</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/硬件/">硬件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/系统安全/">系统安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译器/">编译器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译安全/">编译安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚函数/">虚函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟化/">虚拟化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/链接器/">链接器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/静态分析/">静态分析</a></li></ul>
     </div>
@@ -1012,7 +971,7 @@ server_name example.com www.example.com;
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
+    <h3 class="widget-title">Nuage de mot-clés</h3>
     <div class="widget tagcloud">
       <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/GCC/" style="font-size: 17.14px;">GCC</a> <a href="/tags/I-O/" style="font-size: 11.43px;">I/O</a> <a href="/tags/IDA-pro/" style="font-size: 10px;">IDA pro</a> <a href="/tags/KVM/" style="font-size: 10px;">KVM</a> <a href="/tags/Ocaml/" style="font-size: 11.43px;">Ocaml</a> <a href="/tags/PID-namespace/" style="font-size: 10px;">PID namespace</a> <a href="/tags/QEMU/" style="font-size: 10px;">QEMU</a> <a href="/tags/SGX/" style="font-size: 12.86px;">SGX</a> <a href="/tags/binutils/" style="font-size: 10px;">binutils</a> <a href="/tags/chrome/" style="font-size: 10px;">chrome</a> <a href="/tags/container/" style="font-size: 10px;">container</a> <a href="/tags/intel/" style="font-size: 11.43px;">intel</a> <a href="/tags/kvm/" style="font-size: 10px;">kvm</a> <a href="/tags/linux/" style="font-size: 20px;">linux</a> <a href="/tags/linux内核/" style="font-size: 12.86px;">linux内核</a> <a href="/tags/llvm/" style="font-size: 10px;">llvm</a> <a href="/tags/memory/" style="font-size: 10px;">memory</a> <a href="/tags/namespace/" style="font-size: 11.43px;">namespace</a> <a href="/tags/nginx/" style="font-size: 11.43px;">nginx</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/server/" style="font-size: 11.43px;">server</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/x64-assembly/" style="font-size: 11.43px;">x64 assembly</a> <a href="/tags/x86-64/" style="font-size: 10px;">x86-64</a> <a href="/tags/二进制/" style="font-size: 10px;">二进制</a> <a href="/tags/内存安全/" style="font-size: 10px;">内存安全</a> <a href="/tags/底层安全/" style="font-size: 10px;">底层安全</a> <a href="/tags/操作系统/" style="font-size: 18.57px;">操作系统</a> <a href="/tags/文件系统/" style="font-size: 10px;">文件系统</a> <a href="/tags/浏览器安全/" style="font-size: 10px;">浏览器安全</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a> <a href="/tags/硬件/" style="font-size: 10px;">硬件</a> <a href="/tags/系统安全/" style="font-size: 12.86px;">系统安全</a> <a href="/tags/编译器/" style="font-size: 11.43px;">编译器</a> <a href="/tags/编译安全/" style="font-size: 15.71px;">编译安全</a> <a href="/tags/虚函数/" style="font-size: 10px;">虚函数</a> <a href="/tags/虚拟化/" style="font-size: 14.29px;">虚拟化</a> <a href="/tags/链接器/" style="font-size: 10px;">链接器</a> <a href="/tags/静态分析/" style="font-size: 12.86px;">静态分析</a>
     </div>
@@ -1031,13 +990,9 @@ server_name example.com www.example.com;
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
+    <h3 class="widget-title">Articles récents</h3>
     <div class="widget">
       <ul>
-        
-          <li>
-            <a href="/2017/07/28/hello-world/">Hello World</a>
-          </li>
         
           <li>
             <a href="/2017/07/15/浅谈GCC编译优化/">浅谈GCC编译优化</a>
@@ -1055,6 +1010,10 @@ server_name example.com www.example.com;
             <a href="/2017/06/09/Hack gcc：添加新的函数/">Hack GCC，在编译时构造新的函数</a>
           </li>
         
+          <li>
+            <a href="/2017/05/16/Hack GCC：insturment on RTL/">Hack GCC，在RTL上插桩</a>
+          </li>
+        
       </ul>
     </div>
   </div>
@@ -1068,7 +1027,7 @@ server_name example.com www.example.com;
   <div class="outer">
     <div id="footer-info" class="inner">
       &copy; 2017 John Doe<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
 </footer>

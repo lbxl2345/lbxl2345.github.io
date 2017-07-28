@@ -48,9 +48,9 @@
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
@@ -60,49 +60,6 @@
 </header>
       <div class="outer">
         <section id="main">
-  
-    <article id="post-GCC overview" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/05/01/GCC overview/" class="article-date">
-  <time datetime="2017-05-01T13:40:00.000Z" itemprop="datePublished">2017-05-01</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/05/01/GCC overview/">GCC，Overview</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h4 id="前端：AST-GENERIC"><a href="#前端：AST-GENERIC" class="headerlink" title="前端：AST/GENERIC"></a>前端：AST/GENERIC</h4><p>AST:用<code>tree</code>来表示函数。其中，<code>tree</code>实际上是一个指针，它能够指向许多种类型的<code>tree_node</code>，这些<code>tree_node</code>定义在tree-core.h当中，就不一一赘述了。只需要明白，GCC当中最重要的数据就够就是tree，如果你想要添加一种<code>tree_node</code>，也可以在tree.def里面添加。  </p>
-<p>tree-core.h中定义了两种数据结构，用来直接表示tree节点，分别是tree_list和tree_vec。它们都包含有一个tree_common结构。tree_common包含有一个chain，用来和其他的tree链接起来。而tree_list则包含有purpose和value，它们都是<code>tree_node</code>。<strong>value包含了一个tree的主体</strong>。<br>可以说，在GENERIC中，<code>tree_node</code>才是主角。正如前面所说的，<code>tree_node</code>根据表示内容，也有不同的类型，而不同类型的<code>tree_node</code>的代码也不同了。比如指针类型使用POINTER_TYPE代码，而数组使用ARRAY_TYPE代码。<br>函数的声明、属性、表达式等，都是通过tree_node来表示的。在AST中，函数可以分为几个部分，分别是名字、参数、结果和函数体。这几个部分，都是通过<code>tree_node</code>来表示的。当然函数的内部还包含有许多属性。值得一提的是，有时候tree会为后端保留一些slot，用来在树被转化为RTL时，给GCC后端使用。 </p>
-<h4 id="中端：GIMPLE"><a href="#中端：GIMPLE" class="headerlink" title="中端：GIMPLE"></a>中端：GIMPLE</h4><p><strong>目前C和C++的前端直接从tree转换为GIMPLE</strong>，不再先转换为GENERIC了。<br>在GCC中，<code>gimplifier</code>过程将原始的GENERIC表达式，生成（不超过3个操作数）的GIMPLE元组。GIMPLE同样是基于tree结构的中间语言。其实GIMPLE还可以进行细分，它表现出了编译器在middle end的过程。没有完全下降的GIMPLE被称为“High GIMPLE”。“Low GIMPLE”完成了进一步下降，消除了隐式的跳转和异常表达式。<br>在Low GIMPLE之后，是基于SSA的GIMPLE。SSA，“静态单赋值”保证程序中的变量，只在一个位置赋值（赋值多次就在每次赋值后产生新的变量），这样做的好处是利于数据流分析，大多数优化都是基于SSA来做的。基于GIMPLE的优化过程，都是与机器语言无关的，它包括变量的属性设置、数据流分析和优化、别名分析等。<br>目前，大多数插桩的工作，也都是在GIMPLE上完成的，因为它属于与目标机器代码无关的中间语言；这也和LLVM IR类似。  </p>
-<h4 id="后端：RTL"><a href="#后端：RTL" class="headerlink" title="后端：RTL"></a>后端：RTL</h4><p>RTL则是从GIMPLE进一步拓展而来，它与机器语言直接相关。它也是大部分pass依赖的中间表示，和Lisp很类似。RTL会在优化过程中，逐渐去掉伪寄存器、合并指令，删除控制流图等。最后GCC根据RTL语言，根据insn-output当中的的模版，一一对应的输出汇编格式，再由汇编翻译成二进制代码。<br>RTL语言的定义位于rtl.def当中，在make过程中，GCC会根据机器描述文件，从对应到机器代码中提取寄存器、指令的配置，并生成相应的insn-out.c等文件，它们会在make install的时候进一步生成GCC。<br>值得一提的是，不论是RTL还是GIMPLE，都是和编译器所维护的控制流图相关的。控制流图由基本块和边来表示，并在编译过程中保持更新。控制流图在树拓展为RTL的过程中被丢弃。  </p>
-<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><p>总体而言，GCC的编译过程可以归纳为：从源码到语法树、从语法树到GIMPLE、从GIMPLE到RTL，再从RTL到汇编。在每个阶段，而GCC的优化工作，主要在GIMPLE和RTL上面进行。    </p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/05/01/GCC overview/" data-id="cj5nn6mjt0016o43fi293a9id" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译安全/">编译安全</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
   
     <article id="post-深入理解进程通信" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
@@ -290,7 +247,7 @@ if((recvbytes = recv(sockfd, buf, MAXDATASIZE, 0)) == -1)
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/30/深入理解进程通信/" data-id="cj5nn6mmb0040o43f6ab35lwe" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2017/04/30/深入理解进程通信/" data-id="cj5nn89ax003woc3f8ljwim8c" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
@@ -448,7 +405,7 @@ if (q) {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/27/深入理解信号/" data-id="cj5nn6mm1003jo43fagyuejs1" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2017/04/27/深入理解信号/" data-id="cj5nn89am003hoc3fznbqx3ba" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
@@ -727,7 +684,7 @@ unlock:
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/25/深入理解进程地址空间/" data-id="cj5nn6mm8003vo43ff2d5jks8" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2017/04/25/深入理解进程地址空间/" data-id="cj5nn89aw003toc3fgh5a25ji" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
@@ -806,7 +763,7 @@ struct list_head full;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/20/深入理解内存管理/" data-id="cj5nn6mm1003lo43fj40go4tt" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2017/04/20/深入理解内存管理/" data-id="cj5nn89aq003moc3faa3zuxdn" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
@@ -854,7 +811,7 @@ struct list_head full;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/15/深入理解进程与调度/" data-id="cj5nn6mm7003so43fi1x3xyv5" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2017/04/15/深入理解进程与调度/" data-id="cj5nn89av003roc3f0rvs0xfo" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
@@ -952,7 +909,7 @@ struct bio_vec        *bi_io_vec;    //bio_vec数组
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/11/深入理解I:O体系结构（二）/" data-id="cj5nn6mlz003go43ffinsakih" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2017/04/11/深入理解I:O体系结构（二）/" data-id="cj5nn89al003eoc3ful99wkdz" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
@@ -1195,7 +1152,7 @@ unsigned int count;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/10/深入理解I:O体系结构（一）/" data-id="cj5nn6mlz003eo43fkaezfzos" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2017/04/10/深入理解I:O体系结构（一）/" data-id="cj5nn89ak003coc3fgfsy586q" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
@@ -1255,7 +1212,7 @@ unsigned int count;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/05/IDAPython-advance1/" data-id="cj5nn6mk8001ho43fu940r5sy" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2017/04/05/IDAPython-advance1/" data-id="cj5nn8990001joc3furwo89xf" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/系统安全/">系统安全</a></li></ul>
@@ -1321,7 +1278,7 @@ for x in range(0,5):
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/05/IDAPython/" data-id="cj5nn6mka001lo43frnc5dygx" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2017/04/05/IDAPython/" data-id="cj5nn8992001moc3f01v0vusk" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IDA-pro/">IDA pro</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/静态分析/">静态分析</a></li></ul>
@@ -1333,10 +1290,179 @@ for x in range(0,5):
 
 
   
+    <article id="post-深入理解文件系统" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/03/30/深入理解文件系统/" class="article-date">
+  <time datetime="2017-03-30T03:40:00.000Z" itemprop="datePublished">2017-03-30</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/03/30/深入理解文件系统/">深入理解文件系统</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="虚拟文件系统（VFS）的思想和作用"><a href="#虚拟文件系统（VFS）的思想和作用" class="headerlink" title="虚拟文件系统（VFS）的思想和作用"></a>虚拟文件系统（VFS）的思想和作用</h4><p>实际上，看到<strong>Virtaul</strong>，我们就应该想到VFS的作用，是虚拟出一个中间层，来实现某些部分的<strong>统一处理</strong>。实际上，VFS要解决的是，让应用能够“以一种通用的方式”，去访问不同类型的文件系统：<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/VFS.png?raw=true =100" alt=""><br>可以看到，对于不同类型的文件系统、网络文件系统、伪文件系统，应用对它们的操作接口都是一致的,而底层的驱动则会完成实际的区分工作。  </p>
+<h4 id="通用文件模型"><a href="#通用文件模型" class="headerlink" title="通用文件模型"></a>通用文件模型</h4><p>VFS通过一个通用文件模型，来表示一个文件系统，它从顶层到底层，一共维护四个数据结构。这里我们通过磁盘文件系统来举例子说明：<br>file：文件<strong>对象</strong>。如果一个进程要和一个对象进行交互，那么久要在访问期间存放一个文件对象在内核内存中。<br>dentry：目录项<strong>对象</strong>。用来存放目录项和对应文件链接信息，每个磁盘文件系统，都有特殊的方式，将该类信息存在磁盘上。<br>inode：索引节点<strong>对象</strong>。用来存放关于具体文件的一般信息，对基于磁盘的文件系统来说，通常对应于存放在磁盘上的文件控制块，其节点号唯一标识文件系统中的文件。<br>superblock：超级块<strong>对象</strong>。对应安装的文件系统的信息，他对应磁盘上的文件系统控制块。</p>
+<p><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/%E9%80%9A%E7%94%A8%E6%A8%A1%E5%9E%8B.png?raw=true ＝100" alt=""></p>
+<p>这张图反映出了在一次访问中，各个对象是如何参与到过程中去的。这里我为什么要把<strong>对象</strong>给加粗呢？VFS实际采用的是一种面向对象的方式（虽然它是用C语言写的）。每个object，都有一系列的“操作方式”，VFS为这些对象提供了“统一的”接口，而具体的文件系统则提供了千差万别的实现方式，这是由一个函数指针表来实现的。  </p>
+<h4 id="文件对象"><a href="#文件对象" class="headerlink" title="文件对象"></a>文件对象</h4><p>这里我们从文件对象开始说。如果留意进程的<code>task_struct</code>（定义在sched.h当中），你会发现一个<code>fs_struct</code>结构，以及一个<code>files_struct</code>结构。<br>其中<code>fs_struct</code>保存了当前点工作目录和根目录：</p>
+<pre><code>struct fs_struct {
+int users;
+spinlock_t lock;
+seqcount_t seq;
+int umask;
+int in_exec;
+struct path root, pwd;
+};
+</code></pre><p>而<code>files_struct</code>结构则保存了当前进程所打开的所有文件，它们保存在<code>fdtable</code>中：</p>
+<pre><code>struct fdtable {
+unsigned int max_fds;
+struct file __rcu **fd;      /* current fd array */
+unsigned long *close_on_exec;
+unsigned long *open_fds;
+struct rcu_head rcu;
+};
+</code></pre><p>当<code>open()</code>系统调用发生时，文件描述符实际上是fd中的下标。现在我们终于看到<code>file</code>结构了，这里我只列出了重要的部分：</p>
+<pre><code>struct file {
+union {
+    struct llist_node    fu_llist;
+    struct rcu_head     fu_rcuhead;
+} f_u;
+struct path        f_path;
+struct inode        *f_inode;    /* cached value */
+const struct file_operations    *f_op;  
+
+struct mutex        f_pos_lock;
+loff_t            f_pos;
+
+} __attribute__((aligned(4)));    
+</code></pre><p>这里，<code>loff_t</code>是平时我们用来在文件读写上用于定位的指针，显然这个值必须放在file当中，因为可能会有几个进程同时访问一个文件。<br>而<code>f_op</code>正反映出了“通用文件模型的”特点，它保存了文件操作的对应指针；这个值是在进程打开文件时，从文件索引节点中的i_fop中复制的。<br>当然在<code>file</code>中我们也看到了<code>dentry</code>和<code>inode</code>的影子：<code>f_path</code>包含了<code>dentry *</code>，而*f_indoe也是file的一个域，它们分别指向了对应文件点dentry对象和inode对象，我们将会在接下来对它们进行详细的说明。  </p>
+<h4 id="目录项对象"><a href="#目录项对象" class="headerlink" title="目录项对象"></a>目录项对象</h4><p>在上一节中，我们知道了文件对象描述了应用和文件的联系。这里，目录项是用来描述具体的文件系统中的目录项的，他的作用是：<strong>用来快速找到一个路径，并且与文件相关联</strong>。假设进程需要查找一个路径，那么路径中的每一个分量，都会有一个目录项与之对应。并且，目录项会把每个分量和它对应的索引节点联系起来。<code>dentry</code>的定义如下：  </p>
+<pre><code>struct dentry {
+unsigned int d_flags;        
+seqcount_t d_seq;        
+struct hlist_bl_node d_hash;    /* 哈希链表 */
+struct dentry *d_parent;    /* 父目录项 */
+struct qstr d_name;            /* 目录名 */
+struct inode *d_inode;        /* 对应的索引节点 */
+unsigned char d_iname[DNAME_INLINE_LEN];    /* small names */
+
+struct lockref d_lockref;    /* per-dentry lock and refcount */
+const struct dentry_operations *d_op;    /* dentry操作 */
+struct super_block *d_sb;    /* 文件的超级块对象 */
+unsigned long d_time;        
+void *d_fsdata;            
+
+struct list_head d_lru;        /* LRU list */
+struct list_head d_child;    /* child of parent list */
+struct list_head d_subdirs;    /* our children */
+
+union {
+    struct hlist_node d_alias;    /* inode alias list */
+     struct rcu_head d_rcu;
+} d_u;
+};  
+</code></pre><p>这里可以看到，除开自身的名称、引用计数等，目录项对象中有这些关键的结构：<code>d_op</code>描述了目录项所对应的操作（通用模型的特点）；<code>d_sb</code>则是    文件的超级块对象，至于<code>d_inode</code>则是这个目录项关联的索引节点（当然它们并不是一一对应的关系）。注意，这里还有个很重要的变量：<code>d_lockref</code>，它其实就是一个计数器，说明了这个目录项对象的引用次数。</p>
+<p>目录项对象保存在<strong>dentry cache</strong>中。linux操作系统为了提高目录项对象的处理效率，设计了这个高速缓存。这是因为，从磁盘中读取目录项，并且构造相应的目录项对象是需要花费大量的时间的，因此，在完成对目录项对象的操作之后，在内存中（尽量）保存它们具有很重要的意义。这个dentry cache，其本质是一个哈希链表，它定义在list_bl.h当中（它的hash计算在<code>d_hash</code>中完成）。我注意到，对于每一个dentry，都有一个d_flags，它的可能的值，定义在dcache.h当中。因为dentry cache的大小也是有限的，因此我们也不可能无限制地把dentry保存在cache中。因此linux首先把dentry的状态进行了定义：  </p>
+<p>free：该状态目录项对象不包含有效信息，未被VFS使用<br>unused：目前没有被内核使用，d_count的值为0，d_inode仍然指向相关的索引节点<br>in use：正在被使用，d_count的值大于0，d_inode仍然指向相关的索引节点<br>negative：与目录项关联的索引节点不存在，相应的磁盘索引节点已经被删除（d_inode为负数）。 </p>
+<p>那么对于unused和negative这一类目录项，linux使用了一个LRU（最近最少使用）的双向链表，一旦dentry cache的大小吃紧，就从这个LRU链表中删除dentry。  </p>
+<h4 id="索引节点对象"><a href="#索引节点对象" class="headerlink" title="索引节点对象"></a>索引节点对象</h4><p>索引节点对象，是VFS当中最为重要的一个数据结构。它的作用是<strong>表示文件的相关信息</strong>。这里的相关信息，不包括文件本身的内容，而是诸如文件大小、拥有者、创建时间等信息。在一个文件被首次访问时，内核会在内存中构造它的索引节点对象。我们在操作系统中，可以任意修改一个文件的名字，但是索引节点和文件是一一对应的（由索引节点号标识），只要文件存在它就会存在（注意，超级块对象和索引节点对象在硬盘上都是有对应的实体数据结构的，在使用时利用硬盘上的内容，在内存中构造索引节点对象）。目录项是用来找到一个对应的索引节点实体，而具体与文件关联的工作则是由索引节点完成的。<br>让我们来看看索引节点的数据结构（只取了重要的部分），其定义在fs.h当中：</p>
+<pre><code>struct inode {
+    struct hlist_node    i_hash;     /* 散列表，用于快速查找inode */
+    struct list_head    i_list;        /* 相同状态索引节点链表 */
+    struct list_head    i_sb_list;  /* 文件系统中所有节点链表  */
+    struct list_head    i_dentry;   /* 目录项链表 */
+    unsigned long        i_ino;      /* 节点号 */
+    atomic_t        i_count;        /* 引用计数 */
+    unsigned int        i_nlink;    /* 硬链接数 */
+    uid_t            i_uid;          /* 使用者id */
+    gid_t            i_gid;          /* 使用组id */
+    struct timespec        i_atime;    /* 最后访问时间 */
+    struct timespec        i_mtime;    /* 最后修改时间 */
+    struct timespec        i_ctime;    /* 最后改变时间 */
+    const struct inode_operations    *i_op;  /* 索引节点操作函数 */
+    const struct file_operations    *i_fop;    /* 缺省的索引节点操作 */
+    struct super_block    *i_sb;              /* 相关的超级块 */
+    struct address_space    *i_mapping;     /* 相关的地址映射 */
+    struct address_space    i_data;         /* 设备地址映射 */
+    unsigned int        i_flags;            /* 文件系统标志 */
+    void            *i_private;             /* fs 私有指针 */
+    unsigned long i_state;
+};
+</code></pre><p>可以看到，inode同样采用了多个链表来保存。<code>i_hash</code>用来快速查找inode，<code>i_list</code>则是相同状态索引结点形成的双链表，这包含有未用索引节点链表，正在使用索引节点链表和脏索引节点链表等。<code>i_dentry</code>是所有使用该节点的dentry链表。值得注意的是，inode不仅仅包含了自身索引节点的操作函数<code>i_op</code>，还有指向（缺省）文件操作的指针<code>i_fop</code>。当然，inode还会和super_block有联系。<code>i_sb</code>是索引节点所在的超级块，而i_sb_list则是超级块中的所有节点的链表。<br>当在某个目录下创建、打开一个文件时，内核就会调用<code>create()</code>为这个文件创建一个inode。VFS通过inode的i_op-&gt;create()函数来完成这个工作；它将目录的inode、新打开文件的dentry、访问权限作为参数；<code>lookup()</code>函数用来查找指定文件的dentry，<code>link()</code>和<code>symlink()</code>分别用来创建硬链接和软链接。</p>
+<h4 id="超级块对象"><a href="#超级块对象" class="headerlink" title="超级块对象"></a>超级块对象</h4><p>与前面几类对象不同的是，超级块对象表述的内容更加庞大一些：它表示的是一个“已安装的文件系统”。它在文件系统安装时建立，在文件系统卸载时删除。其定义在fs.h当中，这里我只列举出了较为关键的域。</p>
+<pre><code>struct super_block {
+        struct list_head        s_list;         //超级块链表的指针
+        dev_t                   s_dev;          //设备标识符
+        unsigned char           s_blocksize_bits;
+        unsigned long           s_blocksize;
+        loff_t                  s_maxbytes;     //文件的最长长度
+        struct file_system_type *s_type;
+        const struct super_operations   *s_op;  //超级块的操作
+        const struct dquot_operations   *dq_op; 
+        const struct quotactl_ops       *s_qcop;
+        const struct export_operations *s_export_op;
+        unsigned long           s_flags;    //安装标识
+        struct dentry           *s_root;    //根目录的目录项
+        int                     s_count;
+        const struct xattr_handler **s_xattr;
+        struct list_head        s_inodes;       //所有的inodes链（打开文件的inodes链）
+
+        struct block_device     *s_bdev;    //块设备
+          char s_id[32];                          //块设备名称
+        u8 s_uuid[16];                          //UUID            fmode_t                 s_mode;
+
+        char *s_subtype;
+        const struct dentry_operations *s_d_op; //default d_op for dentries
+        void *s_fs_indo;     //文件系统的信息指针
+        };
+</code></pre><p>在linux中，每个超级块代表一个已安装的文件系统。所有的超级块链表，是以一种双向环形链表的形式链接在一起的。其<code>prev</code>、<code>next</code>保存在<code>list_head</code>域中。超级块对象中，保存有其根目录的<code>dentry</code>，以及其所有的<code>inode</code>。<code>s_fs_info</code>则指向了文件系统的超级块信息。而对于超级块来说，同样定义有<code>s_op</code>，也即超级块的操作表。<br>超级块一般是储存在磁盘的特定扇区当中，但如果是基于内存对文件系统，比如proc、sysfs，则是保存在内存当中，而超级块对象，则是在使用时创建的，它保存在内存中。  </p>
+<h4 id="硬链接和软链接与复制"><a href="#硬链接和软链接与复制" class="headerlink" title="硬链接和软链接与复制"></a>硬链接和软链接与复制</h4><p>linux里面，可以把文件分成三个部分：文件名（dentry），inode，数据。<br>复制的定义很明确，就是为这三个部分，都创建一个新的副本。<br>硬链接的本质是一个“文件名”，一个文件可能有多个“文件名”，inode并不包含文件名，而只是有一个索引节点号。硬链接实际上就是为链接文件创建一个新的dentry，并将dentry写入父目录的数据中，而硬链接所对应的inode依然没有变。所以删除硬链接只是删除了dentry，而inode结点数减少1而已。<br>软链接就是一个普通的文件，只不过它的数据保存的是另一个文件的路径。软链接的创建，调用了<code>__ext4_new_inode()</code>来创建一个新的inode，并把<code>dentry-&gt;name</code>作为了它的内容。也就是说，软链接也同时创建了这三个部分。<br>二者的区别在哪里呢？首先，硬链接共享了inode，因此它不能跨文件系统；但是软链接不受这个限制。由于相同的原因，硬链接只能对存在的文件进行创建，而软链接不是。而且硬链接有可能会在目录中引入循环，所以不能指向目录；但软链接不会，因为它有一个inode实体可以跟踪。不过不论删除软链接还是硬链接，都不会对原文件、具有相同inode号的文件造成影响。但如果原文件被删除，软链接会变成死链接，硬链接不会，因为inode的计数并没有变成0。<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/%E9%93%BE%E6%8E%A5.png?raw=true" alt="">    </p>
+<h4 id="路径名查找"><a href="#路径名查找" class="headerlink" title="路径名查找"></a>路径名查找</h4><p>每当进程需要识别一个文件时，就把它的文件路径名，传递给某个VFS系统调用，比如<code>open()</code>。在路径查找中，有个辅助的数据结构：<code>nameidata</code>，它用来向函数传递参数，并且保存查找的结果：  </p>
+<pre><code>struct nameidata {
+    struct path    path;
+    struct qstr    last;
+    struct path    root;
+    struct inode    *inode; /* path.dentry.d_inode */
+    unsigned int    flags;
+    unsigned    seq, m_seq;
+    int        last_type;
+    unsigned    depth;
+    struct file    *base;
+    char *saved_names[MAX_NESTED_LINKS + 1];
+};
+</code></pre><p>在查找完成后，<code>path</code>中保存了目录项，<code>depth</code>表示了当前路径的深度，<code>saved_names</code>保存了符号链接处理中的路径名。<br>路径查找的复杂性，主要体现在VFS系统的一些特点上：（1）必须对目录的访问权限进行检查；（2）文件名可能是符号链接；（3）要考虑符号链接可能带来的循环引用；（4）文件名可能是文件系统的安装点（5）路径名和进程的命名空间有关等。<br>路径名查找的入口是<code>path_lookup()</code>，它调用了<code>filename_lookup()</code>。这个函数对nameidata进行了简单的填充，随后调用<code>lookupat()</code>。<br><code>lookupat()</code>函数中通过一个循环，和<code>path_init()</code>函数，逐级向下进行查找，检查目录的访问权限，并且考虑符号链接等情况。  </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/03/30/深入理解文件系统/" data-id="cj5nn89as003ooc3fmvgkyqd2" class="article-share-link">Partager</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
 
 
   <nav id="page-nav">
-    <a class="extend prev" rel="prev" href="/">&laquo; __('prev')</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/3/">__('next') &raquo;</a>
+    <a class="extend prev" rel="prev" href="/">&laquo; __('prev')</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/">__('next') &raquo;</a>
   </nav>
 </section>
         
@@ -1347,7 +1473,7 @@ for x in range(0,5):
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
+    <h3 class="widget-title">Mot-clés</h3>
     <div class="widget">
       <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GCC/">GCC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/I-O/">I/O</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDA-pro/">IDA pro</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KVM/">KVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ocaml/">Ocaml</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PID-namespace/">PID namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/QEMU/">QEMU</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SGX/">SGX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/binutils/">binutils</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/container/">container</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/intel/">intel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kvm/">kvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux内核/">linux内核</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/llvm/">llvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/">memory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/namespace/">namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/server/">server</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/x64-assembly/">x64 assembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/x86-64/">x86-64</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/二进制/">二进制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内存安全/">内存安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/底层安全/">底层安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/文件系统/">文件系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/浏览器安全/">浏览器安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/爬虫/">爬虫</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/硬件/">硬件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/系统安全/">系统安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译器/">编译器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译安全/">编译安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚函数/">虚函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟化/">虚拟化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/链接器/">链接器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/静态分析/">静态分析</a></li></ul>
     </div>
@@ -1357,7 +1483,7 @@ for x in range(0,5):
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
+    <h3 class="widget-title">Nuage de mot-clés</h3>
     <div class="widget tagcloud">
       <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/GCC/" style="font-size: 17.14px;">GCC</a> <a href="/tags/I-O/" style="font-size: 11.43px;">I/O</a> <a href="/tags/IDA-pro/" style="font-size: 10px;">IDA pro</a> <a href="/tags/KVM/" style="font-size: 10px;">KVM</a> <a href="/tags/Ocaml/" style="font-size: 11.43px;">Ocaml</a> <a href="/tags/PID-namespace/" style="font-size: 10px;">PID namespace</a> <a href="/tags/QEMU/" style="font-size: 10px;">QEMU</a> <a href="/tags/SGX/" style="font-size: 12.86px;">SGX</a> <a href="/tags/binutils/" style="font-size: 10px;">binutils</a> <a href="/tags/chrome/" style="font-size: 10px;">chrome</a> <a href="/tags/container/" style="font-size: 10px;">container</a> <a href="/tags/intel/" style="font-size: 11.43px;">intel</a> <a href="/tags/kvm/" style="font-size: 10px;">kvm</a> <a href="/tags/linux/" style="font-size: 20px;">linux</a> <a href="/tags/linux内核/" style="font-size: 12.86px;">linux内核</a> <a href="/tags/llvm/" style="font-size: 10px;">llvm</a> <a href="/tags/memory/" style="font-size: 10px;">memory</a> <a href="/tags/namespace/" style="font-size: 11.43px;">namespace</a> <a href="/tags/nginx/" style="font-size: 11.43px;">nginx</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/server/" style="font-size: 11.43px;">server</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/x64-assembly/" style="font-size: 11.43px;">x64 assembly</a> <a href="/tags/x86-64/" style="font-size: 10px;">x86-64</a> <a href="/tags/二进制/" style="font-size: 10px;">二进制</a> <a href="/tags/内存安全/" style="font-size: 10px;">内存安全</a> <a href="/tags/底层安全/" style="font-size: 10px;">底层安全</a> <a href="/tags/操作系统/" style="font-size: 18.57px;">操作系统</a> <a href="/tags/文件系统/" style="font-size: 10px;">文件系统</a> <a href="/tags/浏览器安全/" style="font-size: 10px;">浏览器安全</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a> <a href="/tags/硬件/" style="font-size: 10px;">硬件</a> <a href="/tags/系统安全/" style="font-size: 12.86px;">系统安全</a> <a href="/tags/编译器/" style="font-size: 11.43px;">编译器</a> <a href="/tags/编译安全/" style="font-size: 15.71px;">编译安全</a> <a href="/tags/虚函数/" style="font-size: 10px;">虚函数</a> <a href="/tags/虚拟化/" style="font-size: 14.29px;">虚拟化</a> <a href="/tags/链接器/" style="font-size: 10px;">链接器</a> <a href="/tags/静态分析/" style="font-size: 12.86px;">静态分析</a>
     </div>
@@ -1376,13 +1502,9 @@ for x in range(0,5):
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
+    <h3 class="widget-title">Articles récents</h3>
     <div class="widget">
       <ul>
-        
-          <li>
-            <a href="/2017/07/28/hello-world/">Hello World</a>
-          </li>
         
           <li>
             <a href="/2017/07/15/浅谈GCC编译优化/">浅谈GCC编译优化</a>
@@ -1400,6 +1522,10 @@ for x in range(0,5):
             <a href="/2017/06/09/Hack gcc：添加新的函数/">Hack GCC，在编译时构造新的函数</a>
           </li>
         
+          <li>
+            <a href="/2017/05/16/Hack GCC：insturment on RTL/">Hack GCC，在RTL上插桩</a>
+          </li>
+        
       </ul>
     </div>
   </div>
@@ -1413,7 +1539,7 @@ for x in range(0,5):
   <div class="outer">
     <div id="footer-info" class="inner">
       &copy; 2017 John Doe<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
 </footer>
