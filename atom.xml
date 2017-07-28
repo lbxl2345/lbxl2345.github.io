@@ -445,9 +445,9 @@ DECL_ARGUMENTS(fndecl) = t;
     </summary>
     
     
-      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
-    
       <category term="GCC" scheme="http://sec-lbx.tk/tags/GCC/"/>
+    
+      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
     
   </entry>
   
@@ -492,9 +492,9 @@ emit_insn(BNDmode == BND64mode ? gen_bnd64_cu(op1, op0):gen_bnd32_cu(op1, op0));
     </summary>
     
     
-      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
-    
       <category term="GCC" scheme="http://sec-lbx.tk/tags/GCC/"/>
+    
+      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
     
   </entry>
   
@@ -533,9 +533,9 @@ else{
     </summary>
     
     
-      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
-    
       <category term="GCC" scheme="http://sec-lbx.tk/tags/GCC/"/>
+    
+      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
     
   </entry>
   
@@ -609,9 +609,9 @@ else{
     </summary>
     
     
-      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
-    
       <category term="GCC" scheme="http://sec-lbx.tk/tags/GCC/"/>
+    
+      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
     
   </entry>
   
@@ -676,9 +676,9 @@ rtx: mov ax, 8
     </summary>
     
     
-      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
-    
       <category term="GCC" scheme="http://sec-lbx.tk/tags/GCC/"/>
+    
+      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
     
   </entry>
   
@@ -734,9 +734,9 @@ register_callback(&quot;myplugin&quot;, PLUGIN_INFO, NULL, &amp;myplugin_info);
     </summary>
     
     
-      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
-    
       <category term="GCC" scheme="http://sec-lbx.tk/tags/GCC/"/>
+    
+      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
     
   </entry>
   
@@ -761,9 +761,9 @@ register_callback(&quot;myplugin&quot;, PLUGIN_INFO, NULL, &amp;myplugin_info);
     </summary>
     
     
-      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
-    
       <category term="GCC" scheme="http://sec-lbx.tk/tags/GCC/"/>
+    
+      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
     
   </entry>
   
@@ -1783,52 +1783,6 @@ unsigned int count;
   </entry>
   
   <entry>
-    <title>IDAPython:进阶（一）</title>
-    <link href="http://sec-lbx.tk/2017/04/05/IDAPython-advance1/"/>
-    <id>http://sec-lbx.tk/2017/04/05/IDAPython-advance1/</id>
-    <published>2017-04-05T13:40:00.000Z</published>
-    <updated>2017-07-28T09:04:47.000Z</updated>
-    
-    <content type="html"><![CDATA[<h4 id="IDAPython-进阶（一）"><a href="#IDAPython-进阶（一）" class="headerlink" title="IDAPython:进阶（一）"></a>IDAPython:进阶（一）</h4><h4 id="Instruction-feature"><a href="#Instruction-feature" class="headerlink" title="Instruction feature"></a>Instruction feature</h4><p>在IDAPython中，时常可以看到使用<code>insn.get_canon_feature()</code>来获取指令“特性”。这里，<code>instruc_t</code>类中包含有两个变量，<code>name</code>和<code>feature</code>，其中<code>feature</code>是一系列的指令特征位。 </p>
-<h4 id="IDA-SDK"><a href="#IDA-SDK" class="headerlink" title="IDA SDK"></a>IDA SDK</h4><p>IDA SDK分为很多hpp，不过它的文档不是特别友好，这里我把比较重要的header的作用给列出来，方便日后进行分析和使用：  </p>
-<ul>
-<li>area:程序中地址范围的集合，它表示一段连续的地址范围，由起始地址和终止地址来表示，例如程序中的segments就是用area来表示的，它在IDA的数据库当中，是采用B树的形式来保存的。  </li>
-<li>bitrange:用来管理一段连续bits的容器，类似一个数组。  </li>
-<li>bytes:处理byte特性的函数，在程序中，每个byte都被识别成一个32-bit的值，他被IDA称为<code>flags</code>。对于bits和flags，都只能通过特定的函数去修改、访问。flags被保存在*.id1这样的文件当中。  </li>
-<li>diskio:IDA的文件IO函数，通常不使用标准的C来进行I/O，而使用这个hpp当中的函数。  </li>
-<li>entry:处理entry入口的函数，每个entry包含有地址、名称、序号。  </li>
-<li>fixup:处理地址、偏移量的修正等。  </li>
-<li>frame:处理栈桢，包括参数、返回值、保存的寄存器和局部变量等。  </li>
-<li>funcs:处理反汇编程序的函数，函数由多个chunk组成。  </li>
-<li>idp:包含IDP模块的接口，包括有目标的汇编器，以及当前处理器的信息。例如判断一条指令是否为jmp、ret等，都可以使用这种方式。</li>
-<li>lines:处理反汇编text line的生成。</li>
-<li>name:处理命名，给一个特定地址命名等，但是指令和数据的中间是不能命名的。  </li>
-<li>netnode:database的底层接口，程序被以B树的形式保存，而B树的信息则是存放在netnode当中的。  </li>
-<li>offset:用来处理offset的函数，一个操作数可能自身，或者一部分表示了程序中的偏移量。  </li>
-<li>search:中间层的搜索函数，包括寻找数据、代码等。  </li>
-<li>segments:用来和程序中段进行交互的函数，IDA需要程序中的所有地址，属于一个segment(每个地址都必须属于一个segment)，如果地址不属于一个segment，那么这些bytes不能被转换为指令、不能用有名字、不能拥有注释。每个segment都有一个selector。  </li>
-<li>ua:处理程序指令的反汇编。它包含两种函数，第一类是通过kernel来反汇编，第二类是通过IDP模块来反汇编，它们是“helper”。反汇编可以分为三步：分析、仿真、转化为文字。  </li>
-<li>xref:处理交叉引用的情况。包括有CODE和DATA的引用。  </li>
-</ul>
-<h4 id="获取文件名"><a href="#获取文件名" class="headerlink" title="获取文件名"></a>获取文件名</h4><p>SDK提供了两个api，idaapi.get_root_filename能够用来获取当前的文件名，而idaapi.get_input_file_path能够用来获取包含路径的文件名。这两个函数定义在nalt当中。  </p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h4 id=&quot;IDAPython-进阶（一）&quot;&gt;&lt;a href=&quot;#IDAPython-进阶（一）&quot; class=&quot;headerlink&quot; title=&quot;IDAPython:进阶（一）&quot;&gt;&lt;/a&gt;IDAPython:进阶（一）&lt;/h4&gt;&lt;h4 id=&quot;Instruction-f
-    
-    </summary>
-    
-    
-      <category term="系统安全" scheme="http://sec-lbx.tk/tags/%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/"/>
-    
-      <category term="linux" scheme="http://sec-lbx.tk/tags/linux/"/>
-    
-      <category term="操作系统" scheme="http://sec-lbx.tk/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
-    
-  </entry>
-  
-  <entry>
     <title>IDAPython：入门</title>
     <link href="http://sec-lbx.tk/2017/04/05/IDAPython/"/>
     <id>http://sec-lbx.tk/2017/04/05/IDAPython/</id>
@@ -1877,6 +1831,52 @@ for x in range(0,5):
       <category term="python" scheme="http://sec-lbx.tk/tags/python/"/>
     
       <category term="静态分析" scheme="http://sec-lbx.tk/tags/%E9%9D%99%E6%80%81%E5%88%86%E6%9E%90/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>IDAPython:进阶（一）</title>
+    <link href="http://sec-lbx.tk/2017/04/05/IDAPython-advance1/"/>
+    <id>http://sec-lbx.tk/2017/04/05/IDAPython-advance1/</id>
+    <published>2017-04-05T13:40:00.000Z</published>
+    <updated>2017-07-28T09:04:47.000Z</updated>
+    
+    <content type="html"><![CDATA[<h4 id="IDAPython-进阶（一）"><a href="#IDAPython-进阶（一）" class="headerlink" title="IDAPython:进阶（一）"></a>IDAPython:进阶（一）</h4><h4 id="Instruction-feature"><a href="#Instruction-feature" class="headerlink" title="Instruction feature"></a>Instruction feature</h4><p>在IDAPython中，时常可以看到使用<code>insn.get_canon_feature()</code>来获取指令“特性”。这里，<code>instruc_t</code>类中包含有两个变量，<code>name</code>和<code>feature</code>，其中<code>feature</code>是一系列的指令特征位。 </p>
+<h4 id="IDA-SDK"><a href="#IDA-SDK" class="headerlink" title="IDA SDK"></a>IDA SDK</h4><p>IDA SDK分为很多hpp，不过它的文档不是特别友好，这里我把比较重要的header的作用给列出来，方便日后进行分析和使用：  </p>
+<ul>
+<li>area:程序中地址范围的集合，它表示一段连续的地址范围，由起始地址和终止地址来表示，例如程序中的segments就是用area来表示的，它在IDA的数据库当中，是采用B树的形式来保存的。  </li>
+<li>bitrange:用来管理一段连续bits的容器，类似一个数组。  </li>
+<li>bytes:处理byte特性的函数，在程序中，每个byte都被识别成一个32-bit的值，他被IDA称为<code>flags</code>。对于bits和flags，都只能通过特定的函数去修改、访问。flags被保存在*.id1这样的文件当中。  </li>
+<li>diskio:IDA的文件IO函数，通常不使用标准的C来进行I/O，而使用这个hpp当中的函数。  </li>
+<li>entry:处理entry入口的函数，每个entry包含有地址、名称、序号。  </li>
+<li>fixup:处理地址、偏移量的修正等。  </li>
+<li>frame:处理栈桢，包括参数、返回值、保存的寄存器和局部变量等。  </li>
+<li>funcs:处理反汇编程序的函数，函数由多个chunk组成。  </li>
+<li>idp:包含IDP模块的接口，包括有目标的汇编器，以及当前处理器的信息。例如判断一条指令是否为jmp、ret等，都可以使用这种方式。</li>
+<li>lines:处理反汇编text line的生成。</li>
+<li>name:处理命名，给一个特定地址命名等，但是指令和数据的中间是不能命名的。  </li>
+<li>netnode:database的底层接口，程序被以B树的形式保存，而B树的信息则是存放在netnode当中的。  </li>
+<li>offset:用来处理offset的函数，一个操作数可能自身，或者一部分表示了程序中的偏移量。  </li>
+<li>search:中间层的搜索函数，包括寻找数据、代码等。  </li>
+<li>segments:用来和程序中段进行交互的函数，IDA需要程序中的所有地址，属于一个segment(每个地址都必须属于一个segment)，如果地址不属于一个segment，那么这些bytes不能被转换为指令、不能用有名字、不能拥有注释。每个segment都有一个selector。  </li>
+<li>ua:处理程序指令的反汇编。它包含两种函数，第一类是通过kernel来反汇编，第二类是通过IDP模块来反汇编，它们是“helper”。反汇编可以分为三步：分析、仿真、转化为文字。  </li>
+<li>xref:处理交叉引用的情况。包括有CODE和DATA的引用。  </li>
+</ul>
+<h4 id="获取文件名"><a href="#获取文件名" class="headerlink" title="获取文件名"></a>获取文件名</h4><p>SDK提供了两个api，idaapi.get_root_filename能够用来获取当前的文件名，而idaapi.get_input_file_path能够用来获取包含路径的文件名。这两个函数定义在nalt当中。  </p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h4 id=&quot;IDAPython-进阶（一）&quot;&gt;&lt;a href=&quot;#IDAPython-进阶（一）&quot; class=&quot;headerlink&quot; title=&quot;IDAPython:进阶（一）&quot;&gt;&lt;/a&gt;IDAPython:进阶（一）&lt;/h4&gt;&lt;h4 id=&quot;Instruction-f
+    
+    </summary>
+    
+    
+      <category term="系统安全" scheme="http://sec-lbx.tk/tags/%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/"/>
+    
+      <category term="linux" scheme="http://sec-lbx.tk/tags/linux/"/>
+    
+      <category term="操作系统" scheme="http://sec-lbx.tk/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
     
   </entry>
   

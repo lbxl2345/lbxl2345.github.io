@@ -19,9 +19,9 @@
     <meta name="theme-color" content="#3F51B5">
     
     
-    <meta name="keywords" content="编译安全,GCC">
+    <meta name="keywords" content="GCC,编译安全">
     <meta name="description" content="怎么做和为什么？首先对于GCC来说，添加一个新的函数是完全可以实现的，但我并没有看到任何相关的资料。我给gcc的mailing list发了封邮件，但没人给出回答。倒是有人私下给我发了封邮件，表示他对这个做法很好奇，希望我做出来之后能和大家分享一下方法。看来求人终究不如求自己，我看了好几天代码，终于能够在编译的过程中添加函数了。至于为什么要这么做，我认为如果编译时插桩的代码是大量重复的，那么去构造">
-<meta name="keywords" content="编译安全,GCC">
+<meta name="keywords" content="GCC,编译安全">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hack GCC，在编译时构造新的函数">
 <meta property="og:url" content="http://sec-lbx.tk/2017/06/09/Hack gcc：添加新的函数/index.html">
@@ -47,7 +47,7 @@
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
         <i class="icon icon-lg icon-close"></i>
     </a>
-    <div class="brand-wrap" style="background-image:url(/)">
+    <div class="brand-wrap" style="background-image:url(/img/back.jpg)">
       <div class="brand">
         <a href="/" class="avatar waves-effect waves-circle waves-light">
           <img src="/img/avatar.jpg">
@@ -106,7 +106,7 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
@@ -218,7 +218,7 @@ DECL_ARGUMENTS(fndecl) = t;
     <div class="content">
         
 <span class="post-time">
-    Last updated: <time datetime="2017-07-28T09:04:47.000Z" itemprop="dateUpdated">2017-07-28 17:04:47</time>
+    最后更新时间：<time datetime="2017-07-28T09:04:47.000Z" itemprop="dateUpdated">2017-07-28 17:04:47</time>
 </span><br>
 
 
@@ -354,7 +354,7 @@ DECL_ARGUMENTS(fndecl) = t;
             
                 <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
             
-            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
         </p>
     </div>
     <div class="bottom">
