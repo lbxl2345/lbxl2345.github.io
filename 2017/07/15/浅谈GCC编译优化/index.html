@@ -13,7 +13,7 @@
     
     
     
-    <title>浅谈GCC编译优化 | Hexo</title>
+    <title>浅谈GCC编译优化 | lbx&#39;s blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="theme-color" content="#3F51B5">
@@ -24,8 +24,8 @@
 <meta name="keywords" content="GCC,编译器">
 <meta property="og:type" content="article">
 <meta property="og:title" content="浅谈GCC编译优化">
-<meta property="og:url" content="http://yoursite.com/2017/07/15/浅谈GCC编译优化/index.html">
-<meta property="og:site_name" content="Hexo">
+<meta property="og:url" content="http://sec-lbx.tk/2017/07/15/浅谈GCC编译优化/index.html">
+<meta property="og:site_name" content="lbx&#39;s blog">
 <meta property="og:description" content="GCC Pass在GCC完成词法、语法分析，并获得源代码对应的抽象语法树AST之后，会将其转换为对应的GIMPLE序列。随后，GCC会对GIMPLE中间表示进行一系列的处理，包括GIMPLE的低级化、优化、RTL生成等、RTL优化等。为了方便管理，GCC采用了一种称为Pass的组织形式，把它们分成一个个的处理过程，把每个输出结果作为下一个处理过程的输入。GCC中，Pass可以分为4类，GIMPLE">
 <meta property="og:image" content="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E7%BC%96%E8%AF%91%E5%99%A8/%E8%A1%A8%E8%B0%83%E5%BA%A6.png?raw=true">
 <meta property="og:image" content="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E7%BC%96%E8%AF%91%E5%99%A8/ira.png?raw=true">
@@ -35,7 +35,7 @@
 <meta name="twitter:description" content="GCC Pass在GCC完成词法、语法分析，并获得源代码对应的抽象语法树AST之后，会将其转换为对应的GIMPLE序列。随后，GCC会对GIMPLE中间表示进行一系列的处理，包括GIMPLE的低级化、优化、RTL生成等、RTL优化等。为了方便管理，GCC采用了一种称为Pass的组织形式，把它们分成一个个的处理过程，把每个输出结果作为下一个处理过程的输入。GCC中，Pass可以分为4类，GIMPLE">
 <meta name="twitter:image" content="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E7%BC%96%E8%AF%91%E5%99%A8/%E8%A1%A8%E8%B0%83%E5%BA%A6.png?raw=true">
     
-        <link rel="alternate" type="application/atom+xml" title="Hexo" href="/atom.xml">
+        <link rel="alternate" type="application/atom+xml" title="lbx&#39;s blog" href="/atom.xml">
     
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
@@ -50,14 +50,14 @@
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
         <i class="icon icon-lg icon-close"></i>
     </a>
-    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+    <div class="brand-wrap" style="background-image:url(/)">
       <div class="brand">
         <a href="/" class="avatar waves-effect waves-circle waves-light">
-          <img src="/img/avatar.jpg">
+          <img src="/avatar.jpg">
         </a>
         <hgroup class="introduce">
-          <h5 class="nickname">John Doe</h5>
-          <a href="mailto:634206017@qq.com" title="634206017@qq.com" class="mail">634206017@qq.com</a>
+          <h5 class="nickname">Benxi Liu</h5>
+          <a href="mailto:lbxhust@163.com" title="lbxhust@163.com" class="mail">lbxhust@163.com</a>
         </hgroup>
       </div>
     </div>
@@ -369,13 +369,13 @@ make_edges (basic_block min, basic_block max, int updata_p)
 
 
         
-        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2017/07/15/浅谈GCC编译优化/" target="_blank" rel="external">http://yoursite.com/2017/07/15/浅谈GCC编译优化/</a>
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2017/07/15/浅谈GCC编译优化/" target="_blank" rel="external">http://sec-lbx.tk/2017/07/15/浅谈GCC编译优化/</a>
         
     </div>
     <footer>
-        <a href="http://yoursite.com">
-            <img src="/img/avatar.jpg" alt="John Doe">
-            John Doe
+        <a href="http://sec-lbx.tk">
+            <img src="/avatar.jpg" alt="Benxi Liu">
+            Benxi Liu
         </a>
     </footer>
 </blockquote>
@@ -399,7 +399,7 @@ make_edges (basic_block min, basic_block max, int updata_p)
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2017/07/15/浅谈GCC编译优化/&title=《浅谈GCC编译优化》 — Hexo&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/07/15/浅谈GCC编译优化/&title=《浅谈GCC编译优化》 — lbx's blog&pic=http://sec-lbx.tk/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -409,22 +409,22 @@ make_edges (basic_block min, basic_block max, int updata_p)
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2017/07/15/浅谈GCC编译优化/&title=《浅谈GCC编译优化》 — Hexo&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/07/15/浅谈GCC编译优化/&title=《浅谈GCC编译优化》 — lbx's blog&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2017/07/15/浅谈GCC编译优化/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://sec-lbx.tk/2017/07/15/浅谈GCC编译优化/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《浅谈GCC编译优化》 — Hexo&url=http://yoursite.com/2017/07/15/浅谈GCC编译优化/&via=http://yoursite.com" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《浅谈GCC编译优化》 — lbx's blog&url=http://sec-lbx.tk/2017/07/15/浅谈GCC编译优化/&via=http://sec-lbx.tk" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2017/07/15/浅谈GCC编译优化/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://sec-lbx.tk/2017/07/15/浅谈GCC编译优化/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -527,7 +527,7 @@ make_edges (basic_block min, basic_block max, int updata_p)
         </p>
     </div>
     <div class="bottom">
-        <p><span>John Doe &copy; 2015 - 2017</span>
+        <p><span>Benxi Liu &copy; 2015 - 2017</span>
             <span>
                 
                 Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
@@ -545,7 +545,7 @@ make_edges (basic_block min, basic_block max, int updata_p)
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2017/07/15/浅谈GCC编译优化/&title=《浅谈GCC编译优化》 — Hexo&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/07/15/浅谈GCC编译优化/&title=《浅谈GCC编译优化》 — lbx's blog&pic=http://sec-lbx.tk/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -555,22 +555,22 @@ make_edges (basic_block min, basic_block max, int updata_p)
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2017/07/15/浅谈GCC编译优化/&title=《浅谈GCC编译优化》 — Hexo&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/07/15/浅谈GCC编译优化/&title=《浅谈GCC编译优化》 — lbx's blog&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2017/07/15/浅谈GCC编译优化/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://sec-lbx.tk/2017/07/15/浅谈GCC编译优化/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《浅谈GCC编译优化》 — Hexo&url=http://yoursite.com/2017/07/15/浅谈GCC编译优化/&via=http://yoursite.com" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《浅谈GCC编译优化》 — lbx's blog&url=http://sec-lbx.tk/2017/07/15/浅谈GCC编译优化/&via=http://sec-lbx.tk" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2017/07/15/浅谈GCC编译优化/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://sec-lbx.tk/2017/07/15/浅谈GCC编译优化/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -581,7 +581,7 @@ make_edges (basic_block min, basic_block max, int updata_p)
 <div class="page-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
-    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://yoursite.com/2017/07/15/浅谈GCC编译优化/" alt="微信分享二维码">
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://sec-lbx.tk/2017/07/15/浅谈GCC编译优化/" alt="微信分享二维码">
 </div>
 
 

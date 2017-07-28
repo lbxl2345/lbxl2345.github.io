@@ -13,7 +13,7 @@
     
     
     
-    <title>从虚函数的实现，到虚表劫持攻击 | Hexo</title>
+    <title>从虚函数的实现，到虚表劫持攻击 | lbx&#39;s blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="theme-color" content="#3F51B5">
@@ -24,8 +24,8 @@
 <meta name="keywords" content="内存安全,虚函数,C++">
 <meta property="og:type" content="article">
 <meta property="og:title" content="从虚函数的实现，到虚表劫持攻击">
-<meta property="og:url" content="http://yoursite.com/2017/06/27/虚函数，原理和攻击方式/index.html">
-<meta property="og:site_name" content="Hexo">
+<meta property="og:url" content="http://sec-lbx.tk/2017/06/27/虚函数，原理和攻击方式/index.html">
+<meta property="og:site_name" content="lbx&#39;s blog">
 <meta property="og:description" content="虚函数与多态继承和多态，是面向对象中老生常谈的话题。C++中，我们也可以经常看到virtaul、override这样的关键字；这正是虚函数的标志。虚函数就是为了解决多态的问题：如果要使用一个基类的指针，根据对象的不同类型去调用相应的函数，就需要使用虚函数了。通俗的说也就是同一个入口，却能够调用不同的方法。通常，对于虚函数的调用，往往在运行时才能确定调用哪个版本的函数。这是由于基类的指针或者引用，其">
 <meta property="og:image" content="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/c++/%E8%99%9A%E8%A1%A8.png?raw=true">
 <meta property="og:image" content="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/c++/%E8%99%9A%E8%A1%A8%E6%B3%A8%E5%85%A5.png?raw=true">
@@ -36,7 +36,7 @@
 <meta name="twitter:description" content="虚函数与多态继承和多态，是面向对象中老生常谈的话题。C++中，我们也可以经常看到virtaul、override这样的关键字；这正是虚函数的标志。虚函数就是为了解决多态的问题：如果要使用一个基类的指针，根据对象的不同类型去调用相应的函数，就需要使用虚函数了。通俗的说也就是同一个入口，却能够调用不同的方法。通常，对于虚函数的调用，往往在运行时才能确定调用哪个版本的函数。这是由于基类的指针或者引用，其">
 <meta name="twitter:image" content="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/c++/%E8%99%9A%E8%A1%A8.png?raw=true">
     
-        <link rel="alternate" type="application/atom+xml" title="Hexo" href="/atom.xml">
+        <link rel="alternate" type="application/atom+xml" title="lbx&#39;s blog" href="/atom.xml">
     
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
@@ -51,14 +51,14 @@
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
         <i class="icon icon-lg icon-close"></i>
     </a>
-    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+    <div class="brand-wrap" style="background-image:url(/)">
       <div class="brand">
         <a href="/" class="avatar waves-effect waves-circle waves-light">
-          <img src="/img/avatar.jpg">
+          <img src="/avatar.jpg">
         </a>
         <hgroup class="introduce">
-          <h5 class="nickname">John Doe</h5>
-          <a href="mailto:634206017@qq.com" title="634206017@qq.com" class="mail">634206017@qq.com</a>
+          <h5 class="nickname">Benxi Liu</h5>
+          <a href="mailto:lbxhust@163.com" title="lbxhust@163.com" class="mail">lbxhust@163.com</a>
         </hgroup>
       </div>
     </div>
@@ -319,13 +319,13 @@ B1   B2
 
 
         
-        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2017/06/27/虚函数，原理和攻击方式/" target="_blank" rel="external">http://yoursite.com/2017/06/27/虚函数，原理和攻击方式/</a>
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2017/06/27/虚函数，原理和攻击方式/" target="_blank" rel="external">http://sec-lbx.tk/2017/06/27/虚函数，原理和攻击方式/</a>
         
     </div>
     <footer>
-        <a href="http://yoursite.com">
-            <img src="/img/avatar.jpg" alt="John Doe">
-            John Doe
+        <a href="http://sec-lbx.tk">
+            <img src="/avatar.jpg" alt="Benxi Liu">
+            Benxi Liu
         </a>
     </footer>
 </blockquote>
@@ -349,7 +349,7 @@ B1   B2
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2017/06/27/虚函数，原理和攻击方式/&title=《从虚函数的实现，到虚表劫持攻击》 — Hexo&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/06/27/虚函数，原理和攻击方式/&title=《从虚函数的实现，到虚表劫持攻击》 — lbx's blog&pic=http://sec-lbx.tk/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -359,22 +359,22 @@ B1   B2
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2017/06/27/虚函数，原理和攻击方式/&title=《从虚函数的实现，到虚表劫持攻击》 — Hexo&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/06/27/虚函数，原理和攻击方式/&title=《从虚函数的实现，到虚表劫持攻击》 — lbx's blog&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2017/06/27/虚函数，原理和攻击方式/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://sec-lbx.tk/2017/06/27/虚函数，原理和攻击方式/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《从虚函数的实现，到虚表劫持攻击》 — Hexo&url=http://yoursite.com/2017/06/27/虚函数，原理和攻击方式/&via=http://yoursite.com" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《从虚函数的实现，到虚表劫持攻击》 — lbx's blog&url=http://sec-lbx.tk/2017/06/27/虚函数，原理和攻击方式/&via=http://sec-lbx.tk" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2017/06/27/虚函数，原理和攻击方式/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://sec-lbx.tk/2017/06/27/虚函数，原理和攻击方式/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -484,7 +484,7 @@ B1   B2
         </p>
     </div>
     <div class="bottom">
-        <p><span>John Doe &copy; 2015 - 2017</span>
+        <p><span>Benxi Liu &copy; 2015 - 2017</span>
             <span>
                 
                 Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
@@ -502,7 +502,7 @@ B1   B2
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2017/06/27/虚函数，原理和攻击方式/&title=《从虚函数的实现，到虚表劫持攻击》 — Hexo&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/06/27/虚函数，原理和攻击方式/&title=《从虚函数的实现，到虚表劫持攻击》 — lbx's blog&pic=http://sec-lbx.tk/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -512,22 +512,22 @@ B1   B2
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2017/06/27/虚函数，原理和攻击方式/&title=《从虚函数的实现，到虚表劫持攻击》 — Hexo&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/06/27/虚函数，原理和攻击方式/&title=《从虚函数的实现，到虚表劫持攻击》 — lbx's blog&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2017/06/27/虚函数，原理和攻击方式/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://sec-lbx.tk/2017/06/27/虚函数，原理和攻击方式/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《从虚函数的实现，到虚表劫持攻击》 — Hexo&url=http://yoursite.com/2017/06/27/虚函数，原理和攻击方式/&via=http://yoursite.com" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《从虚函数的实现，到虚表劫持攻击》 — lbx's blog&url=http://sec-lbx.tk/2017/06/27/虚函数，原理和攻击方式/&via=http://sec-lbx.tk" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2017/06/27/虚函数，原理和攻击方式/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://sec-lbx.tk/2017/06/27/虚函数，原理和攻击方式/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -538,7 +538,7 @@ B1   B2
 <div class="page-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
-    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://yoursite.com/2017/06/27/虚函数，原理和攻击方式/" alt="微信分享二维码">
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://sec-lbx.tk/2017/06/27/虚函数，原理和攻击方式/" alt="微信分享二维码">
 </div>
 
 

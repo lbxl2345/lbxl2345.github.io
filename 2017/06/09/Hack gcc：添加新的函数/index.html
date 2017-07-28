@@ -13,7 +13,7 @@
     
     
     
-    <title>Hack GCC，在编译时构造新的函数 | Hexo</title>
+    <title>Hack GCC，在编译时构造新的函数 | lbx&#39;s blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="theme-color" content="#3F51B5">
@@ -24,15 +24,15 @@
 <meta name="keywords" content="编译安全,GCC">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hack GCC，在编译时构造新的函数">
-<meta property="og:url" content="http://yoursite.com/2017/06/09/Hack gcc：添加新的函数/index.html">
-<meta property="og:site_name" content="Hexo">
+<meta property="og:url" content="http://sec-lbx.tk/2017/06/09/Hack gcc：添加新的函数/index.html">
+<meta property="og:site_name" content="lbx&#39;s blog">
 <meta property="og:description" content="怎么做和为什么？首先对于GCC来说，添加一个新的函数是完全可以实现的，但我并没有看到任何相关的资料。我给gcc的mailing list发了封邮件，但没人给出回答。倒是有人私下给我发了封邮件，表示他对这个做法很好奇，希望我做出来之后能和大家分享一下方法。看来求人终究不如求自己，我看了好几天代码，终于能够在编译的过程中添加函数了。至于为什么要这么做，我认为如果编译时插桩的代码是大量重复的，那么去构造">
 <meta property="og:updated_time" content="2017-07-28T09:04:47.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hack GCC，在编译时构造新的函数">
 <meta name="twitter:description" content="怎么做和为什么？首先对于GCC来说，添加一个新的函数是完全可以实现的，但我并没有看到任何相关的资料。我给gcc的mailing list发了封邮件，但没人给出回答。倒是有人私下给我发了封邮件，表示他对这个做法很好奇，希望我做出来之后能和大家分享一下方法。看来求人终究不如求自己，我看了好几天代码，终于能够在编译的过程中添加函数了。至于为什么要这么做，我认为如果编译时插桩的代码是大量重复的，那么去构造">
     
-        <link rel="alternate" type="application/atom+xml" title="Hexo" href="/atom.xml">
+        <link rel="alternate" type="application/atom+xml" title="lbx&#39;s blog" href="/atom.xml">
     
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
@@ -47,14 +47,14 @@
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
         <i class="icon icon-lg icon-close"></i>
     </a>
-    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+    <div class="brand-wrap" style="background-image:url(/)">
       <div class="brand">
         <a href="/" class="avatar waves-effect waves-circle waves-light">
-          <img src="/img/avatar.jpg">
+          <img src="/avatar.jpg">
         </a>
         <hgroup class="introduce">
-          <h5 class="nickname">John Doe</h5>
-          <a href="mailto:634206017@qq.com" title="634206017@qq.com" class="mail">634206017@qq.com</a>
+          <h5 class="nickname">Benxi Liu</h5>
+          <a href="mailto:lbxhust@163.com" title="lbxhust@163.com" class="mail">lbxhust@163.com</a>
         </hgroup>
       </div>
     </div>
@@ -244,13 +244,13 @@ DECL_ARGUMENTS(fndecl) = t;
 
 
         
-        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2017/06/09/Hack gcc：添加新的函数/" target="_blank" rel="external">http://yoursite.com/2017/06/09/Hack gcc：添加新的函数/</a>
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2017/06/09/Hack gcc：添加新的函数/" target="_blank" rel="external">http://sec-lbx.tk/2017/06/09/Hack gcc：添加新的函数/</a>
         
     </div>
     <footer>
-        <a href="http://yoursite.com">
-            <img src="/img/avatar.jpg" alt="John Doe">
-            John Doe
+        <a href="http://sec-lbx.tk">
+            <img src="/avatar.jpg" alt="Benxi Liu">
+            Benxi Liu
         </a>
     </footer>
 </blockquote>
@@ -274,7 +274,7 @@ DECL_ARGUMENTS(fndecl) = t;
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2017/06/09/Hack gcc：添加新的函数/&title=《Hack GCC，在编译时构造新的函数》 — Hexo&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/06/09/Hack gcc：添加新的函数/&title=《Hack GCC，在编译时构造新的函数》 — lbx's blog&pic=http://sec-lbx.tk/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -284,22 +284,22 @@ DECL_ARGUMENTS(fndecl) = t;
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2017/06/09/Hack gcc：添加新的函数/&title=《Hack GCC，在编译时构造新的函数》 — Hexo&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/06/09/Hack gcc：添加新的函数/&title=《Hack GCC，在编译时构造新的函数》 — lbx's blog&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2017/06/09/Hack gcc：添加新的函数/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://sec-lbx.tk/2017/06/09/Hack gcc：添加新的函数/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Hack GCC，在编译时构造新的函数》 — Hexo&url=http://yoursite.com/2017/06/09/Hack gcc：添加新的函数/&via=http://yoursite.com" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Hack GCC，在编译时构造新的函数》 — lbx's blog&url=http://sec-lbx.tk/2017/06/09/Hack gcc：添加新的函数/&via=http://sec-lbx.tk" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2017/06/09/Hack gcc：添加新的函数/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://sec-lbx.tk/2017/06/09/Hack gcc：添加新的函数/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -409,7 +409,7 @@ DECL_ARGUMENTS(fndecl) = t;
         </p>
     </div>
     <div class="bottom">
-        <p><span>John Doe &copy; 2015 - 2017</span>
+        <p><span>Benxi Liu &copy; 2015 - 2017</span>
             <span>
                 
                 Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
@@ -427,7 +427,7 @@ DECL_ARGUMENTS(fndecl) = t;
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2017/06/09/Hack gcc：添加新的函数/&title=《Hack GCC，在编译时构造新的函数》 — Hexo&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/06/09/Hack gcc：添加新的函数/&title=《Hack GCC，在编译时构造新的函数》 — lbx's blog&pic=http://sec-lbx.tk/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -437,22 +437,22 @@ DECL_ARGUMENTS(fndecl) = t;
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2017/06/09/Hack gcc：添加新的函数/&title=《Hack GCC，在编译时构造新的函数》 — Hexo&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/06/09/Hack gcc：添加新的函数/&title=《Hack GCC，在编译时构造新的函数》 — lbx's blog&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2017/06/09/Hack gcc：添加新的函数/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://sec-lbx.tk/2017/06/09/Hack gcc：添加新的函数/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Hack GCC，在编译时构造新的函数》 — Hexo&url=http://yoursite.com/2017/06/09/Hack gcc：添加新的函数/&via=http://yoursite.com" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Hack GCC，在编译时构造新的函数》 — lbx's blog&url=http://sec-lbx.tk/2017/06/09/Hack gcc：添加新的函数/&via=http://sec-lbx.tk" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2017/06/09/Hack gcc：添加新的函数/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://sec-lbx.tk/2017/06/09/Hack gcc：添加新的函数/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -463,7 +463,7 @@ DECL_ARGUMENTS(fndecl) = t;
 <div class="page-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
-    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://yoursite.com/2017/06/09/Hack gcc：添加新的函数/" alt="微信分享二维码">
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://sec-lbx.tk/2017/06/09/Hack gcc：添加新的函数/" alt="微信分享二维码">
 </div>
 
 

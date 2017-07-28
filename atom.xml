@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>Hexo</title>
+  <title>lbx&#39;s blog</title>
   
   <link href="/atom.xml" rel="self"/>
   
-  <link href="http://yoursite.com/"/>
+  <link href="http://sec-lbx.tk/"/>
   <updated>2017-07-28T09:04:47.000Z</updated>
-  <id>http://yoursite.com/</id>
+  <id>http://sec-lbx.tk/</id>
   
   <author>
-    <name>John Doe</name>
+    <name>Benxi Liu</name>
     
   </author>
   
@@ -17,8 +17,8 @@
   
   <entry>
     <title>浅谈GCC编译优化</title>
-    <link href="http://yoursite.com/2017/07/15/%E6%B5%85%E8%B0%88GCC%E7%BC%96%E8%AF%91%E4%BC%98%E5%8C%96/"/>
-    <id>http://yoursite.com/2017/07/15/浅谈GCC编译优化/</id>
+    <link href="http://sec-lbx.tk/2017/07/15/%E6%B5%85%E8%B0%88GCC%E7%BC%96%E8%AF%91%E4%BC%98%E5%8C%96/"/>
+    <id>http://sec-lbx.tk/2017/07/15/浅谈GCC编译优化/</id>
     <published>2017-07-15T13:40:00.000Z</published>
     <updated>2017-07-28T09:04:47.000Z</updated>
     
@@ -196,16 +196,16 @@ make_edges (basic_block min, basic_block max, int updata_p)
     </summary>
     
     
-      <category term="GCC" scheme="http://yoursite.com/tags/GCC/"/>
+      <category term="GCC" scheme="http://sec-lbx.tk/tags/GCC/"/>
     
-      <category term="编译器" scheme="http://yoursite.com/tags/%E7%BC%96%E8%AF%91%E5%99%A8/"/>
+      <category term="编译器" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%99%A8/"/>
     
   </entry>
   
   <entry>
     <title>从虚函数的实现，到虚表劫持攻击</title>
-    <link href="http://yoursite.com/2017/06/27/%E8%99%9A%E5%87%BD%E6%95%B0%EF%BC%8C%E5%8E%9F%E7%90%86%E5%92%8C%E6%94%BB%E5%87%BB%E6%96%B9%E5%BC%8F/"/>
-    <id>http://yoursite.com/2017/06/27/虚函数，原理和攻击方式/</id>
+    <link href="http://sec-lbx.tk/2017/06/27/%E8%99%9A%E5%87%BD%E6%95%B0%EF%BC%8C%E5%8E%9F%E7%90%86%E5%92%8C%E6%94%BB%E5%87%BB%E6%96%B9%E5%BC%8F/"/>
+    <id>http://sec-lbx.tk/2017/06/27/虚函数，原理和攻击方式/</id>
     <published>2017-06-27T03:40:00.000Z</published>
     <updated>2017-07-28T09:04:47.000Z</updated>
     
@@ -332,18 +332,18 @@ B1   B2
     </summary>
     
     
-      <category term="内存安全" scheme="http://yoursite.com/tags/%E5%86%85%E5%AD%98%E5%AE%89%E5%85%A8/"/>
+      <category term="内存安全" scheme="http://sec-lbx.tk/tags/%E5%86%85%E5%AD%98%E5%AE%89%E5%85%A8/"/>
     
-      <category term="虚函数" scheme="http://yoursite.com/tags/%E8%99%9A%E5%87%BD%E6%95%B0/"/>
+      <category term="虚函数" scheme="http://sec-lbx.tk/tags/%E8%99%9A%E5%87%BD%E6%95%B0/"/>
     
-      <category term="C++" scheme="http://yoursite.com/tags/C/"/>
+      <category term="C++" scheme="http://sec-lbx.tk/tags/C/"/>
     
   </entry>
   
   <entry>
     <title>编译链中的一环，静态链接详解</title>
-    <link href="http://yoursite.com/2017/06/19/%E7%BC%96%E8%AF%91%E9%93%BE%E4%B8%AD%E7%9A%84%E4%B8%80%E7%8E%AF%EF%BC%8C%E9%9D%99%E6%80%81%E9%93%BE%E6%8E%A5%E8%AF%A6%E8%A7%A3/"/>
-    <id>http://yoursite.com/2017/06/19/编译链中的一环，静态链接详解/</id>
+    <link href="http://sec-lbx.tk/2017/06/19/%E7%BC%96%E8%AF%91%E9%93%BE%E4%B8%AD%E7%9A%84%E4%B8%80%E7%8E%AF%EF%BC%8C%E9%9D%99%E6%80%81%E9%93%BE%E6%8E%A5%E8%AF%A6%E8%A7%A3/"/>
+    <id>http://sec-lbx.tk/2017/06/19/编译链中的一环，静态链接详解/</id>
     <published>2017-06-19T13:40:00.000Z</published>
     <updated>2017-07-28T09:04:47.000Z</updated>
     
@@ -380,16 +380,16 @@ typedef struct{
     </summary>
     
     
-      <category term="链接器" scheme="http://yoursite.com/tags/%E9%93%BE%E6%8E%A5%E5%99%A8/"/>
+      <category term="链接器" scheme="http://sec-lbx.tk/tags/%E9%93%BE%E6%8E%A5%E5%99%A8/"/>
     
-      <category term="binutils" scheme="http://yoursite.com/tags/binutils/"/>
+      <category term="binutils" scheme="http://sec-lbx.tk/tags/binutils/"/>
     
   </entry>
   
   <entry>
     <title>Hack GCC，在编译时构造新的函数</title>
-    <link href="http://yoursite.com/2017/06/09/Hack%20gcc%EF%BC%9A%E6%B7%BB%E5%8A%A0%E6%96%B0%E7%9A%84%E5%87%BD%E6%95%B0/"/>
-    <id>http://yoursite.com/2017/06/09/Hack gcc：添加新的函数/</id>
+    <link href="http://sec-lbx.tk/2017/06/09/Hack%20gcc%EF%BC%9A%E6%B7%BB%E5%8A%A0%E6%96%B0%E7%9A%84%E5%87%BD%E6%95%B0/"/>
+    <id>http://sec-lbx.tk/2017/06/09/Hack gcc：添加新的函数/</id>
     <published>2017-06-09T03:40:00.000Z</published>
     <updated>2017-07-28T09:04:47.000Z</updated>
     
@@ -445,16 +445,16 @@ DECL_ARGUMENTS(fndecl) = t;
     </summary>
     
     
-      <category term="编译安全" scheme="http://yoursite.com/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
+      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
     
-      <category term="GCC" scheme="http://yoursite.com/tags/GCC/"/>
+      <category term="GCC" scheme="http://sec-lbx.tk/tags/GCC/"/>
     
   </entry>
   
   <entry>
     <title>Hack GCC，在RTL上插桩</title>
-    <link href="http://yoursite.com/2017/05/16/Hack%20GCC%EF%BC%9Ainsturment%20on%20RTL/"/>
-    <id>http://yoursite.com/2017/05/16/Hack GCC：insturment on RTL/</id>
+    <link href="http://sec-lbx.tk/2017/05/16/Hack%20GCC%EF%BC%9Ainsturment%20on%20RTL/"/>
+    <id>http://sec-lbx.tk/2017/05/16/Hack GCC：insturment on RTL/</id>
     <published>2017-05-16T13:40:00.000Z</published>
     <updated>2017-07-28T09:04:47.000Z</updated>
     
@@ -492,16 +492,16 @@ emit_insn(BNDmode == BND64mode ? gen_bnd64_cu(op1, op0):gen_bnd32_cu(op1, op0));
     </summary>
     
     
-      <category term="编译安全" scheme="http://yoursite.com/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
+      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
     
-      <category term="GCC" scheme="http://yoursite.com/tags/GCC/"/>
+      <category term="GCC" scheme="http://sec-lbx.tk/tags/GCC/"/>
     
   </entry>
   
   <entry>
     <title>Hack GCC，改变函数的顺序</title>
-    <link href="http://yoursite.com/2017/05/12/Hack%20GCC%EF%BC%8C%E4%BF%AE%E6%94%B9%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%96%87%E4%BB%B6%E4%B8%AD%E5%87%BD%E6%95%B0%E7%9A%84%E9%A1%BA%E5%BA%8F/"/>
-    <id>http://yoursite.com/2017/05/12/Hack GCC，修改二进制文件中函数的顺序/</id>
+    <link href="http://sec-lbx.tk/2017/05/12/Hack%20GCC%EF%BC%8C%E4%BF%AE%E6%94%B9%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%96%87%E4%BB%B6%E4%B8%AD%E5%87%BD%E6%95%B0%E7%9A%84%E9%A1%BA%E5%BA%8F/"/>
+    <id>http://sec-lbx.tk/2017/05/12/Hack GCC，修改二进制文件中函数的顺序/</id>
     <published>2017-05-12T13:40:00.000Z</published>
     <updated>2017-07-28T09:04:47.000Z</updated>
     
@@ -533,16 +533,16 @@ else{
     </summary>
     
     
-      <category term="编译安全" scheme="http://yoursite.com/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
+      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
     
-      <category term="GCC" scheme="http://yoursite.com/tags/GCC/"/>
+      <category term="GCC" scheme="http://sec-lbx.tk/tags/GCC/"/>
     
   </entry>
   
   <entry>
     <title>RTL，指令和运算，识别特定指令</title>
-    <link href="http://yoursite.com/2017/05/10/RTL%E8%AF%A6%E8%A7%A3/"/>
-    <id>http://yoursite.com/2017/05/10/RTL详解/</id>
+    <link href="http://sec-lbx.tk/2017/05/10/RTL%E8%AF%A6%E8%A7%A3/"/>
+    <id>http://sec-lbx.tk/2017/05/10/RTL详解/</id>
     <published>2017-05-10T13:40:00.000Z</published>
     <updated>2017-07-28T09:04:47.000Z</updated>
     
@@ -609,16 +609,16 @@ else{
     </summary>
     
     
-      <category term="编译安全" scheme="http://yoursite.com/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
+      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
     
-      <category term="GCC" scheme="http://yoursite.com/tags/GCC/"/>
+      <category term="GCC" scheme="http://sec-lbx.tk/tags/GCC/"/>
     
   </entry>
   
   <entry>
     <title>RTL，类型和操作数</title>
-    <link href="http://yoursite.com/2017/05/07/gcc%20rtx/"/>
-    <id>http://yoursite.com/2017/05/07/gcc rtx/</id>
+    <link href="http://sec-lbx.tk/2017/05/07/gcc%20rtx/"/>
+    <id>http://sec-lbx.tk/2017/05/07/gcc rtx/</id>
     <published>2017-05-07T13:40:00.000Z</published>
     <updated>2017-07-28T09:04:47.000Z</updated>
     
@@ -676,16 +676,16 @@ rtx: mov ax, 8
     </summary>
     
     
-      <category term="编译安全" scheme="http://yoursite.com/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
+      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
     
-      <category term="GCC" scheme="http://yoursite.com/tags/GCC/"/>
+      <category term="GCC" scheme="http://sec-lbx.tk/tags/GCC/"/>
     
   </entry>
   
   <entry>
     <title>GCC插件：注册、编译和使用</title>
-    <link href="http://yoursite.com/2017/05/05/GCC%E6%8F%92%E4%BB%B6%E7%BC%96%E5%86%99/"/>
-    <id>http://yoursite.com/2017/05/05/GCC插件编写/</id>
+    <link href="http://sec-lbx.tk/2017/05/05/GCC%E6%8F%92%E4%BB%B6%E7%BC%96%E5%86%99/"/>
+    <id>http://sec-lbx.tk/2017/05/05/GCC插件编写/</id>
     <published>2017-05-05T13:40:00.000Z</published>
     <updated>2017-07-28T09:04:47.000Z</updated>
     
@@ -734,16 +734,16 @@ register_callback(&quot;myplugin&quot;, PLUGIN_INFO, NULL, &amp;myplugin_info);
     </summary>
     
     
-      <category term="编译安全" scheme="http://yoursite.com/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
+      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
     
-      <category term="GCC" scheme="http://yoursite.com/tags/GCC/"/>
+      <category term="GCC" scheme="http://sec-lbx.tk/tags/GCC/"/>
     
   </entry>
   
   <entry>
     <title>GCC，Overview</title>
-    <link href="http://yoursite.com/2017/05/01/GCC%20overview/"/>
-    <id>http://yoursite.com/2017/05/01/GCC overview/</id>
+    <link href="http://sec-lbx.tk/2017/05/01/GCC%20overview/"/>
+    <id>http://sec-lbx.tk/2017/05/01/GCC overview/</id>
     <published>2017-05-01T13:40:00.000Z</published>
     <updated>2017-07-28T09:04:47.000Z</updated>
     
@@ -761,16 +761,16 @@ register_callback(&quot;myplugin&quot;, PLUGIN_INFO, NULL, &amp;myplugin_info);
     </summary>
     
     
-      <category term="编译安全" scheme="http://yoursite.com/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
+      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
     
-      <category term="GCC" scheme="http://yoursite.com/tags/GCC/"/>
+      <category term="GCC" scheme="http://sec-lbx.tk/tags/GCC/"/>
     
   </entry>
   
   <entry>
     <title>深入理解进程通信</title>
-    <link href="http://yoursite.com/2017/04/30/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/"/>
-    <id>http://yoursite.com/2017/04/30/深入理解进程通信/</id>
+    <link href="http://sec-lbx.tk/2017/04/30/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/"/>
+    <id>http://sec-lbx.tk/2017/04/30/深入理解进程通信/</id>
     <published>2017-04-30T03:40:00.000Z</published>
     <updated>2017-07-28T09:04:47.000Z</updated>
     
@@ -955,16 +955,16 @@ if((recvbytes = recv(sockfd, buf, MAXDATASIZE, 0)) == -1)
     </summary>
     
     
-      <category term="linux" scheme="http://yoursite.com/tags/linux/"/>
+      <category term="linux" scheme="http://sec-lbx.tk/tags/linux/"/>
     
-      <category term="操作系统" scheme="http://yoursite.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+      <category term="操作系统" scheme="http://sec-lbx.tk/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
     
   </entry>
   
   <entry>
     <title>深入理解信号</title>
-    <link href="http://yoursite.com/2017/04/27/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E4%BF%A1%E5%8F%B7/"/>
-    <id>http://yoursite.com/2017/04/27/深入理解信号/</id>
+    <link href="http://sec-lbx.tk/2017/04/27/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E4%BF%A1%E5%8F%B7/"/>
+    <id>http://sec-lbx.tk/2017/04/27/深入理解信号/</id>
     <published>2017-04-27T13:40:00.000Z</published>
     <updated>2017-07-28T09:04:47.000Z</updated>
     
@@ -1103,16 +1103,16 @@ if (q) {
     </summary>
     
     
-      <category term="linux" scheme="http://yoursite.com/tags/linux/"/>
+      <category term="linux" scheme="http://sec-lbx.tk/tags/linux/"/>
     
-      <category term="操作系统" scheme="http://yoursite.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+      <category term="操作系统" scheme="http://sec-lbx.tk/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
     
   </entry>
   
   <entry>
     <title>深入理解进程地址空间</title>
-    <link href="http://yoursite.com/2017/04/25/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E8%BF%9B%E7%A8%8B%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4/"/>
-    <id>http://yoursite.com/2017/04/25/深入理解进程地址空间/</id>
+    <link href="http://sec-lbx.tk/2017/04/25/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E8%BF%9B%E7%A8%8B%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4/"/>
+    <id>http://sec-lbx.tk/2017/04/25/深入理解进程地址空间/</id>
     <published>2017-04-25T13:40:00.000Z</published>
     <updated>2017-07-28T09:04:47.000Z</updated>
     
@@ -1366,16 +1366,16 @@ unlock:
     </summary>
     
     
-      <category term="linux" scheme="http://yoursite.com/tags/linux/"/>
+      <category term="linux" scheme="http://sec-lbx.tk/tags/linux/"/>
     
-      <category term="操作系统" scheme="http://yoursite.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+      <category term="操作系统" scheme="http://sec-lbx.tk/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
     
   </entry>
   
   <entry>
     <title>深入理解内存管理</title>
-    <link href="http://yoursite.com/2017/04/20/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/"/>
-    <id>http://yoursite.com/2017/04/20/深入理解内存管理/</id>
+    <link href="http://sec-lbx.tk/2017/04/20/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/"/>
+    <id>http://sec-lbx.tk/2017/04/20/深入理解内存管理/</id>
     <published>2017-04-20T03:40:00.000Z</published>
     <updated>2017-07-28T09:04:47.000Z</updated>
     
@@ -1429,16 +1429,16 @@ struct list_head full;
     </summary>
     
     
-      <category term="linux" scheme="http://yoursite.com/tags/linux/"/>
+      <category term="linux" scheme="http://sec-lbx.tk/tags/linux/"/>
     
-      <category term="操作系统" scheme="http://yoursite.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+      <category term="操作系统" scheme="http://sec-lbx.tk/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
     
   </entry>
   
   <entry>
     <title>深入理解进程与调度</title>
-    <link href="http://yoursite.com/2017/04/15/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E8%BF%9B%E7%A8%8B%E4%B8%8E%E8%B0%83%E5%BA%A6/"/>
-    <id>http://yoursite.com/2017/04/15/深入理解进程与调度/</id>
+    <link href="http://sec-lbx.tk/2017/04/15/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E8%BF%9B%E7%A8%8B%E4%B8%8E%E8%B0%83%E5%BA%A6/"/>
+    <id>http://sec-lbx.tk/2017/04/15/深入理解进程与调度/</id>
     <published>2017-04-15T13:40:00.000Z</published>
     <updated>2017-07-28T09:04:47.000Z</updated>
     
@@ -1461,16 +1461,16 @@ struct list_head full;
     </summary>
     
     
-      <category term="linux" scheme="http://yoursite.com/tags/linux/"/>
+      <category term="linux" scheme="http://sec-lbx.tk/tags/linux/"/>
     
-      <category term="操作系统" scheme="http://yoursite.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+      <category term="操作系统" scheme="http://sec-lbx.tk/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
     
   </entry>
   
   <entry>
     <title>深入理解I/O体系结构（二）</title>
-    <link href="http://yoursite.com/2017/04/11/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3I:O%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%EF%BC%88%E4%BA%8C%EF%BC%89/"/>
-    <id>http://yoursite.com/2017/04/11/深入理解I:O体系结构（二）/</id>
+    <link href="http://sec-lbx.tk/2017/04/11/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3I:O%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%EF%BC%88%E4%BA%8C%EF%BC%89/"/>
+    <id>http://sec-lbx.tk/2017/04/11/深入理解I:O体系结构（二）/</id>
     <published>2017-04-11T03:40:00.000Z</published>
     <updated>2017-07-28T09:04:47.000Z</updated>
     
@@ -1543,16 +1543,16 @@ struct bio_vec        *bi_io_vec;    //bio_vec数组
     </summary>
     
     
-      <category term="linux" scheme="http://yoursite.com/tags/linux/"/>
+      <category term="linux" scheme="http://sec-lbx.tk/tags/linux/"/>
     
-      <category term="操作系统" scheme="http://yoursite.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+      <category term="操作系统" scheme="http://sec-lbx.tk/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
     
   </entry>
   
   <entry>
     <title>深入理解I/O体系结构（一）</title>
-    <link href="http://yoursite.com/2017/04/10/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3I:O%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%EF%BC%88%E4%B8%80%EF%BC%89/"/>
-    <id>http://yoursite.com/2017/04/10/深入理解I:O体系结构（一）/</id>
+    <link href="http://sec-lbx.tk/2017/04/10/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3I:O%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%EF%BC%88%E4%B8%80%EF%BC%89/"/>
+    <id>http://sec-lbx.tk/2017/04/10/深入理解I:O体系结构（一）/</id>
     <published>2017-04-10T03:40:00.000Z</published>
     <updated>2017-07-28T09:04:47.000Z</updated>
     
@@ -1776,16 +1776,16 @@ unsigned int count;
     </summary>
     
     
-      <category term="linux" scheme="http://yoursite.com/tags/linux/"/>
+      <category term="linux" scheme="http://sec-lbx.tk/tags/linux/"/>
     
-      <category term="操作系统" scheme="http://yoursite.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+      <category term="操作系统" scheme="http://sec-lbx.tk/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
     
   </entry>
   
   <entry>
     <title>IDAPython：入门</title>
-    <link href="http://yoursite.com/2017/04/05/IDAPython/"/>
-    <id>http://yoursite.com/2017/04/05/IDAPython/</id>
+    <link href="http://sec-lbx.tk/2017/04/05/IDAPython/"/>
+    <id>http://sec-lbx.tk/2017/04/05/IDAPython/</id>
     <published>2017-04-05T13:40:00.000Z</published>
     <updated>2017-07-28T09:04:47.000Z</updated>
     
@@ -1826,18 +1826,18 @@ for x in range(0,5):
     </summary>
     
     
-      <category term="IDA pro" scheme="http://yoursite.com/tags/IDA-pro/"/>
+      <category term="IDA pro" scheme="http://sec-lbx.tk/tags/IDA-pro/"/>
     
-      <category term="python" scheme="http://yoursite.com/tags/python/"/>
+      <category term="python" scheme="http://sec-lbx.tk/tags/python/"/>
     
-      <category term="静态分析" scheme="http://yoursite.com/tags/%E9%9D%99%E6%80%81%E5%88%86%E6%9E%90/"/>
+      <category term="静态分析" scheme="http://sec-lbx.tk/tags/%E9%9D%99%E6%80%81%E5%88%86%E6%9E%90/"/>
     
   </entry>
   
   <entry>
     <title>IDAPython:进阶（一）</title>
-    <link href="http://yoursite.com/2017/04/05/IDAPython-advance1/"/>
-    <id>http://yoursite.com/2017/04/05/IDAPython-advance1/</id>
+    <link href="http://sec-lbx.tk/2017/04/05/IDAPython-advance1/"/>
+    <id>http://sec-lbx.tk/2017/04/05/IDAPython-advance1/</id>
     <published>2017-04-05T13:40:00.000Z</published>
     <updated>2017-07-28T09:04:47.000Z</updated>
     
@@ -1872,18 +1872,18 @@ for x in range(0,5):
     </summary>
     
     
-      <category term="系统安全" scheme="http://yoursite.com/tags/%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/"/>
+      <category term="系统安全" scheme="http://sec-lbx.tk/tags/%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/"/>
     
-      <category term="linux" scheme="http://yoursite.com/tags/linux/"/>
+      <category term="linux" scheme="http://sec-lbx.tk/tags/linux/"/>
     
-      <category term="操作系统" scheme="http://yoursite.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+      <category term="操作系统" scheme="http://sec-lbx.tk/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
     
   </entry>
   
   <entry>
     <title>深入理解文件系统</title>
-    <link href="http://yoursite.com/2017/03/30/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/"/>
-    <id>http://yoursite.com/2017/03/30/深入理解文件系统/</id>
+    <link href="http://sec-lbx.tk/2017/03/30/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/"/>
+    <id>http://sec-lbx.tk/2017/03/30/深入理解文件系统/</id>
     <published>2017-03-30T03:40:00.000Z</published>
     <updated>2017-07-28T09:04:47.000Z</updated>
     
@@ -2039,9 +2039,9 @@ union {
     </summary>
     
     
-      <category term="linux" scheme="http://yoursite.com/tags/linux/"/>
+      <category term="linux" scheme="http://sec-lbx.tk/tags/linux/"/>
     
-      <category term="操作系统" scheme="http://yoursite.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+      <category term="操作系统" scheme="http://sec-lbx.tk/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
     
   </entry>
   

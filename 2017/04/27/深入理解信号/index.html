@@ -13,7 +13,7 @@
     
     
     
-    <title>深入理解信号 | Hexo</title>
+    <title>深入理解信号 | lbx&#39;s blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="theme-color" content="#3F51B5">
@@ -24,8 +24,8 @@
 <meta name="keywords" content="linux,操作系统">
 <meta property="og:type" content="article">
 <meta property="og:title" content="深入理解信号">
-<meta property="og:url" content="http://yoursite.com/2017/04/27/深入理解信号/index.html">
-<meta property="og:site_name" content="Hexo">
+<meta property="og:url" content="http://sec-lbx.tk/2017/04/27/深入理解信号/index.html">
+<meta property="og:site_name" content="lbx&#39;s blog">
 <meta property="og:description" content="信号信号用来通知进程异步事件，可以把它理解为对中断的一种模拟。它是一个很小的消息，用来达到两个目的：（1）告知进程发生了一个特定的事件；（2）强迫进程执行自身所包含的信号处理程序。linux预先定义了一些常规信号，并为它们定义了一些缺省操作。除此之外，还有一类实时信号，它们需要排队进行处理，我们也可以自己定义信号和信号处理方式。既然信号是和进程相关的，那么task_struct中就必然包含有与信号">
 <meta property="og:image" content="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E8%BF%9B%E7%A8%8B/%E4%BF%A1%E5%8F%B7.gif?raw=true">
 <meta property="og:image" content="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E8%BF%9B%E7%A8%8B/%E6%A0%88.gif?raw=true">
@@ -35,7 +35,7 @@
 <meta name="twitter:description" content="信号信号用来通知进程异步事件，可以把它理解为对中断的一种模拟。它是一个很小的消息，用来达到两个目的：（1）告知进程发生了一个特定的事件；（2）强迫进程执行自身所包含的信号处理程序。linux预先定义了一些常规信号，并为它们定义了一些缺省操作。除此之外，还有一类实时信号，它们需要排队进行处理，我们也可以自己定义信号和信号处理方式。既然信号是和进程相关的，那么task_struct中就必然包含有与信号">
 <meta name="twitter:image" content="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E8%BF%9B%E7%A8%8B/%E4%BF%A1%E5%8F%B7.gif?raw=true">
     
-        <link rel="alternate" type="application/atom+xml" title="Hexo" href="/atom.xml">
+        <link rel="alternate" type="application/atom+xml" title="lbx&#39;s blog" href="/atom.xml">
     
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
@@ -50,14 +50,14 @@
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
         <i class="icon icon-lg icon-close"></i>
     </a>
-    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+    <div class="brand-wrap" style="background-image:url(/)">
       <div class="brand">
         <a href="/" class="avatar waves-effect waves-circle waves-light">
-          <img src="/img/avatar.jpg">
+          <img src="/avatar.jpg">
         </a>
         <hgroup class="introduce">
-          <h5 class="nickname">John Doe</h5>
-          <a href="mailto:634206017@qq.com" title="634206017@qq.com" class="mail">634206017@qq.com</a>
+          <h5 class="nickname">Benxi Liu</h5>
+          <a href="mailto:lbxhust@163.com" title="lbxhust@163.com" class="mail">lbxhust@163.com</a>
         </hgroup>
       </div>
     </div>
@@ -330,13 +330,13 @@ if (q) {
 
 
         
-        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2017/04/27/深入理解信号/" target="_blank" rel="external">http://yoursite.com/2017/04/27/深入理解信号/</a>
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2017/04/27/深入理解信号/" target="_blank" rel="external">http://sec-lbx.tk/2017/04/27/深入理解信号/</a>
         
     </div>
     <footer>
-        <a href="http://yoursite.com">
-            <img src="/img/avatar.jpg" alt="John Doe">
-            John Doe
+        <a href="http://sec-lbx.tk">
+            <img src="/avatar.jpg" alt="Benxi Liu">
+            Benxi Liu
         </a>
     </footer>
 </blockquote>
@@ -360,7 +360,7 @@ if (q) {
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2017/04/27/深入理解信号/&title=《深入理解信号》 — Hexo&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/04/27/深入理解信号/&title=《深入理解信号》 — lbx's blog&pic=http://sec-lbx.tk/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -370,22 +370,22 @@ if (q) {
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2017/04/27/深入理解信号/&title=《深入理解信号》 — Hexo&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/04/27/深入理解信号/&title=《深入理解信号》 — lbx's blog&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2017/04/27/深入理解信号/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://sec-lbx.tk/2017/04/27/深入理解信号/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《深入理解信号》 — Hexo&url=http://yoursite.com/2017/04/27/深入理解信号/&via=http://yoursite.com" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《深入理解信号》 — lbx's blog&url=http://sec-lbx.tk/2017/04/27/深入理解信号/&via=http://sec-lbx.tk" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2017/04/27/深入理解信号/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://sec-lbx.tk/2017/04/27/深入理解信号/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -495,7 +495,7 @@ if (q) {
         </p>
     </div>
     <div class="bottom">
-        <p><span>John Doe &copy; 2015 - 2017</span>
+        <p><span>Benxi Liu &copy; 2015 - 2017</span>
             <span>
                 
                 Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
@@ -513,7 +513,7 @@ if (q) {
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2017/04/27/深入理解信号/&title=《深入理解信号》 — Hexo&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/04/27/深入理解信号/&title=《深入理解信号》 — lbx's blog&pic=http://sec-lbx.tk/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -523,22 +523,22 @@ if (q) {
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2017/04/27/深入理解信号/&title=《深入理解信号》 — Hexo&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/04/27/深入理解信号/&title=《深入理解信号》 — lbx's blog&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2017/04/27/深入理解信号/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://sec-lbx.tk/2017/04/27/深入理解信号/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《深入理解信号》 — Hexo&url=http://yoursite.com/2017/04/27/深入理解信号/&via=http://yoursite.com" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《深入理解信号》 — lbx's blog&url=http://sec-lbx.tk/2017/04/27/深入理解信号/&via=http://sec-lbx.tk" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2017/04/27/深入理解信号/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://sec-lbx.tk/2017/04/27/深入理解信号/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -549,7 +549,7 @@ if (q) {
 <div class="page-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
-    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://yoursite.com/2017/04/27/深入理解信号/" alt="微信分享二维码">
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://sec-lbx.tk/2017/04/27/深入理解信号/" alt="微信分享二维码">
 </div>
 
 

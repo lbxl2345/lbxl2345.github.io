@@ -13,7 +13,7 @@
     
     
     
-    <title>编译链中的一环，静态链接详解 | Hexo</title>
+    <title>编译链中的一环，静态链接详解 | lbx&#39;s blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="theme-color" content="#3F51B5">
@@ -24,15 +24,15 @@
 <meta name="keywords" content="链接器,binutils">
 <meta property="og:type" content="article">
 <meta property="og:title" content="编译链中的一环，静态链接详解">
-<meta property="og:url" content="http://yoursite.com/2017/06/19/编译链中的一环，静态链接详解/index.html">
-<meta property="og:site_name" content="Hexo">
+<meta property="og:url" content="http://sec-lbx.tk/2017/06/19/编译链中的一环，静态链接详解/index.html">
+<meta property="og:site_name" content="lbx&#39;s blog">
 <meta property="og:description" content="GCC的工作，到生成汇编代码为止。剩下的工作，交给了Binutils来完成：assembler和static linker。最近详细地研究了一下linker的工作过程。linker主要完成的是静态链接，目标文件合并的工作。例如，把多个.o文件合并成一个可执行文件。   两步链接两步链接指的是：    空间与地址的分配链接器会首先扫描所有的输入文件，获得各个段的长度、属性和位置，将段合并；并将输入目">
 <meta property="og:updated_time" content="2017-07-28T09:04:47.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="编译链中的一环，静态链接详解">
 <meta name="twitter:description" content="GCC的工作，到生成汇编代码为止。剩下的工作，交给了Binutils来完成：assembler和static linker。最近详细地研究了一下linker的工作过程。linker主要完成的是静态链接，目标文件合并的工作。例如，把多个.o文件合并成一个可执行文件。   两步链接两步链接指的是：    空间与地址的分配链接器会首先扫描所有的输入文件，获得各个段的长度、属性和位置，将段合并；并将输入目">
     
-        <link rel="alternate" type="application/atom+xml" title="Hexo" href="/atom.xml">
+        <link rel="alternate" type="application/atom+xml" title="lbx&#39;s blog" href="/atom.xml">
     
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
@@ -47,14 +47,14 @@
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
         <i class="icon icon-lg icon-close"></i>
     </a>
-    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+    <div class="brand-wrap" style="background-image:url(/)">
       <div class="brand">
         <a href="/" class="avatar waves-effect waves-circle waves-light">
-          <img src="/img/avatar.jpg">
+          <img src="/avatar.jpg">
         </a>
         <hgroup class="introduce">
-          <h5 class="nickname">John Doe</h5>
-          <a href="mailto:634206017@qq.com" title="634206017@qq.com" class="mail">634206017@qq.com</a>
+          <h5 class="nickname">Benxi Liu</h5>
+          <a href="mailto:lbxhust@163.com" title="lbxhust@163.com" class="mail">lbxhust@163.com</a>
         </hgroup>
       </div>
     </div>
@@ -225,13 +225,13 @@ typedef struct{
 
 
         
-        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2017/06/19/编译链中的一环，静态链接详解/" target="_blank" rel="external">http://yoursite.com/2017/06/19/编译链中的一环，静态链接详解/</a>
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2017/06/19/编译链中的一环，静态链接详解/" target="_blank" rel="external">http://sec-lbx.tk/2017/06/19/编译链中的一环，静态链接详解/</a>
         
     </div>
     <footer>
-        <a href="http://yoursite.com">
-            <img src="/img/avatar.jpg" alt="John Doe">
-            John Doe
+        <a href="http://sec-lbx.tk">
+            <img src="/avatar.jpg" alt="Benxi Liu">
+            Benxi Liu
         </a>
     </footer>
 </blockquote>
@@ -255,7 +255,7 @@ typedef struct{
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2017/06/19/编译链中的一环，静态链接详解/&title=《编译链中的一环，静态链接详解》 — Hexo&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/06/19/编译链中的一环，静态链接详解/&title=《编译链中的一环，静态链接详解》 — lbx's blog&pic=http://sec-lbx.tk/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -265,22 +265,22 @@ typedef struct{
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2017/06/19/编译链中的一环，静态链接详解/&title=《编译链中的一环，静态链接详解》 — Hexo&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/06/19/编译链中的一环，静态链接详解/&title=《编译链中的一环，静态链接详解》 — lbx's blog&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2017/06/19/编译链中的一环，静态链接详解/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://sec-lbx.tk/2017/06/19/编译链中的一环，静态链接详解/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《编译链中的一环，静态链接详解》 — Hexo&url=http://yoursite.com/2017/06/19/编译链中的一环，静态链接详解/&via=http://yoursite.com" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《编译链中的一环，静态链接详解》 — lbx's blog&url=http://sec-lbx.tk/2017/06/19/编译链中的一环，静态链接详解/&via=http://sec-lbx.tk" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2017/06/19/编译链中的一环，静态链接详解/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://sec-lbx.tk/2017/06/19/编译链中的一环，静态链接详解/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -390,7 +390,7 @@ typedef struct{
         </p>
     </div>
     <div class="bottom">
-        <p><span>John Doe &copy; 2015 - 2017</span>
+        <p><span>Benxi Liu &copy; 2015 - 2017</span>
             <span>
                 
                 Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
@@ -408,7 +408,7 @@ typedef struct{
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2017/06/19/编译链中的一环，静态链接详解/&title=《编译链中的一环，静态链接详解》 — Hexo&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/06/19/编译链中的一环，静态链接详解/&title=《编译链中的一环，静态链接详解》 — lbx's blog&pic=http://sec-lbx.tk/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -418,22 +418,22 @@ typedef struct{
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2017/06/19/编译链中的一环，静态链接详解/&title=《编译链中的一环，静态链接详解》 — Hexo&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/06/19/编译链中的一环，静态链接详解/&title=《编译链中的一环，静态链接详解》 — lbx's blog&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2017/06/19/编译链中的一环，静态链接详解/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://sec-lbx.tk/2017/06/19/编译链中的一环，静态链接详解/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《编译链中的一环，静态链接详解》 — Hexo&url=http://yoursite.com/2017/06/19/编译链中的一环，静态链接详解/&via=http://yoursite.com" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《编译链中的一环，静态链接详解》 — lbx's blog&url=http://sec-lbx.tk/2017/06/19/编译链中的一环，静态链接详解/&via=http://sec-lbx.tk" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2017/06/19/编译链中的一环，静态链接详解/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://sec-lbx.tk/2017/06/19/编译链中的一环，静态链接详解/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -444,7 +444,7 @@ typedef struct{
 <div class="page-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
-    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://yoursite.com/2017/06/19/编译链中的一环，静态链接详解/" alt="微信分享二维码">
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://sec-lbx.tk/2017/06/19/编译链中的一环，静态链接详解/" alt="微信分享二维码">
 </div>
 
 
