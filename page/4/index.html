@@ -1,107 +1,117 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  
-  <title>Hexo | </title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  
-  <meta name="theme-color" content="#3F51B5">
-  
-  
-  <meta name="keywords" content="">
-  <meta property="og:type" content="website">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <title>Hexo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="">
+    <meta property="og:type" content="website">
 <meta property="og:title" content="Hexo">
 <meta property="og:url" content="http://yoursite.com/page/4/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hexo">
-  
-    <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
-  
-  <meta name="summary" content="">
-  <link rel="shortcut icon" href="/favicon.ico">
-  <link rel="stylesheet" href="/css/style.css">
+    
+        <link rel="alternate" type="application/atom+xml" title="Hexo" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
 </head>
 
 <body>
-  <div id="loading" class="active"></div>
+    <div id="loading" class="active"></div>
 
-  <nav id="menu"  >
-   <div class="inner flex-row-vertical">
-  <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-      <i class="icon icon-lg icon-close"></i>
-  </a>
-  <div class="brand-wrap">
-    <div class="brand">
-      <a href="/" class="avatar"><img src="/img/logo.jpg"></a>
-      <hgroup class="introduce">
-        <h5 class="nickname">John Doe</h5>
-        <a href="mailto:634206017@qq.com" title="634206017@qq.com" class="mail">634206017@qq.com</a>
-      </hgroup>
+    <aside id="menu"  >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">John Doe</h5>
+          <a href="mailto:634206017@qq.com" title="634206017@qq.com" class="mail">634206017@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/yscoder" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://www.weibo.com/ysweb" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/custom"  >
+                <i class="icon icon-lg icon-link"></i>
+                测试
+              </a>
+            </li>
+        
+      </ul>
     </div>
   </div>
-  <div class="scroll-wrap flex-col">
-    <ul class="nav">
-      
-          <li class="waves-block waves-effect">
-            <a href="/"  >
-              <i class="icon icon-lg icon-home"></i>
-              主页
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="/archives"  >
-              <i class="icon icon-lg icon-archives"></i>
-              Archives
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="/tags"  >
-              <i class="icon icon-lg icon-tags"></i>
-              Tags
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="https://github.com/yscoder" target="_blank" >
-              <i class="icon icon-lg icon-github"></i>
-              Github
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="http://www.weibo.com/ysweb" target="_blank" >
-              <i class="icon icon-lg icon-weibo"></i>
-              Weibo
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="/404"  >
-              <i class="icon icon-lg icon-link"></i>
-              测试
-            </a>
-          </li>
-      
-    </ul>
+</aside>
 
-    <footer class="footer">
-  <p><a rel="license" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0;vertical-align:middle;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAAAPCAMAAABEF7i9AAAAllBMVEUAAAD///+rsapERER3d3eIiIjMzMzu7u4iIiKUmZO6v7rKzsoODg4RERFVVVUNDQ0NDg0PEA8zMzNLTEtbXltmZmZydnF9gn2AgICPkI+ZmZmqqqq7u7vFxsXIzMgNDQwZGRkgICAhISEkJSMnKCcuMC4xMzE5Ozk7PTtBQkFCQkJDQ0Nna2eGhoaHh4ezuLLGysbd3d1wVGpAAAAA4UlEQVR42q2T1xqCMAyFk7QsBQeKA9x7j/d/OSm22CpX0nzcpA1/T05aAOuBVkMAScQFHLnEwoCo2f1TnQIGoVMewjZEjVFN4GH1Ue1Cn2jWqwfsOOj6wDwGvotsl/c8lv7KIq1eLOsT0HMFHMIE/RZyHnlphryT9zyV+8WH5e8yQw3wnQvgAFxPTKUVi555SHR/lOfLMgVTeDlSfN+TaoUsiTyeIm+bCkHvCA2FUKG48LDtYBZBknsYP/G8NTw0gaaHyuQf4H5pecrB/FYCT2sL9zAfy1Xyjou6L8X2W7YcLyBZCRtnq/zfAAAAAElFTkSuQmCC" /></a></p>
-  <p>Hexo &copy; 2017</p>
-  <p>Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
-  <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a></p>
-  <a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-2x icon-rss-square"></i></a>
-</footer>
-
-  </div>
-</div>
-
-  </nav>
-  <main id="main">
-    <header class="top-header" id="header">
+    <main id="main">
+        <header class="top-header" id="header">
     <div class="flex-row">
         <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
           <i class="icon icon-lg icon-navicon"></i>
@@ -112,37 +122,52 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input " autocomplete="off" placeholder="输入感兴趣的关键字">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
         </div>
         
         
-        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-share">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
             <i class="icon icon-lg icon-share-alt"></i>
         </a>
         
     </div>
 </header>
-<header class="content-header">
-  <div class="container">
-    <h1 class="author">Hexo</h1>
-    <h5 class="subtitle">
-        
-        
-        
-    </h5>
-  </div>
+<header class="content-header index-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Hexo</h1>
+        <h5 class="subtitle">
+            
+                
+            
+        </h5>
+    </div>
+
+    
+
+
 </header>
 
-    <div class="container body-wrap">
-      <ul class="post-list">
-  
-    <li class="post-list-item">
-        <article id="post-PIDnamespace"
-  class="article article-type-post" itemprop="blogPost">
-     
+<div class="container body-wrap">
+
+    <ul class="post-list">
+    
+        <li class="post-list-item fade">
+            <article id="post-PIDnamespace"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2016-10-10 21:00:00" datetime="2016-10-10T13:00:00.000Z"  itemprop="datePublished">2016-10-10</time>
+
+        
+
+
+    </div>
+
+    
 
 
   
@@ -153,37 +178,41 @@
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        PID NamespacePID namespace能够允许创建任务的集合，使得这样的集合像一个独立的机器一样运行。在不同的namespace中，任务能够拥有相同的ID。PID Namespace主要能够解决不同host之间，containers的移植问题，由于使用了一个独立的namespace，从一个host移植到另一个host时，是能够保持PID值不变的。如果没有这个特性，那么移植过程很...
+    
+
+        <a href="/2016/10/10/PIDnamespace/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PID-namespace/">PID namespace</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux内核/">linux内核</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-userspaceAPI"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2016-10-10T13:00:00.000Z" itemprop="datePublished" class="post-time">
-  2016-10-10
-</time>
+        <time class="post-time" title="2016-10-10 20:00:00" datetime="2016-10-10T12:00:00.000Z"  itemprop="datePublished">2016-10-10</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           PID Namespace  PID namespace能够允许创建任务的集合，使得这样的集合像一个独立的机器一样运行。在不同的namespace中，任务能够拥有相同的ID。 PID Namespace主要能够解决不同host之间，containers的移植问题，由于使用了一个独立的namespace，从一个host移植到另一个host时，是能够保持PID值不变的。如果没有这个特性，那么移植
-    
-    
-        <a href="/2016/10/10/PIDnamespace/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PID-namespace/">PID namespace</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux内核/">linux内核</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-userspaceAPI"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -194,38 +223,42 @@
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        namespace APInamespace的API包含3个系统调用——clone，unshare，setns，以及一系列的/proc文件。为了指定操作的namespace类型，这3个系统调用都使用了一个CLONE_NEW常量(CLONE_NEWIPC,CLONE_NEWNS,etc)。  
+clone通过clone，可以创建一个namespace，它是一个创建新的process的系统调用。...
+    
+
+        <a href="/2016/10/10/userspaceAPI/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/container/">container</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux内核/">linux内核</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/namespace/">namespace</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-namespace相关"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2016-10-10T12:00:00.000Z" itemprop="datePublished" class="post-time">
-  2016-10-10
-</time>
+        <time class="post-time" title="2016-10-10 11:40:00" datetime="2016-10-10T03:40:00.000Z"  itemprop="datePublished">2016-10-10</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           namespace API  namespace的API包含3个系统调用——clone，unshare，setns，以及一系列的/proc文件。为了指定操作的namespace类型，这3个系统调用都使用了一个CLONE_NEW常量(CLONE_NEWIPC,CLONE_NEWNS,etc)。   
-   clone  通过clone，可以创建一个namespace，它是一个创建新的proce
-    
-    
-        <a href="/2016/10/10/userspaceAPI/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/container/">container</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux内核/">linux内核</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/namespace/">namespace</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-namespace相关"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -236,38 +269,42 @@
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        namespace当前，linux实现了6种不同类型的namespaces。每种namespace，都用来包含一类特定的系统资源，这样从命名空间内部的进程来看，它们就拥有了隔离的全局资源。namespaces的一个目标就是容器，一种轻量级的虚拟化工具，让一组进程认为它们是系统上仅有的一组进程。  
+mount namespacesmount namespace(CLONE_NEWNS)隔离一...
+    
+
+        <a href="/2016/10/10/namespace相关/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux内核/">linux内核</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/namespace/">namespace</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-SGX"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2016-10-10T03:40:00.000Z" itemprop="datePublished" class="post-time">
-  2016-10-10
-</time>
+        <time class="post-time" title="2016-09-18 17:40:00" datetime="2016-09-18T09:40:00.000Z"  itemprop="datePublished">2016-09-18</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           namespace  当前，linux实现了6种不同类型的namespaces。每种namespace，都用来 包含一类特定的系统资源 ，这样从命名空间内部的进程来看，它们就拥有了隔离的全局资源。namespaces的一个目标就是 容器 ，一种轻量级的虚拟化工具，让一组进程认为它们是系统上仅有的一组进程。   
-   mount namespaces  mount namespace(CLO
-    
-    
-        <a href="/2016/10/10/namespace相关/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux内核/">linux内核</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/namespace/">namespace</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-SGX"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -278,40 +315,44 @@
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        1 SGXSGX:Software Guard Extensions在运行时，程序可以分为几个部分：  
+
+Untrusted Run-Time System:在SGX enclave外部执行的部分，负责加载和管理一个enclave，并且Ecall enclave，接受enclave中的Ocall。  
+Trusted Run-Time System:在SGX enclave内部执行的部分，...
+    
+
+        <a href="/2016/09/18/SGX/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SGX/">SGX</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-kvm内存虚拟化"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2016-09-18T09:40:00.000Z" itemprop="datePublished" class="post-time">
-  2016-09-18
-</time>
+        <time class="post-time" title="2016-06-27 11:40:00" datetime="2016-06-27T03:40:00.000Z"  itemprop="datePublished">2016-06-27</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           1 SGX  SGX:Software Guard Extensions 在运行时，程序可以分为几个部分：   
- 
- Untrusted Run-Time System:在SGX enclave外部执行的部分，负责加载和管理一个enclave，并且Ecall enclave，接受enclave中的Ocall。   
- Trusted Run-Time System:在SGX enclave
-    
-    
-        <a href="/2016/09/18/SGX/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SGX/">SGX</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-kvm内存虚拟化"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -322,38 +363,42 @@
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        EPT Violation与操作系统当中的缺页中断类似，EPT中的缺页被称为“EPT violation”。当GPA-&gt;HPA的映射不存在时，就会触发VM-EXIT，由KVM来捕获异常，并进行异常处理。  
+1 vmx.c当中，handle_ept_violation是EPT缺页中断的入口，其参数只有一个，struct kvm_vcpu *vcpu。它从VMCS中读取数据，判断OS能否...
+    
+
+        <a href="/2016/06/27/kvm内存虚拟化/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kvm/">kvm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/虚拟化/">虚拟化</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-Intel VT-x:EPT解读"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2016-06-27T03:40:00.000Z" itemprop="datePublished" class="post-time">
-  2016-06-27
-</time>
+        <time class="post-time" title="2016-06-15 17:40:00" datetime="2016-06-15T09:40:00.000Z"  itemprop="datePublished">2016-06-15</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           EPT Violation  与操作系统当中的缺页中断类似，EPT中的缺页被称为“EPT violation”。当GPA-&gt;HPA的映射不存在时，就会触发VM-EXIT，由KVM来捕获异常，并进行异常处理。   
- 1 vmx.c当中， handle_ept_violation 是EPT缺页中断的入口，其参数只有一个， struct kvm_vcpu *vcpu 。它从VMCS中读取数
-    
-    
-        <a href="/2016/06/27/kvm内存虚拟化/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kvm/">kvm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/虚拟化/">虚拟化</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-Intel VT-x:EPT解读"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -364,37 +409,41 @@
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        1 VT-xVT-x是intel针对硬件辅助虚拟化的技术，它解决x86指令集不能被虚拟化的问题，并且简化了VMM软件，减少了软件虚拟化的需求。Virtual Machine Extensions定义了一系列新的操作，称为VMX操作，来提供处理器级别的支持。同时它提供了一个新的特权等级VMX root给VMM，从而避免了ring deprivileging方法(让操作系统运行于ring 1，V...
+    
+
+        <a href="/2016/06/15/Intel VT-x:EPT解读/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/intel/">intel</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/虚拟化/">虚拟化</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-Intel：针对ROP攻击的特性"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2016-06-15T09:40:00.000Z" itemprop="datePublished" class="post-time">
-  2016-06-15
-</time>
+        <time class="post-time" title="2016-06-13 17:40:00" datetime="2016-06-13T09:40:00.000Z"  itemprop="datePublished">2016-06-13</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           1 VT-x  VT-x是intel针对硬件辅助虚拟化的技术，它解决x86指令集不能被虚拟化的问题，并且简化了VMM软件，减少了软件虚拟化的需求。Virtual Machine Extensions定义了一系列新的操作，称为VMX操作，来提供处理器级别的支持。同时它提供了一个新的特权等级VMX root给VMM，从而避免了ring deprivileging方法(让操作系统运行于ring 1
-    
-    
-        <a href="/2016/06/15/Intel VT-x:EPT解读/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/intel/">intel</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/虚拟化/">虚拟化</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-Intel：针对ROP攻击的特性"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -405,37 +454,41 @@
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        1 针对ROP/JOP/COP的intel特性ROP/JOP/COP攻击通常有两个特性：第一是包含执行特权命令的代码片段，至少包含一条控制流转移指令，其转移目的由返回stack或者寄存器中的目标地址决定；第二是它们将控制流指令(RET，CALL，JMP)的地址修改到新的目标地址。intel提供Shadow Stack和Indirect branch tracking两种功能，来防御这一类攻击...
+    
+
+        <a href="/2016/06/13/Intel：针对ROP攻击的特性/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/intel/">intel</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/硬件/">硬件</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-I:O与page cache"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2016-06-13T09:40:00.000Z" itemprop="datePublished" class="post-time">
-  2016-06-13
-</time>
+        <time class="post-time" title="2016-06-08 17:40:00" datetime="2016-06-08T09:40:00.000Z"  itemprop="datePublished">2016-06-08</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           1 针对ROP/JOP/COP的intel特性  ROP/JOP/COP攻击通常有两个特性：第一是包含执行特权命令的代码片段，至少包含一条控制流转移指令，其转移目的由返回stack或者寄存器中的目标地址决定；第二是它们将控制流指令(RET，CALL，JMP)的地址修改到新的目标地址。 intel提供Shadow Stack和Indirect branch tracking两种功能，来防御这一
-    
-    
-        <a href="/2016/06/13/Intel：针对ROP攻击的特性/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/intel/">intel</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/硬件/">硬件</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-I:O与page cache"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -446,37 +499,41 @@
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        buffer cache/page cachelinux中存在有两个缓存，buffer cache是针对设备的缓存，而page cache是针对文件的缓存。对于一个ext4文件系统来说，每个文件都有一棵radix树管理文件的缓存页，这些缓存页就是page cache；而对于每个块设备来说，都有一棵radix树来管理数据的缓存块，这些缓存块被称为buffer cache。在常见的linux系统...
+    
+
+        <a href="/2016/06/08/I:O与page cache/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/I-O/">I/O</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-详解virtio"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2016-06-08T09:40:00.000Z" itemprop="datePublished" class="post-time">
-  2016-06-08
-</time>
+        <time class="post-time" title="2016-05-26 17:40:00" datetime="2016-05-26T09:40:00.000Z"  itemprop="datePublished">2016-05-26</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           buffer cache/page cache  linux中存在有两个缓存，buffer cache是针对设备的缓存，而page cache是针对文件的缓存。对于一个ext4文件系统来说，每个文件都有一棵radix树管理文件的缓存页，这些缓存页就是page cache；而对于每个块设备来说，都有一棵radix树来管理数据的缓存块，这些缓存块被称为buffer cache。在常见的linux
-    
-    
-        <a href="/2016/06/08/I:O与page cache/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/I-O/">I/O</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-详解virtio"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -487,37 +544,41 @@
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        biobi_next其实只是用在request queue当中的，作为一个指向下一个bio结构体的指针。bi_bdev指向了设备。bi_iter的作用是用来对这个bio中的bio_vec进行迭代，这个bio_vec以数组的形式进行存放。每个bio都包含一个磁盘存储区标识符(存储区中的起始扇区号和扇区数目)和一个或多个描述与I/O操作相关的内存区的段。其中bvec_iter bi_iter包含...
+    
+
+        <a href="/2016/05/26/详解virtio/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/虚拟化/">虚拟化</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-爬虫入门"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2016-05-26T09:40:00.000Z" itemprop="datePublished" class="post-time">
-  2016-05-26
-</time>
+        <time class="post-time" title="2016-05-13 17:40:00" datetime="2016-05-13T09:40:00.000Z"  itemprop="datePublished">2016-05-13</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           bio  bi_next其实只是用在request queue当中的，作为一个指向下一个bio结构体的指针。 bi_bdev指向了设备。 bi_iter的作用是用来对这个bio中的bio_vec进行迭代，这个bio_vec以数组的形式进行存放。 每个bio都包含一个磁盘存储区标识符(存储区中的起始扇区号和扇区数目)和一个或多个描述与I/O操作相关的内存区的段。其中bvec_iter bi_i
-    
-    
-        <a href="/2016/05/26/详解virtio/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/虚拟化/">虚拟化</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-爬虫入门"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -528,104 +589,138 @@
 
 
 
-    <div class="post-meta">
-        <time datetime="2016-05-13T09:40:00.000Z" itemprop="datePublished" class="post-time">
-  2016-05-13
-</time>
 
-        
-
-
-    </div>
-
-    <div class="post-content" id="post-content" itemprop="postContent" >
+    <div class="post-content" id="post-content" itemprop="postContent">
 
     
-           工作原理  爬虫，就是伪造一个用户身份，通过URL去访问某个网页，将这个网页上的某些感兴趣的内容，利用正则式的方式提取出来。对于google，baidu的搜索部门，爬虫可以说是核心技术之一。 
-   python spider  python为实现基本的爬虫，提供了十分方便的模块。通常利用urllib来实现简单的爬虫。首先确定访问的url，然后对这个url生成一个request。reques
+        工作原理爬虫，就是伪造一个用户身份，通过URL去访问某个网页，将这个网页上的某些感兴趣的内容，利用正则式的方式提取出来。对于google，baidu的搜索部门，爬虫可以说是核心技术之一。
+python spiderpython为实现基本的爬虫，提供了十分方便的模块。通常利用urllib来实现简单的爬虫。首先确定访问的url，然后对这个url生成一个request。request并不仅仅是一个...
     
-    
+
         <a href="/2016/05/13/爬虫入门/" class="post-more waves-effect waves-button">
-            阅读全文...
+            Continue reading...
         </a>
     </div>
     
+    <div class="post-footer">
+        
 	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/爬虫/">爬虫</a></li></ul>
 
+    </div>
+    
 </article>
 
-    </li>
-  
-</ul>
+        </li>
+    
+    </ul>
 
+    
 <nav id="page-nav">
     <div class="inner">
     <a class="extend prev" rel="prev" href="/page/3/">上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/5/">下一页</a>
     </div>
 </nav>
 
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
     </div>
-  </main>
-<div class="mask" id="mask"></div>
+    <div class="bottom">
+        <p><span>John Doe &copy; 2015 - 2017</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
 
-<script>
-var BLOG_SHARE = {
-    title: "Hexo",
-    pic: "/img/logo.jpg",
-    summary: document.getElementsByName('summary')[0].content,
-    url: "http://yoursite.com/page/4/index.html"
-};
-</script>
-<div class="global-share" id="global-share">
-    <div class="tit">分享到：</div>
+
+
+<div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" href="javascript:;" data-title="微博" data-service="tsina">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/page/4/&title=Hexo&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
       <li>
-        <a class="weixin share-sns" href="javascript:;" data-title="微信" data-service="weixin">
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
           <i class="icon icon-weixin"></i>
         </a>
       </li>
       <li>
-        <a class="qq share-sns" href="javascript:;" data-title=" QQ" data-service="cqq">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/page/4/&title=Hexo&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" href="javascript:;" data-title=" Facebook" data-service="fb">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/page/4/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" href="javascript:;" data-title=" Twitter" data-service="twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=Hexo&url=http://yoursite.com/page/4/&via=http://yoursite.com" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="douban share-sns" href="javascript:;" data-title="豆瓣" data-service="douban">
-          豆
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/page/4/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
         </a>
       </li>
     </ul>
  </div>
 
 
-<script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://yoursite.com/page/4/" alt="微信分享二维码">
+</div>
 
-<script src="/js/main.js"></script>
 
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
 
 
 <div class="search-panel" id="search-panel">
     <ul class="search-result" id="search-result"></ul>
 </div>
-<script type="text/template" id="search-tpl">
+<template id="search-tpl">
 <li class="item">
-    <a href="/{path}" class="waves-block waves-effect">
+    <a href="{path}" class="waves-block waves-effect">
         <div class="title ellipsis" title="{title}">{title}</div>
         <div class="flex-row flex-middle">
             <div class="tags ellipsis">
@@ -635,15 +730,35 @@ var BLOG_SHARE = {
         </div>
     </a>
 </li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
 </script>
-
-<script src="/js/search.js"></script>
-
-
-
-
-
-
 
 
 

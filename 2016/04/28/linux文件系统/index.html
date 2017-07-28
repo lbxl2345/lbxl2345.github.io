@@ -1,16 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  
-  <title>linux文件系统 | Hexo | </title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  
-  <meta name="theme-color" content="#3F51B5">
-  
-  
-  <meta name="keywords" content="linux,文件系统">
-  <meta name="description" content="虚拟文件系统(VFS)是linux的内核软件层，它能够为各种文件系统提供通用的接口，例如linux，unix，windows系统。它是一个位于应用程序和具体文件之间的中间层。VFS引入了一个通用文件模型，它能够表示所有支持的文件系统，它包含有超级块对象、索引节点对象、文件对象、目录项对象。 超级块对象super_block存放已安装文件系统的有关信息，对基于磁盘的文件系统，它通常对应于存放在磁盘上">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <title>linux文件系统 | Hexo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="linux,文件系统">
+    <meta name="description" content="虚拟文件系统(VFS)是linux的内核软件层，它能够为各种文件系统提供通用的接口，例如linux，unix，windows系统。它是一个位于应用程序和具体文件之间的中间层。VFS引入了一个通用文件模型，它能够表示所有支持的文件系统，它包含有超级块对象、索引节点对象、文件对象、目录项对象。 超级块对象super_block存放已安装文件系统的有关信息，对基于磁盘的文件系统，它通常对应于存放在磁盘上">
 <meta name="keywords" content="linux,文件系统">
 <meta property="og:type" content="article">
 <meta property="og:title" content="linux文件系统">
@@ -23,92 +33,92 @@
 <meta name="twitter:title" content="linux文件系统">
 <meta name="twitter:description" content="虚拟文件系统(VFS)是linux的内核软件层，它能够为各种文件系统提供通用的接口，例如linux，unix，windows系统。它是一个位于应用程序和具体文件之间的中间层。VFS引入了一个通用文件模型，它能够表示所有支持的文件系统，它包含有超级块对象、索引节点对象、文件对象、目录项对象。 超级块对象super_block存放已安装文件系统的有关信息，对基于磁盘的文件系统，它通常对应于存放在磁盘上">
 <meta name="twitter:image" content="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/%E8%B6%85%E7%BA%A7%E5%9D%97.jpg?raw=true">
-  
-    <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
-  
-  <meta name="summary" content="">
-  <link rel="shortcut icon" href="/favicon.ico">
-  <link rel="stylesheet" href="/css/style.css">
+    
+        <link rel="alternate" type="application/atom+xml" title="Hexo" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
 </head>
 
 <body>
-  <div id="loading" class="active"></div>
+    <div id="loading" class="active"></div>
 
-  <nav id="menu" class="hide" >
-   <div class="inner flex-row-vertical">
-  <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-      <i class="icon icon-lg icon-close"></i>
-  </a>
-  <div class="brand-wrap">
-    <div class="brand">
-      <a href="/" class="avatar"><img src="/img/logo.jpg"></a>
-      <hgroup class="introduce">
-        <h5 class="nickname">John Doe</h5>
-        <a href="mailto:634206017@qq.com" title="634206017@qq.com" class="mail">634206017@qq.com</a>
-      </hgroup>
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">John Doe</h5>
+          <a href="mailto:634206017@qq.com" title="634206017@qq.com" class="mail">634206017@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/yscoder" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://www.weibo.com/ysweb" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/custom"  >
+                <i class="icon icon-lg icon-link"></i>
+                测试
+              </a>
+            </li>
+        
+      </ul>
     </div>
   </div>
-  <div class="scroll-wrap flex-col">
-    <ul class="nav">
-      
-          <li class="waves-block waves-effect">
-            <a href="/"  >
-              <i class="icon icon-lg icon-home"></i>
-              主页
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="/archives"  >
-              <i class="icon icon-lg icon-archives"></i>
-              Archives
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="/tags"  >
-              <i class="icon icon-lg icon-tags"></i>
-              Tags
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="https://github.com/yscoder" target="_blank" >
-              <i class="icon icon-lg icon-github"></i>
-              Github
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="http://www.weibo.com/ysweb" target="_blank" >
-              <i class="icon icon-lg icon-weibo"></i>
-              Weibo
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="/404"  >
-              <i class="icon icon-lg icon-link"></i>
-              测试
-            </a>
-          </li>
-      
-    </ul>
+</aside>
 
-    <footer class="footer">
-  <p><a rel="license" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0;vertical-align:middle;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAAAPCAMAAABEF7i9AAAAllBMVEUAAAD///+rsapERER3d3eIiIjMzMzu7u4iIiKUmZO6v7rKzsoODg4RERFVVVUNDQ0NDg0PEA8zMzNLTEtbXltmZmZydnF9gn2AgICPkI+ZmZmqqqq7u7vFxsXIzMgNDQwZGRkgICAhISEkJSMnKCcuMC4xMzE5Ozk7PTtBQkFCQkJDQ0Nna2eGhoaHh4ezuLLGysbd3d1wVGpAAAAA4UlEQVR42q2T1xqCMAyFk7QsBQeKA9x7j/d/OSm22CpX0nzcpA1/T05aAOuBVkMAScQFHLnEwoCo2f1TnQIGoVMewjZEjVFN4GH1Ue1Cn2jWqwfsOOj6wDwGvotsl/c8lv7KIq1eLOsT0HMFHMIE/RZyHnlphryT9zyV+8WH5e8yQw3wnQvgAFxPTKUVi555SHR/lOfLMgVTeDlSfN+TaoUsiTyeIm+bCkHvCA2FUKG48LDtYBZBknsYP/G8NTw0gaaHyuQf4H5pecrB/FYCT2sL9zAfy1Xyjou6L8X2W7YcLyBZCRtnq/zfAAAAAElFTkSuQmCC" /></a></p>
-  <p>Hexo &copy; 2017</p>
-  <p>Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
-  <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a></p>
-  <a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-2x icon-rss-square"></i></a>
-</footer>
-
-  </div>
-</div>
-
-  </nav>
-  <main id="main">
-    <header class="top-header" id="header">
+    <main id="main">
+        <header class="top-header" id="header">
     <div class="flex-row">
         <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
           <i class="icon icon-lg icon-navicon"></i>
@@ -119,96 +129,76 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input " autocomplete="off" placeholder="输入感兴趣的关键字">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
         </div>
         
         
-        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-share">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
             <i class="icon icon-lg icon-share-alt"></i>
         </a>
         
     </div>
 </header>
-<header class="content-header">
-  <div class="container">
-    <h1 class="author">linux文件系统</h1>
-    <h5 class="subtitle">
-        
-            <time datetime="2016-04-28T09:40:00.000Z" itemprop="datePublished" class="page-time">
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">linux文件系统</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2016-04-28T09:40:00.000Z" itemprop="datePublished" class="page-time">
   2016-04-28
 </time>
 
 
-        
-    </h5>
-  </div>
+            
+        </h5>
+    </div>
+
+    
+
+
 </header>
 
-    <div class="container body-wrap">
-      <article id="post-linux文件系统" 
-  class="article article-type-post" itemprop="blogPost">
-    <div class="post-meta flex-row">
-        
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/文件系统/">文件系统</a></li></ul>
 
-    </div>
-    <div class="post-body">
-        <aside class="post-widget" id="post-widget">
-
-            
-            <div class="post-share" id="post-share">
-    <div class="tit">分享到：</div>
-    <ul class="reset share-icons">
-      <li>
-        <a class="weibo share-sns" href="javascript:;" data-title="微博" data-service="tsina">
-          <i class="icon icon-weibo"></i>
-        </a>
-      </li>
-      <li>
-        <a class="weixin share-sns" href="javascript:;" data-title="微信" data-service="weixin">
-          <i class="icon icon-weixin"></i>
-        </a>
-      </li>
-      <li>
-        <a class="qq share-sns" href="javascript:;" data-title=" QQ" data-service="cqq">
-          <i class="icon icon-qq"></i>
-        </a>
-      </li>
-      <li>
-        <a class="facebook share-sns" href="javascript:;" data-title=" Facebook" data-service="fb">
-          <i class="icon icon-facebook"></i>
-        </a>
-      </li>
-      <li>
-        <a class="twitter share-sns" href="javascript:;" data-title=" Twitter" data-service="twitter">
-          <i class="icon icon-twitter"></i>
-        </a>
-      </li>
-      <li>
-        <a class="douban share-sns" href="javascript:;" data-title="豆瓣" data-service="douban">
-          豆
-        </a>
-      </li>
-    </ul>
- </div>
-
-            
-
-            
-            <nav class="post-toc-wrap" id="post-toc">
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap" id="post-toc">
+            <h4>TOC</h4>
             <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#超级块对象"><span class="post-toc-number">1.</span> <span class="post-toc-text">超级块对象</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#索引节点对象"><span class="post-toc-number">2.</span> <span class="post-toc-text">索引节点对象</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#文件对象"><span class="post-toc-number">3.</span> <span class="post-toc-text">文件对象</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#目录项对象"><span class="post-toc-number">4.</span> <span class="post-toc-text">目录项对象</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#文件操作函数的调用"><span class="post-toc-number">5.</span> <span class="post-toc-text">文件操作函数的调用</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#进程与文件"><span class="post-toc-number">6.</span> <span class="post-toc-text">进程与文件</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#文件系统的安装和拆卸"><span class="post-toc-number">7.</span> <span class="post-toc-text">文件系统的安装和拆卸</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#安装普通文件系统"><span class="post-toc-number">7.0.1.</span> <span class="post-toc-text">安装普通文件系统</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#安装根文件系统"><span class="post-toc-number">7.0.2.</span> <span class="post-toc-text">安装根文件系统</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#卸载文件系统"><span class="post-toc-number">7.0.3.</span> <span class="post-toc-text">卸载文件系统</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#路径名查找"><span class="post-toc-number">8.</span> <span class="post-toc-text">路径名查找</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#文件打开-读写"><span class="post-toc-number">9.</span> <span class="post-toc-text">文件打开/读写</span></a></li></ol>
-            </nav>
+        </nav>
+    </aside>
+    
+<article id="post-linux文件系统"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">linux文件系统</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2016-04-28 17:40:00" datetime="2016-04-28T09:40:00.000Z"  itemprop="datePublished">2016-04-28</time>
+
             
-        </aside>
 
-        <div class="post-main">
 
-            <div class="post-content" id="post-content" itemprop="postContent">
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
             <p>虚拟文件系统(VFS)是linux的内核软件层，它能够为各种文件系统提供通用的接口，例如linux，unix，windows系统。它是一个位于应用程序和具体文件之间的中间层。VFS引入了一个通用文件模型，它能够表示所有支持的文件系统，它包含有超级块对象、索引节点对象、文件对象、目录项对象。</p>
-<h3 id="超级块对象"><a href="#超级块对象" class="headerlink" title="超级块对象"></a>超级块对象</h3><p>super_block存放已安装文件系统的有关信息，对基于磁盘的文件系统，它通常对应于存放在磁盘上的文件系统控制块。对于一个特定的文件系统，超级块的格式是固定的。每一个文件系统都对应一个超级块，它们都会链接到一个超级块链表，而文件系统中的每个文件在打开时都需要在内存分配一个inode结构它们都要链接到超级块。<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/%E8%B6%85%E7%BA%A7%E5%9D%97.jpg?raw=true" alt="pic"></p>
+<h3 id="超级块对象"><a href="#超级块对象" class="headerlink" title="超级块对象"></a>超级块对象</h3><p>super_block存放已安装文件系统的有关信息，对基于磁盘的文件系统，它通常对应于存放在磁盘上的文件系统控制块。对于一个特定的文件系统，超级块的格式是固定的。每一个文件系统都对应一个超级块，它们都会链接到一个超级块链表，而文件系统中的每个文件在打开时都需要在内存分配一个inode结构它们都要链接到超级块。<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/%E8%B6%85%E7%BA%A7%E5%9D%97.jpg?raw=true" alt="pic" title="">
+                </div>
+                <div class="image-caption">pic</div>
+            </figure></p>
 <h3 id="索引节点对象"><a href="#索引节点对象" class="headerlink" title="索引节点对象"></a>索引节点对象</h3><p>文件系统处理文件所需要的所有信息，都放在索引节点的数据结构中。对于每个文件来说，索引节点对文件是唯一的,其数据结构是inode。要访问一个文件时，一定要通过它的索引才知道它是什么类型的文件(inode有一个union包含了这个信息)。inode包含了文件的各种信息。它还包含一个dentry结构的队列，可以通过它找到与这个文件相联系的所有dentry结构，指向超级块的指针等。每个索引节点对象也包含在文件系统的双向循环链表中，这个链表的头保存在超级块对象中。同时，inodes也存放在一个散列表中，用来加快对索引对象的搜索。</p>
 <h3 id="文件对象"><a href="#文件对象" class="headerlink" title="文件对象"></a>文件对象</h3><p>文件对象用来描述一个进程怎样与一个打开的文件进行交互，它是在文件被打开的时候创建的，由一个file数据结构来描述。其存放的主要信息是文件指针，即文件中当前的位置。使用中的文件对象，包含在超级块所确立的链表中。其中的f_list字段包含了前一个/后一个对象的指针。</p>
 <h3 id="目录项对象"><a href="#目录项对象" class="headerlink" title="目录项对象"></a>目录项对象</h3><p>VFS把每个目录看作由若干子目录和文件组成的一个普通文件。在目录项被读入内存后，VFS就用一个dentry结构来表示它。对于进程查找路径中的每一个分量，都为其创建一个目录项分量。每个分量都和其对应的索引节点相联系。由于目录项对象可能会经常使用，因此linux使用目录项高速缓存，它包含一个不同状态的目录项对象集合，以及一个用于快速的散列表。</p>
@@ -224,25 +214,95 @@ struct files_struct *files;
 <h3 id="路径名查找"><a href="#路径名查找" class="headerlink" title="路径名查找"></a>路径名查找</h3><p>进程识别一个文件时，需要分析路径名，并且把它拆分成一个文件名序列。首先需要区分这个路径是相对路径还是绝对路径。这个可以通过路径名的第一个字符是否是“/”来确定。绝对路径从进程的根目录开始搜索，否则从进程的当前目录开始搜索。<br>在这个过程中，内核会检查依次检查序列中的每一项，找到与它匹配的目录项，以获得相应的索引节点；再读取这个索引节点的目录文件，继续检查下去。但这个过程没有想象的那么简单：每个目录的访问权都需要检查，文件名可能是与任意一个路径名对应的符号链接，符号链接会包括循环，查找可能会延伸到其他的文件系统。<br>路径名查找接受一个文件名指针，一个标志，以及一个nameidata数据结构的地址，这个nameidata存放了查找操作的结果。nameidata中的dentry和mnt分别指向所解析的最后一个路径分量的目录项对象和已安装文件系统对象。</p>
 <h3 id="文件打开-读写"><a href="#文件打开-读写" class="headerlink" title="文件打开/读写"></a>文件打开/读写</h3><p>文件打开和关闭，核心是对一个fd进行操作。这个fd也就是指向文件对象的指针数组task_struct-&gt;files-&gt;fd中分配给新文件的索引。创建一个新的文件对象，然后将它放在fd数组中。<br>文件读写是对于文件自身来说的，因此其相关的信息存储在inode中。linux中，对于文件的读写，实际上是对缓冲区直接进行的，而不是直接在文件上操作。对文件的操作由内核中的线程kflushd来完成，它们相当于一道流水线上的两道工序。</p>
 
+        </div>
+
+        <blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2017-07-28T09:04:47.000Z" itemprop="dateUpdated">2017-07-28 17:04:47</time>
+</span><br>
+
+
+        
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2016/04/28/linux文件系统/" target="_blank" rel="external">http://yoursite.com/2016/04/28/linux文件系统/</a>
+        
+    </div>
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/avatar.jpg" alt="John Doe">
+            John Doe
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/文件系统/">文件系统</a></li></ul>
+
 
             
-            <div class="post-reward">
-                <a id="rewardBtn" href="javascript:;" class="post-reward-btn waves-effect waves-circle waves-light">赏</a>
-            </div>
-            
-            
-            <blockquote>
-                <p>
-                本文地址：
-                <a href="http://yoursite.com/2016/04/28/linux文件系统/" target="_blank" rel="external">http://yoursite.com/2016/04/28/linux文件系统/</a>
-                </p>
-                <footer><cite><a href="http://yoursite.com">@Hexo</a></cite></footer>
-            </blockquote>
-            </div>
-            
-<nav class="post-nav">
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2016/04/28/linux文件系统/&title=《linux文件系统》 — Hexo&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2016/04/28/linux文件系统/&title=《linux文件系统》 — Hexo&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2016/04/28/linux文件系统/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《linux文件系统》 — Hexo&url=http://yoursite.com/2016/04/28/linux文件系统/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2016/04/28/linux文件系统/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
   
-    <div class="waves-block waves-effect prev fl">
+    <div class="waves-block waves-effect prev">
       <a href="/2016/05/05/I:O体系结构/" id="post-prev" class="post-nav-link">
         <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
         <h4 class="title">I/O体系结构</h4>
@@ -251,7 +311,7 @@ struct files_struct *files;
   
 
   
-    <div class="waves-block waves-effect next fr">
+    <div class="waves-block waves-effect next">
       <a href="/2016/04/21/操作系统寻址/" id="post-next" class="post-nav-link">
         <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
         <h4 class="title">操作系统寻址</h4>
@@ -261,121 +321,151 @@ struct files_struct *files;
 </nav>
 
 
-            
-            
-<div class="duoshuo">
-	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="linux文件系统" data-title="linux文件系统" data-url="http://yoursite.com/2016/04/28/linux文件系统/index.html"></div>
-	<!-- 多说评论框 end -->
-	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-	<script type="text/javascript">
-	var duoshuoQuery = {short_name:"ysblog"};
-	(function() {
-		var ds = document.createElement('script');
-		ds.type = 'text/javascript';ds.async = true;
-		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-		ds.charset = 'UTF-8';
-		(document.getElementsByTagName('head')[0] 
-		 || document.getElementsByTagName('body')[0]).appendChild(ds);
-	})();
-	</script>
-	<!-- 多说公共JS代码 end -->
-</div>
+
+    
 
 
 
 
 
-        </div>
-    </div>
+
+
+
+
+
+
+
+
+
 </article>
 
-<div id="reward" class="reward-lay">
-    <a class="reward-off" id="rewardOff" href="javascript:;"><i class="icon icon-close"></i></a>
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <h3 class="reward-title">
         <i class="icon icon-quote-left"></i>
         谢谢大爷~
         <i class="icon icon-quote-right"></i>
     </h3>
-    <ul class="reward-items">
+    <div class="reward-content">
         
-        <li>
-            <img src="/img/wechat.jpg" title="微信打赏二维码" alt="微信打赏二维码">
-            <p>微信</p>
-        </li>
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
         
-
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
         
-        <li>
-            <img src="/img/alipay.jpg" title="支付宝打赏二维码" alt="支付宝打赏二维码">
-            <p>支付宝</p>
-        </li>
-        
-    </ul>
+    </div>
 </div>
 
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
     </div>
-  </main>
-<div class="mask" id="mask"></div>
+    <div class="bottom">
+        <p><span>John Doe &copy; 2015 - 2017</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
 
-<script>
-var BLOG_SHARE = {
-    title: "linux文件系统",
-    pic: "/img/logo.jpg",
-    summary: document.getElementsByName('summary')[0].content,
-    url: "http://yoursite.com/2016/04/28/linux文件系统/index.html"
-};
-</script>
-<div class="global-share" id="global-share">
-    <div class="tit">分享到：</div>
+
+
+<div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" href="javascript:;" data-title="微博" data-service="tsina">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2016/04/28/linux文件系统/&title=《linux文件系统》 — Hexo&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
       <li>
-        <a class="weixin share-sns" href="javascript:;" data-title="微信" data-service="weixin">
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
           <i class="icon icon-weixin"></i>
         </a>
       </li>
       <li>
-        <a class="qq share-sns" href="javascript:;" data-title=" QQ" data-service="cqq">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2016/04/28/linux文件系统/&title=《linux文件系统》 — Hexo&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" href="javascript:;" data-title=" Facebook" data-service="fb">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2016/04/28/linux文件系统/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" href="javascript:;" data-title=" Twitter" data-service="twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《linux文件系统》 — Hexo&url=http://yoursite.com/2016/04/28/linux文件系统/&via=http://yoursite.com" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="douban share-sns" href="javascript:;" data-title="豆瓣" data-service="douban">
-          豆
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2016/04/28/linux文件系统/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
         </a>
       </li>
     </ul>
  </div>
 
 
-<script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://yoursite.com/2016/04/28/linux文件系统/" alt="微信分享二维码">
+</div>
 
-<script src="/js/main.js"></script>
 
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
 
 
 <div class="search-panel" id="search-panel">
     <ul class="search-result" id="search-result"></ul>
 </div>
-<script type="text/template" id="search-tpl">
+<template id="search-tpl">
 <li class="item">
-    <a href="/{path}" class="waves-block waves-effect">
+    <a href="{path}" class="waves-block waves-effect">
         <div class="title ellipsis" title="{title}">{title}</div>
         <div class="flex-row flex-middle">
             <div class="tags ellipsis">
@@ -385,15 +475,35 @@ var BLOG_SHARE = {
         </div>
     </a>
 </li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
 </script>
-
-<script src="/js/search.js"></script>
-
-
-
-
-
-
 
 
 

@@ -1,107 +1,117 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  
-  <title>Hexo | </title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  
-  <meta name="theme-color" content="#3F51B5">
-  
-  
-  <meta name="keywords" content="">
-  <meta property="og:type" content="website">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <title>Hexo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="">
+    <meta property="og:type" content="website">
 <meta property="og:title" content="Hexo">
 <meta property="og:url" content="http://yoursite.com/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hexo">
-  
-    <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
-  
-  <meta name="summary" content="">
-  <link rel="shortcut icon" href="/favicon.ico">
-  <link rel="stylesheet" href="/css/style.css">
+    
+        <link rel="alternate" type="application/atom+xml" title="Hexo" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
 </head>
 
 <body>
-  <div id="loading" class="active"></div>
+    <div id="loading" class="active"></div>
 
-  <nav id="menu"  >
-   <div class="inner flex-row-vertical">
-  <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-      <i class="icon icon-lg icon-close"></i>
-  </a>
-  <div class="brand-wrap">
-    <div class="brand">
-      <a href="/" class="avatar"><img src="/img/logo.jpg"></a>
-      <hgroup class="introduce">
-        <h5 class="nickname">John Doe</h5>
-        <a href="mailto:634206017@qq.com" title="634206017@qq.com" class="mail">634206017@qq.com</a>
-      </hgroup>
+    <aside id="menu"  >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">John Doe</h5>
+          <a href="mailto:634206017@qq.com" title="634206017@qq.com" class="mail">634206017@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect active">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/yscoder" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://www.weibo.com/ysweb" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/custom"  >
+                <i class="icon icon-lg icon-link"></i>
+                测试
+              </a>
+            </li>
+        
+      </ul>
     </div>
   </div>
-  <div class="scroll-wrap flex-col">
-    <ul class="nav">
-      
-          <li class="waves-block waves-effect active">
-            <a href="/"  >
-              <i class="icon icon-lg icon-home"></i>
-              主页
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="/archives"  >
-              <i class="icon icon-lg icon-archives"></i>
-              Archives
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="/tags"  >
-              <i class="icon icon-lg icon-tags"></i>
-              Tags
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="https://github.com/yscoder" target="_blank" >
-              <i class="icon icon-lg icon-github"></i>
-              Github
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="http://www.weibo.com/ysweb" target="_blank" >
-              <i class="icon icon-lg icon-weibo"></i>
-              Weibo
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="/404"  >
-              <i class="icon icon-lg icon-link"></i>
-              测试
-            </a>
-          </li>
-      
-    </ul>
+</aside>
 
-    <footer class="footer">
-  <p><a rel="license" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0;vertical-align:middle;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAAAPCAMAAABEF7i9AAAAllBMVEUAAAD///+rsapERER3d3eIiIjMzMzu7u4iIiKUmZO6v7rKzsoODg4RERFVVVUNDQ0NDg0PEA8zMzNLTEtbXltmZmZydnF9gn2AgICPkI+ZmZmqqqq7u7vFxsXIzMgNDQwZGRkgICAhISEkJSMnKCcuMC4xMzE5Ozk7PTtBQkFCQkJDQ0Nna2eGhoaHh4ezuLLGysbd3d1wVGpAAAAA4UlEQVR42q2T1xqCMAyFk7QsBQeKA9x7j/d/OSm22CpX0nzcpA1/T05aAOuBVkMAScQFHLnEwoCo2f1TnQIGoVMewjZEjVFN4GH1Ue1Cn2jWqwfsOOj6wDwGvotsl/c8lv7KIq1eLOsT0HMFHMIE/RZyHnlphryT9zyV+8WH5e8yQw3wnQvgAFxPTKUVi555SHR/lOfLMgVTeDlSfN+TaoUsiTyeIm+bCkHvCA2FUKG48LDtYBZBknsYP/G8NTw0gaaHyuQf4H5pecrB/FYCT2sL9zAfy1Xyjou6L8X2W7YcLyBZCRtnq/zfAAAAAElFTkSuQmCC" /></a></p>
-  <p>Hexo &copy; 2017</p>
-  <p>Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
-  <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a></p>
-  <a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-2x icon-rss-square"></i></a>
-</footer>
-
-  </div>
-</div>
-
-  </nav>
-  <main id="main">
-    <header class="top-header" id="header">
+    <main id="main">
+        <header class="top-header" id="header">
     <div class="flex-row">
         <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
           <i class="icon icon-lg icon-navicon"></i>
@@ -112,37 +122,52 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input " autocomplete="off" placeholder="输入感兴趣的关键字">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
         </div>
         
         
-        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-share">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
             <i class="icon icon-lg icon-share-alt"></i>
         </a>
         
     </div>
 </header>
-<header class="content-header">
-  <div class="container">
-    <h1 class="author">Hexo</h1>
-    <h5 class="subtitle">
-        
-        
-        
-    </h5>
-  </div>
+<header class="content-header index-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Hexo</h1>
+        <h5 class="subtitle">
+            
+                
+            
+        </h5>
+    </div>
+
+    
+
+
 </header>
 
-    <div class="container body-wrap">
-      <ul class="post-list">
-  
-    <li class="post-list-item">
-        <article id="post-浅谈GCC编译优化"
-  class="article article-type-post" itemprop="blogPost">
-     
+<div class="container body-wrap">
+
+    <ul class="post-list">
+    
+        <li class="post-list-item fade">
+            <article id="post-浅谈GCC编译优化"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2017-07-15 21:40:00" datetime="2017-07-15T13:40:00.000Z"  itemprop="datePublished">2017-07-15</time>
+
+        
+
+
+    </div>
+
+    
 
 
   
@@ -153,37 +178,41 @@
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        GCC Pass在GCC完成词法、语法分析，并获得源代码对应的抽象语法树AST之后，会将其转换为对应的GIMPLE序列。随后，GCC会对GIMPLE中间表示进行一系列的处理，包括GIMPLE的低级化、优化、RTL生成等、RTL优化等。为了方便管理，GCC采用了一种称为Pass的组织形式，把它们分成一个个的处理过程，把每个输出结果作为下一个处理过程的输入。GCC中，Pass可以分为4类，GIM...
+    
+
+        <a href="/2017/07/15/浅谈GCC编译优化/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译器/">编译器</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-虚函数，原理和攻击方式"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2017-07-15T13:40:00.000Z" itemprop="datePublished" class="post-time">
-  2017-07-15
-</time>
+        <time class="post-time" title="2017-06-27 11:40:00" datetime="2017-06-27T03:40:00.000Z"  itemprop="datePublished">2017-06-27</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           GCC Pass  在GCC完成词法、语法分析，并获得源代码对应的抽象语法树AST之后，会将其转换为对应的GIMPLE序列。随后，GCC会对GIMPLE中间表示进行一系列的处理，包括GIMPLE的低级化、优化、RTL生成等、RTL优化等。为了方便管理，GCC采用了一种称为Pass的组织形式，把它们分成一个个的处理过程，把每个输出结果作为下一个处理过程的输入。 GCC中，Pass可以分为4类，
-    
-    
-        <a href="/2017/07/15/浅谈GCC编译优化/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译器/">编译器</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-虚函数，原理和攻击方式"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -194,37 +223,41 @@
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        虚函数与多态继承和多态，是面向对象中老生常谈的话题。C++中，我们也可以经常看到virtaul、override这样的关键字；这正是虚函数的标志。虚函数就是为了解决多态的问题：如果要使用一个基类的指针，根据对象的不同类型去调用相应的函数，就需要使用虚函数了。通俗的说也就是同一个入口，却能够调用不同的方法。通常，对于虚函数的调用，往往在运行时才能确定调用哪个版本的函数。这是由于基类的指针或者引...
+    
+
+        <a href="/2017/06/27/虚函数，原理和攻击方式/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/内存安全/">内存安全</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/虚函数/">虚函数</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-编译链中的一环，静态链接详解"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2017-06-27T03:40:00.000Z" itemprop="datePublished" class="post-time">
-  2017-06-27
-</time>
+        <time class="post-time" title="2017-06-19 21:40:00" datetime="2017-06-19T13:40:00.000Z"  itemprop="datePublished">2017-06-19</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           虚函数与多态  继承和多态，是面向对象中老生常谈的话题。C++中，我们也可以经常看到 virtaul 、 override 这样的关键字；这正是虚函数的标志。虚函数就是为了解决多态的问题：如果要使用一个基类的指针，根据对象的不同类型去调用相应的函数，就需要使用虚函数了。通俗的说也就是同一个入口，却能够调用不同的方法。 通常，对于虚函数的调用，往往在运行时才能确定调用哪个版本的函数。这是由于基
-    
-    
-        <a href="/2017/06/27/虚函数，原理和攻击方式/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/内存安全/">内存安全</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/虚函数/">虚函数</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-编译链中的一环，静态链接详解"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -235,40 +268,44 @@
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        GCC的工作，到生成汇编代码为止。剩下的工作，交给了Binutils来完成：assembler和static linker。最近详细地研究了一下linker的工作过程。linker主要完成的是静态链接，目标文件合并的工作。例如，把多个.o文件合并成一个可执行文件。  
+两步链接两步链接指的是：  
+
+空间与地址的分配链接器会首先扫描所有的输入文件，获得各个段的长度、属性和位置，将段合并；并将...
+    
+
+        <a href="/2017/06/19/编译链中的一环，静态链接详解/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/binutils/">binutils</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/链接器/">链接器</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-Hack gcc：添加新的函数"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2017-06-19T13:40:00.000Z" itemprop="datePublished" class="post-time">
-  2017-06-19
-</time>
+        <time class="post-time" title="2017-06-09 11:40:00" datetime="2017-06-09T03:40:00.000Z"  itemprop="datePublished">2017-06-09</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-         GCC的工作，到生成汇编代码为止。剩下的工作，交给了Binutils来完成：assembler和static linker。最近详细地研究了一下linker的工作过程。 linker主要完成的是静态链接，目标文件合并的工作。例如，把多个.o文件合并成一个可执行文件。   
-   两步链接  两步链接指的是：   
- 
- 空间与地址的分配 链接器会首先扫描所有的输入文件，获得各个段的长度、属性和位
-    
-    
-        <a href="/2017/06/19/编译链中的一环，静态链接详解/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/binutils/">binutils</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/链接器/">链接器</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-Hack gcc：添加新的函数"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -279,37 +316,41 @@
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        怎么做和为什么？首先对于GCC来说，添加一个新的函数是完全可以实现的，但我并没有看到任何相关的资料。我给gcc的mailing list发了封邮件，但没人给出回答。倒是有人私下给我发了封邮件，表示他对这个做法很好奇，希望我做出来之后能和大家分享一下方法。看来求人终究不如求自己，我看了好几天代码，终于能够在编译的过程中添加函数了。至于为什么要这么做，我认为如果编译时插桩的代码是大量重复的，那么...
+    
+
+        <a href="/2017/06/09/Hack gcc：添加新的函数/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译安全/">编译安全</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-Hack GCC：insturment on RTL"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2017-06-09T03:40:00.000Z" itemprop="datePublished" class="post-time">
-  2017-06-09
-</time>
+        <time class="post-time" title="2017-05-16 21:40:00" datetime="2017-05-16T13:40:00.000Z"  itemprop="datePublished">2017-05-16</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           怎么做和为什么？  首先对于GCC来说， 添加一个新的函数 是完全可以实现的，但我并没有看到任何相关的资料。我给gcc的mailing list发了封邮件，但没人给出回答。倒是有人私下给我发了封邮件，表示他对这个做法很好奇，希望我做出来之后能和大家分享一下方法。 看来求人终究不如求自己，我看了好几天代码，终于能够在编译的过程中添加函数了。 至于为什么要这么做，我认为如果编译时 插桩的代码是大
-    
-    
-        <a href="/2017/06/09/Hack gcc：添加新的函数/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译安全/">编译安全</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-Hack GCC：insturment on RTL"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -320,43 +361,47 @@
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        insn的创建在emit-rtl.c当中，列举了一系列的emit_insn函数：  
+/* 在before前插入x */
+emit_insn_before_noloc(rtx x, rtx before)
+/* 在after后插入x */
+emit_insn_after_noloc(rtx x, rtx after)
+/* 插入x的同时插入jump */
+emit_jump_insn_bef...
+    
+
+        <a href="/2017/05/16/Hack GCC：insturment on RTL/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译安全/">编译安全</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-Hack GCC，修改二进制文件中函数的顺序"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2017-05-16T13:40:00.000Z" itemprop="datePublished" class="post-time">
-  2017-05-16
-</time>
+        <time class="post-time" title="2017-05-12 21:40:00" datetime="2017-05-12T13:40:00.000Z"  itemprop="datePublished">2017-05-12</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           insn的创建  在 emit-rtl.c 当中，列举了一系列的 emit_insn 函数：   
-  /* 在before前插入x */
-emit_insn_before_noloc(rtx x, rtx before)
-/* 在after后插入x */
-emit_insn_after_noloc(rtx x, rtx after)
-/* 插入x的同时插入jump */
-emit_jump
-    
-    
-        <a href="/2017/05/16/Hack GCC：insturment on RTL/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译安全/">编译安全</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-Hack GCC，修改二进制文件中函数的顺序"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -367,37 +412,41 @@ emit_jump
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        GCC的函数输出直观的来看，在cgraphunit.c当中，expand_all_functions()被用来输出所有需要输出的函数。这里，它首先进行了一次拓扑排序，在ipa_reverse_postorder()中完成。这样做的好处是，当一个函数被输出时，它所调用的所有函数都已经被输出了。这个函数还会先把内联的情况给处理掉。在expand_all_functions()中，随后在允许函数重...
+    
+
+        <a href="/2017/05/12/Hack GCC，修改二进制文件中函数的顺序/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译安全/">编译安全</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-RTL详解"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2017-05-12T13:40:00.000Z" itemprop="datePublished" class="post-time">
-  2017-05-12
-</time>
+        <time class="post-time" title="2017-05-10 21:40:00" datetime="2017-05-10T13:40:00.000Z"  itemprop="datePublished">2017-05-10</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           GCC的函数输出  直观的来看，在 cgraphunit.c 当中， expand_all_functions() 被用来输出所有需要输出的函数。这里，它首先进行了一次拓扑排序，在 ipa_reverse_postorder() 中完成。这样做的好处是，当一个函数被输出时，它所调用的所有函数都已经被输出了。这个函数还会先把内联的情况给处理掉。 在 expand_all_functions()
-    
-    
-        <a href="/2017/05/12/Hack GCC，修改二进制文件中函数的顺序/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译安全/">编译安全</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-RTL详解"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -408,38 +457,42 @@ emit_jump
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        运算RTL中的运算，采用一种很直观、简单的方式来进行描述。通常，表达式都会借助于m mode。运算包含有算术、比较、向量操作、Bit域、类型转换等。  
+Side Effect 表达式之前所说的表达式代码，通常表示的是值，而非某种行为。但机器指令，只有在对机器的状态产生了改变时，才会有意义；因此对于这些对寄存器、执行状态产生影响的过程，是有对应的表达式的，被称为side effect表达式。...
+    
+
+        <a href="/2017/05/10/RTL详解/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译安全/">编译安全</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-gcc rtx"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2017-05-10T13:40:00.000Z" itemprop="datePublished" class="post-time">
-  2017-05-10
-</time>
+        <time class="post-time" title="2017-05-07 21:40:00" datetime="2017-05-07T13:40:00.000Z"  itemprop="datePublished">2017-05-07</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           运算  RTL中的运算，采用一种很直观、简单的方式来进行描述。通常，表达式都会借助于m mode。运算包含有算术、比较、向量操作、Bit域、类型转换等。   
-   Side Effect 表达式  之前所说的表达式代码，通常表示的是值，而非某种行为。但机器指令，只有在对机器的状态产生了改变时，才会有意义；因此对于这些对寄存器、执行状态产生影响的过程，是有对应的表达式的，被称为side ef
-    
-    
-        <a href="/2017/05/10/RTL详解/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译安全/">编译安全</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-gcc rtx"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -450,39 +503,43 @@ emit_jump
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        RTXrtx(RTL expression)，也即一个RTL的表达式。在coretypes.h中，其被定义为struct rtx_def *rtx，也即一个指向rtx_def的指针。那么rtx_def是一个什么结构呢？它同样定义在rtl.h当中：
+struct GTY((chain_next (&quot;RTX_NEXT (&amp;%h)&quot;),
+    chain_prev (...
+    
+
+        <a href="/2017/05/07/gcc rtx/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译安全/">编译安全</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-GCC插件编写"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2017-05-07T13:40:00.000Z" itemprop="datePublished" class="post-time">
-  2017-05-07
-</time>
+        <time class="post-time" title="2017-05-05 21:40:00" datetime="2017-05-05T13:40:00.000Z"  itemprop="datePublished">2017-05-05</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           RTX  rtx(RTL expression)，也即一个RTL的表达式。在 coretypes.h 中，其被定义为 struct rtx_def *rtx ，也即一个指向rtx_def的指针。那么rtx_def是一个什么结构呢？它同样定义在rtl.h当中： 
-  struct GTY((chain_next (&quot;RTX_NEXT (&amp;%h)&quot;),
-    cha
-    
-    
-        <a href="/2017/05/07/gcc rtx/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译安全/">编译安全</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-GCC插件编写"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -493,39 +550,43 @@ emit_jump
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        GCC插件:注册、编译、和使用GCC 4.5版本后，为用户提供了接口，允许用户去编写额外的代码优化过程、改造代码形式、对代码进行分析。在GCC中，插件是以共享库的形式工作的。在安装好GCC之后，如果想编写插件，首先可以确定API的位置：
+gcc -print-file-name=plugin
+在gcc-plugin.h中，提供了以下的结构：struct plugin_name_args包含了...
+    
+
+        <a href="/2017/05/05/GCC插件编写/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译安全/">编译安全</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-GCC overview"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2017-05-05T13:40:00.000Z" itemprop="datePublished" class="post-time">
-  2017-05-05
-</time>
+        <time class="post-time" title="2017-05-01 21:40:00" datetime="2017-05-01T13:40:00.000Z"  itemprop="datePublished">2017-05-01</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           GCC插件:注册、编译、和使用  GCC 4.5版本后，为用户提供了接口，允许用户去编写额外的 代码优化过程 、 改造代码形式 、 对代码进行分析 。在GCC中，插件是以共享库的形式工作的。在安装好GCC之后，如果想编写插件，首先可以确定API的位置： 
-  gcc -print-file-name=plugin
-   在gcc-plugin.h中，提供了以下的结构：  struct plu
-    
-    
-        <a href="/2017/05/05/GCC插件编写/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译安全/">编译安全</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-GCC overview"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -536,104 +597,138 @@ emit_jump
 
 
 
-    <div class="post-meta">
-        <time datetime="2017-05-01T13:40:00.000Z" itemprop="datePublished" class="post-time">
-  2017-05-01
-</time>
 
-        
-
-
-    </div>
-
-    <div class="post-content" id="post-content" itemprop="postContent" >
+    <div class="post-content" id="post-content" itemprop="postContent">
 
     
-           前端：AST/GENERIC  AST:用 tree 来表示函数。其中， tree 实际上是一个指针，它能够指向许多种类型的 tree_node ，这些 tree_node 定义在tree-core.h当中，就不一一赘述了。只需要明白，GCC当中最重要的数据就够就是tree，如果你想要添加一种 tree_node ，也可以在tree.def里面添加。   
- tree-core.h中定义了两
+        前端：AST/GENERICAST:用tree来表示函数。其中，tree实际上是一个指针，它能够指向许多种类型的tree_node，这些tree_node定义在tree-core.h当中，就不一一赘述了。只需要明白，GCC当中最重要的数据就够就是tree，如果你想要添加一种tree_node，也可以在tree.def里面添加。  
+tree-core.h中定义了两种数据结构，用来直接表示tr...
     
-    
+
         <a href="/2017/05/01/GCC overview/" class="post-more waves-effect waves-button">
-            阅读全文...
+            Continue reading...
         </a>
     </div>
     
+    <div class="post-footer">
+        
 	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译安全/">编译安全</a></li></ul>
 
+    </div>
+    
 </article>
 
-    </li>
-  
-</ul>
+        </li>
+    
+    </ul>
 
+    
 <nav id="page-nav">
     <div class="inner">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">下一页</a>
     </div>
 </nav>
 
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
     </div>
-  </main>
-<div class="mask" id="mask"></div>
+    <div class="bottom">
+        <p><span>John Doe &copy; 2015 - 2017</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
 
-<script>
-var BLOG_SHARE = {
-    title: "Hexo",
-    pic: "/img/logo.jpg",
-    summary: document.getElementsByName('summary')[0].content,
-    url: "http://yoursite.com/index.html"
-};
-</script>
-<div class="global-share" id="global-share">
-    <div class="tit">分享到：</div>
+
+
+<div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" href="javascript:;" data-title="微博" data-service="tsina">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/&title=Hexo&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
       <li>
-        <a class="weixin share-sns" href="javascript:;" data-title="微信" data-service="weixin">
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
           <i class="icon icon-weixin"></i>
         </a>
       </li>
       <li>
-        <a class="qq share-sns" href="javascript:;" data-title=" QQ" data-service="cqq">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/&title=Hexo&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" href="javascript:;" data-title=" Facebook" data-service="fb">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" href="javascript:;" data-title=" Twitter" data-service="twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=Hexo&url=http://yoursite.com/&via=http://yoursite.com" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="douban share-sns" href="javascript:;" data-title="豆瓣" data-service="douban">
-          豆
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
         </a>
       </li>
     </ul>
  </div>
 
 
-<script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://yoursite.com/" alt="微信分享二维码">
+</div>
 
-<script src="/js/main.js"></script>
 
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
 
 
 <div class="search-panel" id="search-panel">
     <ul class="search-result" id="search-result"></ul>
 </div>
-<script type="text/template" id="search-tpl">
+<template id="search-tpl">
 <li class="item">
-    <a href="/{path}" class="waves-block waves-effect">
+    <a href="{path}" class="waves-block waves-effect">
         <div class="title ellipsis" title="{title}">{title}</div>
         <div class="flex-row flex-middle">
             <div class="tags ellipsis">
@@ -643,15 +738,35 @@ var BLOG_SHARE = {
         </div>
     </a>
 </li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
 </script>
-
-<script src="/js/search.js"></script>
-
-
-
-
-
-
 
 
 

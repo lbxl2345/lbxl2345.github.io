@@ -1,16 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  
-  <title>深入理解中断（二） | Hexo | </title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  
-  <meta name="theme-color" content="#3F51B5">
-  
-  
-  <meta name="keywords" content="linux,操作系统">
-  <meta name="description" content="中断的发生中断指的是CPU在运行时，系统内发生了需要“急需处理”的事件，于是乎CPU暂停了当前正在执行对程序，转而去执行相应的时间处理程序，在处理完之后返回原来的地方执行。那么这些事件包含：（1）外部中断指的是那些CPU外的周边原件引发的中断，例如I/O中断，I/O设备异常（接下来我们把它称为“中断”）；（2）内部中断指的是在CPU内部执行时，由程序自身、异常、陷阱（例如程序中的断点）产生的中断（">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <title>深入理解中断（二） | Hexo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="linux,操作系统">
+    <meta name="description" content="中断的发生中断指的是CPU在运行时，系统内发生了需要“急需处理”的事件，于是乎CPU暂停了当前正在执行对程序，转而去执行相应的时间处理程序，在处理完之后返回原来的地方执行。那么这些事件包含：（1）外部中断指的是那些CPU外的周边原件引发的中断，例如I/O中断，I/O设备异常（接下来我们把它称为“中断”）；（2）内部中断指的是在CPU内部执行时，由程序自身、异常、陷阱（例如程序中的断点）产生的中断（">
 <meta name="keywords" content="linux,操作系统">
 <meta property="og:type" content="article">
 <meta property="og:title" content="深入理解中断（二）">
@@ -25,92 +35,92 @@
 <meta name="twitter:title" content="深入理解中断（二）">
 <meta name="twitter:description" content="中断的发生中断指的是CPU在运行时，系统内发生了需要“急需处理”的事件，于是乎CPU暂停了当前正在执行对程序，转而去执行相应的时间处理程序，在处理完之后返回原来的地方执行。那么这些事件包含：（1）外部中断指的是那些CPU外的周边原件引发的中断，例如I/O中断，I/O设备异常（接下来我们把它称为“中断”）；（2）内部中断指的是在CPU内部执行时，由程序自身、异常、陷阱（例如程序中的断点）产生的中断（">
 <meta name="twitter:image" content="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/APIC.png?raw=true">
-  
-    <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
-  
-  <meta name="summary" content="">
-  <link rel="shortcut icon" href="/favicon.ico">
-  <link rel="stylesheet" href="/css/style.css">
+    
+        <link rel="alternate" type="application/atom+xml" title="Hexo" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
 </head>
 
 <body>
-  <div id="loading" class="active"></div>
+    <div id="loading" class="active"></div>
 
-  <nav id="menu" class="hide" >
-   <div class="inner flex-row-vertical">
-  <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-      <i class="icon icon-lg icon-close"></i>
-  </a>
-  <div class="brand-wrap">
-    <div class="brand">
-      <a href="/" class="avatar"><img src="/img/logo.jpg"></a>
-      <hgroup class="introduce">
-        <h5 class="nickname">John Doe</h5>
-        <a href="mailto:634206017@qq.com" title="634206017@qq.com" class="mail">634206017@qq.com</a>
-      </hgroup>
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">John Doe</h5>
+          <a href="mailto:634206017@qq.com" title="634206017@qq.com" class="mail">634206017@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/yscoder" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://www.weibo.com/ysweb" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/custom"  >
+                <i class="icon icon-lg icon-link"></i>
+                测试
+              </a>
+            </li>
+        
+      </ul>
     </div>
   </div>
-  <div class="scroll-wrap flex-col">
-    <ul class="nav">
-      
-          <li class="waves-block waves-effect">
-            <a href="/"  >
-              <i class="icon icon-lg icon-home"></i>
-              主页
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="/archives"  >
-              <i class="icon icon-lg icon-archives"></i>
-              Archives
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="/tags"  >
-              <i class="icon icon-lg icon-tags"></i>
-              Tags
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="https://github.com/yscoder" target="_blank" >
-              <i class="icon icon-lg icon-github"></i>
-              Github
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="http://www.weibo.com/ysweb" target="_blank" >
-              <i class="icon icon-lg icon-weibo"></i>
-              Weibo
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="/404"  >
-              <i class="icon icon-lg icon-link"></i>
-              测试
-            </a>
-          </li>
-      
-    </ul>
+</aside>
 
-    <footer class="footer">
-  <p><a rel="license" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0;vertical-align:middle;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAAAPCAMAAABEF7i9AAAAllBMVEUAAAD///+rsapERER3d3eIiIjMzMzu7u4iIiKUmZO6v7rKzsoODg4RERFVVVUNDQ0NDg0PEA8zMzNLTEtbXltmZmZydnF9gn2AgICPkI+ZmZmqqqq7u7vFxsXIzMgNDQwZGRkgICAhISEkJSMnKCcuMC4xMzE5Ozk7PTtBQkFCQkJDQ0Nna2eGhoaHh4ezuLLGysbd3d1wVGpAAAAA4UlEQVR42q2T1xqCMAyFk7QsBQeKA9x7j/d/OSm22CpX0nzcpA1/T05aAOuBVkMAScQFHLnEwoCo2f1TnQIGoVMewjZEjVFN4GH1Ue1Cn2jWqwfsOOj6wDwGvotsl/c8lv7KIq1eLOsT0HMFHMIE/RZyHnlphryT9zyV+8WH5e8yQw3wnQvgAFxPTKUVi555SHR/lOfLMgVTeDlSfN+TaoUsiTyeIm+bCkHvCA2FUKG48LDtYBZBknsYP/G8NTw0gaaHyuQf4H5pecrB/FYCT2sL9zAfy1Xyjou6L8X2W7YcLyBZCRtnq/zfAAAAAElFTkSuQmCC" /></a></p>
-  <p>Hexo &copy; 2017</p>
-  <p>Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
-  <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a></p>
-  <a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-2x icon-rss-square"></i></a>
-</footer>
-
-  </div>
-</div>
-
-  </nav>
-  <main id="main">
-    <header class="top-header" id="header">
+    <main id="main">
+        <header class="top-header" id="header">
     <div class="flex-row">
         <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
           <i class="icon icon-lg icon-navicon"></i>
@@ -121,120 +131,176 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input " autocomplete="off" placeholder="输入感兴趣的关键字">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
         </div>
         
         
-        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-share">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
             <i class="icon icon-lg icon-share-alt"></i>
         </a>
         
     </div>
 </header>
-<header class="content-header">
-  <div class="container">
-    <h1 class="author">深入理解中断（二）</h1>
-    <h5 class="subtitle">
-        
-            <time datetime="2017-03-06T03:40:00.000Z" itemprop="datePublished" class="page-time">
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">深入理解中断（二）</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-03-06T03:40:00.000Z" itemprop="datePublished" class="page-time">
   2017-03-06
 </time>
 
 
-        
-    </h5>
-  </div>
+            
+        </h5>
+    </div>
+
+    
+
+
 </header>
 
-    <div class="container body-wrap">
-      <article id="post-中断的发生" 
-  class="article article-type-post" itemprop="blogPost">
-    <div class="post-meta flex-row">
-        
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
 
-    </div>
-    <div class="post-body">
-        <aside class="post-widget" id="post-widget">
-
-            
-            <div class="post-share" id="post-share">
-    <div class="tit">分享到：</div>
-    <ul class="reset share-icons">
-      <li>
-        <a class="weibo share-sns" href="javascript:;" data-title="微博" data-service="tsina">
-          <i class="icon icon-weibo"></i>
-        </a>
-      </li>
-      <li>
-        <a class="weixin share-sns" href="javascript:;" data-title="微信" data-service="weixin">
-          <i class="icon icon-weixin"></i>
-        </a>
-      </li>
-      <li>
-        <a class="qq share-sns" href="javascript:;" data-title=" QQ" data-service="cqq">
-          <i class="icon icon-qq"></i>
-        </a>
-      </li>
-      <li>
-        <a class="facebook share-sns" href="javascript:;" data-title=" Facebook" data-service="fb">
-          <i class="icon icon-facebook"></i>
-        </a>
-      </li>
-      <li>
-        <a class="twitter share-sns" href="javascript:;" data-title=" Twitter" data-service="twitter">
-          <i class="icon icon-twitter"></i>
-        </a>
-      </li>
-      <li>
-        <a class="douban share-sns" href="javascript:;" data-title="豆瓣" data-service="douban">
-          豆
-        </a>
-      </li>
-    </ul>
- </div>
-
-            
-
-            
-            <nav class="post-toc-wrap" id="post-toc">
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap" id="post-toc">
+            <h4>TOC</h4>
             <ol class="post-toc"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#中断的发生"><span class="post-toc-number">1.</span> <span class="post-toc-text">中断的发生</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#中断的屏蔽"><span class="post-toc-number">2.</span> <span class="post-toc-text">中断的屏蔽</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#异常和中断的处理"><span class="post-toc-number">3.</span> <span class="post-toc-text">异常和中断的处理</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#处理器间的中断（IPI）"><span class="post-toc-number">4.</span> <span class="post-toc-text">处理器间的中断（IPI）</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#软中断和tasklet"><span class="post-toc-number">5.</span> <span class="post-toc-text">软中断和tasklet</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#工作队列"><span class="post-toc-number">6.</span> <span class="post-toc-text">工作队列</span></a></li></ol>
-            </nav>
+        </nav>
+    </aside>
+    
+<article id="post-中断的发生"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">深入理解中断（二）</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-03-06 11:40:00" datetime="2017-03-06T03:40:00.000Z"  itemprop="datePublished">2017-03-06</time>
+
             
-        </aside>
 
-        <div class="post-main">
 
-            <div class="post-content" id="post-content" itemprop="postContent">
-            <h4 id="中断的发生"><a href="#中断的发生" class="headerlink" title="中断的发生"></a>中断的发生</h4><p>中断指的是CPU在运行时，系统内发生了需要“急需处理”的事件，于是乎CPU暂停了当前正在执行对程序，转而去执行相应的时间处理程序，在处理完之后返回原来的地方执行。那么这些事件包含：（1）外部中断指的是那些CPU外的周边原件引发的中断，例如I/O中断，I/O设备异常（接下来我们把它称为“中断”）；（2）内部中断指的是在CPU内部执行时，由程序自身、异常、陷阱（例如程序中的断点）产生的中断（包括硬件中断和软件中断，其中软件中断是指一系列的指令）（接下来我们把它称作“异常”）。<br>这两种中断类型不同，产生方式也不一样：<br>（1）中断因为是由外设硬件发出的，所以需要由中断控制器（APIC）参与其中。在中断发出后，首先由APIC来进行处理。这种方式解决两个问题：（a）有大量的外设，而CPU的引脚资源有限，所以不能满足所有的直连需要；（b）如果设备中断和CPU直连，那么在MP系统中，中断负载等需求就无法实现了。<br>可以看到，在x86_64系统下，local APIC通过I/O APIC接受链接，I/O APIC把中断处理成中断消息，并按照规则转发给local APIC。APIC决定了由哪个CPU来处理中断，为某个引脚产生特定的中断向量（中断投递协议），并把中断请求发送给对应的CPU处理。CPU之间的中断通信，也是通过APIC来完成的。<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/APIC.png?raw=true" alt=""><br>I/O设备通过IRQ线与APIC相连，APIC将信号转化为对应的向量，并把这个向量放在它的I/O端口上，允许CPU通过数据总线来读这个向量；随后它发送一个信息给CPU的INTR引脚，从而触发中断，当CPU通过把中断信号写进APIC的I/O端口时，把INTR线清除。目前，外部中断的编号是从32开始，这是由于0-31号中断是留给异常和内部中断使用的，INTEL手册上也给出了这样一个表，详细说明了中断号的对应关系（新的CPU确实用的编号也变多了，就比如#VE）：<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/table1.png?raw=true" alt=""><br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/table2.png?raw=true" alt=""><br>（2）异常则是由CPU自身产生的中断。那么这种中断是否需要APIC介入呢？除了I/O APIC的中断信号外，local APIC还会接收其他来源的中断，例如CPU LINT0/LINT1中断（本地连接的I/O），性能计数器中断、APIC内部错误中断等。但这不意味着所有异常都需要中断控制器的参与；软件中断的中断号是可以由指令直接给出的，因此是不需要中断控制器的参与的。  </p>
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h4 id="中断的发生"><a href="#中断的发生" class="headerlink" title="中断的发生"></a>中断的发生</h4><p>中断指的是CPU在运行时，系统内发生了需要“急需处理”的事件，于是乎CPU暂停了当前正在执行对程序，转而去执行相应的时间处理程序，在处理完之后返回原来的地方执行。那么这些事件包含：（1）外部中断指的是那些CPU外的周边原件引发的中断，例如I/O中断，I/O设备异常（接下来我们把它称为“中断”）；（2）内部中断指的是在CPU内部执行时，由程序自身、异常、陷阱（例如程序中的断点）产生的中断（包括硬件中断和软件中断，其中软件中断是指一系列的指令）（接下来我们把它称作“异常”）。<br>这两种中断类型不同，产生方式也不一样：<br>（1）中断因为是由外设硬件发出的，所以需要由中断控制器（APIC）参与其中。在中断发出后，首先由APIC来进行处理。这种方式解决两个问题：（a）有大量的外设，而CPU的引脚资源有限，所以不能满足所有的直连需要；（b）如果设备中断和CPU直连，那么在MP系统中，中断负载等需求就无法实现了。<br>可以看到，在x86_64系统下，local APIC通过I/O APIC接受链接，I/O APIC把中断处理成中断消息，并按照规则转发给local APIC。APIC决定了由哪个CPU来处理中断，为某个引脚产生特定的中断向量（中断投递协议），并把中断请求发送给对应的CPU处理。CPU之间的中断通信，也是通过APIC来完成的。<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/APIC.png?raw=true" alt=""><br>I/O设备通过IRQ线与APIC相连，APIC将信号转化为对应的向量，并把这个向量放在它的I/O端口上，允许CPU通过数据总线来读这个向量；随后它发送一个信息给CPU的INTR引脚，从而触发中断，当CPU通过把中断信号写进APIC的I/O端口时，把INTR线清除。目前，外部中断的编号是从32开始，这是由于0-31号中断是留给异常和内部中断使用的，INTEL手册上也给出了这样一个表，详细说明了中断号的对应关系（新的CPU确实用的编号也变多了，就比如#VE）：<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/table1.png?raw=true" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure><br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/table2.png?raw=true" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure><br>（2）异常则是由CPU自身产生的中断。那么这种中断是否需要APIC介入呢？除了I/O APIC的中断信号外，local APIC还会接收其他来源的中断，例如CPU LINT0/LINT1中断（本地连接的I/O），性能计数器中断、APIC内部错误中断等。但这不意味着所有异常都需要中断控制器的参与；软件中断的中断号是可以由指令直接给出的，因此是不需要中断控制器的参与的。  </p>
 <h4 id="中断的屏蔽"><a href="#中断的屏蔽" class="headerlink" title="中断的屏蔽"></a>中断的屏蔽</h4><p>注意，这里的中断屏蔽指的是对外部中断的屏蔽（mask）。CPU内部的中断（异常）是不能屏蔽的。在内核同步中，通常采用这种方式来屏蔽外部的中断；并结合自旋锁来保证中断不被打断。<br>IRQ和NMI分别是可屏蔽和不可屏蔽中断（例子：打印机中断和电源掉电）。CPU在处理NMI中断时，不从外部硬件接收中断向量号，其对应中断向量号固定为2。NMI中断通常用于故障处理（协处理器运算出错、存储器校验出错等危急事件）。NMI处理程序通常应以IRET指令来结束。IRQ则是可以屏蔽的一类中断，通过设置CPU中的IF位，可以对IRQ进行屏蔽，这个标志位可以通过软件来设置。例如在处理某个高优先级中断时，CPU收到了低优先级的中断，那么就会对它进行屏蔽。<br>而对于内核的同步，则是由操作系统内部来实现的。可以说，目前我们讨论的只是中断是如何被送到CPU的，而CPU把中断和异常送给操作系统，并操作系统做出反应的过程，则属于另一个范畴了（在另一片博文<a href="http://sec-lbx.tk/2017/02/15/%E4%B8%AD%E6%96%AD%E7%9B%B8%E5%85%B3/" target="_blank" rel="external">http://sec-lbx.tk/2017/02/15/中断相关</a>）。  </p>
 <h4 id="异常和中断的处理"><a href="#异常和中断的处理" class="headerlink" title="异常和中断的处理"></a>异常和中断的处理</h4><p>我们可以把内核，理解成一个服务器，它不断处理着用户的各种请求。因此，它需要保证每项服务在处理时，不会互相造成影响；其并发的来源包括内核的抢占和中断处理等。在内核态，中断处理程序也可以嵌套，这种情况下中断处理程序必须永不阻塞，在它运行的期间不能发生进程切换（不过缺页异常是一个例外，它不会引起进一步的异常，所以缺页异常可以切换进程，提高效率）。中断处理程序既可以抢占其他的中断处理程序，也可以抢占异常处理程序。相反的，异常处理程序<strong>从不会</strong>抢占中断处理程序。如果已经在内核态了，就只可能发生缺页异常（当然，也包含有现在的EPT缺页），但它们不会进一步的进行导致缺页的操作。<br>异常处理程序通常包含三个部分：（1）在内核堆栈保存大多数寄存器的内容；（2）用高级的C函数对异常进行处理；（3）通过<code>ret_from_exception()</code>函数，从异常处理程序退出。<br>中断处理程序与异常处理程序不同，因为当下运行的进程可能和中断完全无关。中断可以分为：I/O中断、时钟中断、处理器间中断。这里，以I/O中断为例。I/O中断必须能够为多个设备同时提供服务，而多个设备却可能会共享一个IRQ线。它往往包含四个部分：（1）在内核态堆栈中保存IRQ的值和寄存器的内容；（2）给为IRQ服务的PIC发一个应答，允许PIC进一步发出中断；（3）执行共享这个IRQ的所有设备的中断服务历程（<code>do_IRQ()</code>会执行与一个中断相关的所有中断服务历程，并且验证它的设备是否需要关注，这也与驱动注册相关）；（4）跳转到<code>ret_from_inrt()</code>后终止。<br>IRQ的动态分配：IRQ线可能在最后时刻才和一个设备驱动相关联，这样即使几个硬件设备不共享IRQ，也能够让几个设备在不同时刻使用同一个IRQ向量。  </p>
 <h4 id="处理器间的中断（IPI）"><a href="#处理器间的中断（IPI）" class="headerlink" title="处理器间的中断（IPI）"></a>处理器间的中断（IPI）</h4><p>由某个CPU向系统中的其他CPU发送中断信号，它不由IRQ总线，而是由本地APIC的总线传递。Linux定义了这样几种处理器间中断。<br>CALL_FUNCTION：强制所有剩余CPU执行发送者传递过来的函数<br>RESCHEDULE_VECTOR：让被中断的CPU重新调度<br>INVALIDATE_TLB_VECTOR：强制CPU清洗TLB  </p>
 <h4 id="软中断和tasklet"><a href="#软中断和tasklet" class="headerlink" title="软中断和tasklet"></a>软中断和tasklet</h4><p>软中断是一种提高运行效率的手段，其核心思想是把不紧迫懂、可以延时处理的中断部分，在中断上下文外，由操作系统自行安排运行时机来运行。tasklet则是建立在软中断之上来实现的，它是I/O驱动中实现可延迟函数的主要方法。对于挂起的软中断，内核会用<code>ksoftirqd</code>进行检查和运行。  </p>
 <h4 id="工作队列"><a href="#工作队列" class="headerlink" title="工作队列"></a>工作队列</h4><p>工作队列是内核中，另外一种将工作推后的形式。其特点在于，它允许<strong>重新调度</strong>和<strong>睡眠</strong>。其本质就是将工作交给内核线程处理。如果推后执行的任务需要睡眠、或者延时指定的时间再触发，则使用这种形式比较好；倘若推后的任务需要在一个tick内处理，那么还是选择软中断或者tasklet的形式比较好。  </p>
 
+        </div>
+
+        <blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2017-07-28T09:04:47.000Z" itemprop="dateUpdated">2017-07-28 17:04:47</time>
+</span><br>
+
+
+        
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2017/03/06/中断的发生/" target="_blank" rel="external">http://yoursite.com/2017/03/06/中断的发生/</a>
+        
+    </div>
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/avatar.jpg" alt="John Doe">
+            John Doe
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+
 
             
-            <div class="post-reward">
-                <a id="rewardBtn" href="javascript:;" class="post-reward-btn waves-effect waves-circle waves-light">赏</a>
-            </div>
-            
-            
-            <blockquote>
-                <p>
-                本文地址：
-                <a href="http://yoursite.com/2017/03/06/中断的发生/" target="_blank" rel="external">http://yoursite.com/2017/03/06/中断的发生/</a>
-                </p>
-                <footer><cite><a href="http://yoursite.com">@Hexo</a></cite></footer>
-            </blockquote>
-            </div>
-            
-<nav class="post-nav">
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2017/03/06/中断的发生/&title=《深入理解中断（二）》 — Hexo&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2017/03/06/中断的发生/&title=《深入理解中断（二）》 — Hexo&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2017/03/06/中断的发生/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《深入理解中断（二）》 — Hexo&url=http://yoursite.com/2017/03/06/中断的发生/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2017/03/06/中断的发生/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
   
-    <div class="waves-block waves-effect prev fl">
+    <div class="waves-block waves-effect prev">
       <a href="/2017/03/15/深入理解内核同步/" id="post-prev" class="post-nav-link">
         <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
         <h4 class="title">深入理解内核同步</h4>
@@ -243,7 +309,7 @@
   
 
   
-    <div class="waves-block waves-effect next fr">
+    <div class="waves-block waves-effect next">
       <a href="/2017/02/15/中断相关/" id="post-next" class="post-nav-link">
         <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
         <h4 class="title">深入理解中断（一）</h4>
@@ -253,121 +319,151 @@
 </nav>
 
 
-            
-            
-<div class="duoshuo">
-	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="中断的发生" data-title="深入理解中断（二）" data-url="http://yoursite.com/2017/03/06/中断的发生/index.html"></div>
-	<!-- 多说评论框 end -->
-	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-	<script type="text/javascript">
-	var duoshuoQuery = {short_name:"ysblog"};
-	(function() {
-		var ds = document.createElement('script');
-		ds.type = 'text/javascript';ds.async = true;
-		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-		ds.charset = 'UTF-8';
-		(document.getElementsByTagName('head')[0] 
-		 || document.getElementsByTagName('body')[0]).appendChild(ds);
-	})();
-	</script>
-	<!-- 多说公共JS代码 end -->
-</div>
+
+    
 
 
 
 
 
-        </div>
-    </div>
+
+
+
+
+
+
+
+
+
 </article>
 
-<div id="reward" class="reward-lay">
-    <a class="reward-off" id="rewardOff" href="javascript:;"><i class="icon icon-close"></i></a>
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <h3 class="reward-title">
         <i class="icon icon-quote-left"></i>
         谢谢大爷~
         <i class="icon icon-quote-right"></i>
     </h3>
-    <ul class="reward-items">
+    <div class="reward-content">
         
-        <li>
-            <img src="/img/wechat.jpg" title="微信打赏二维码" alt="微信打赏二维码">
-            <p>微信</p>
-        </li>
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
         
-
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
         
-        <li>
-            <img src="/img/alipay.jpg" title="支付宝打赏二维码" alt="支付宝打赏二维码">
-            <p>支付宝</p>
-        </li>
-        
-    </ul>
+    </div>
 </div>
 
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
     </div>
-  </main>
-<div class="mask" id="mask"></div>
+    <div class="bottom">
+        <p><span>John Doe &copy; 2015 - 2017</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
 
-<script>
-var BLOG_SHARE = {
-    title: "深入理解中断（二）",
-    pic: "/img/logo.jpg",
-    summary: document.getElementsByName('summary')[0].content,
-    url: "http://yoursite.com/2017/03/06/中断的发生/index.html"
-};
-</script>
-<div class="global-share" id="global-share">
-    <div class="tit">分享到：</div>
+
+
+<div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" href="javascript:;" data-title="微博" data-service="tsina">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2017/03/06/中断的发生/&title=《深入理解中断（二）》 — Hexo&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
       <li>
-        <a class="weixin share-sns" href="javascript:;" data-title="微信" data-service="weixin">
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
           <i class="icon icon-weixin"></i>
         </a>
       </li>
       <li>
-        <a class="qq share-sns" href="javascript:;" data-title=" QQ" data-service="cqq">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2017/03/06/中断的发生/&title=《深入理解中断（二）》 — Hexo&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" href="javascript:;" data-title=" Facebook" data-service="fb">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2017/03/06/中断的发生/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" href="javascript:;" data-title=" Twitter" data-service="twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《深入理解中断（二）》 — Hexo&url=http://yoursite.com/2017/03/06/中断的发生/&via=http://yoursite.com" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="douban share-sns" href="javascript:;" data-title="豆瓣" data-service="douban">
-          豆
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2017/03/06/中断的发生/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
         </a>
       </li>
     </ul>
  </div>
 
 
-<script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://yoursite.com/2017/03/06/中断的发生/" alt="微信分享二维码">
+</div>
 
-<script src="/js/main.js"></script>
 
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
 
 
 <div class="search-panel" id="search-panel">
     <ul class="search-result" id="search-result"></ul>
 </div>
-<script type="text/template" id="search-tpl">
+<template id="search-tpl">
 <li class="item">
-    <a href="/{path}" class="waves-block waves-effect">
+    <a href="{path}" class="waves-block waves-effect">
         <div class="title ellipsis" title="{title}">{title}</div>
         <div class="flex-row flex-middle">
             <div class="tags ellipsis">
@@ -377,15 +473,35 @@ var BLOG_SHARE = {
         </div>
     </a>
 </li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
 </script>
-
-<script src="/js/search.js"></script>
-
-
-
-
-
-
 
 
 

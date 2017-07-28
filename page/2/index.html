@@ -1,107 +1,117 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  
-  <title>Hexo | </title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  
-  <meta name="theme-color" content="#3F51B5">
-  
-  
-  <meta name="keywords" content="">
-  <meta property="og:type" content="website">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <title>Hexo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="">
+    <meta property="og:type" content="website">
 <meta property="og:title" content="Hexo">
 <meta property="og:url" content="http://yoursite.com/page/2/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hexo">
-  
-    <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
-  
-  <meta name="summary" content="">
-  <link rel="shortcut icon" href="/favicon.ico">
-  <link rel="stylesheet" href="/css/style.css">
+    
+        <link rel="alternate" type="application/atom+xml" title="Hexo" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
 </head>
 
 <body>
-  <div id="loading" class="active"></div>
+    <div id="loading" class="active"></div>
 
-  <nav id="menu"  >
-   <div class="inner flex-row-vertical">
-  <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-      <i class="icon icon-lg icon-close"></i>
-  </a>
-  <div class="brand-wrap">
-    <div class="brand">
-      <a href="/" class="avatar"><img src="/img/logo.jpg"></a>
-      <hgroup class="introduce">
-        <h5 class="nickname">John Doe</h5>
-        <a href="mailto:634206017@qq.com" title="634206017@qq.com" class="mail">634206017@qq.com</a>
-      </hgroup>
+    <aside id="menu"  >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">John Doe</h5>
+          <a href="mailto:634206017@qq.com" title="634206017@qq.com" class="mail">634206017@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/yscoder" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://www.weibo.com/ysweb" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/custom"  >
+                <i class="icon icon-lg icon-link"></i>
+                测试
+              </a>
+            </li>
+        
+      </ul>
     </div>
   </div>
-  <div class="scroll-wrap flex-col">
-    <ul class="nav">
-      
-          <li class="waves-block waves-effect">
-            <a href="/"  >
-              <i class="icon icon-lg icon-home"></i>
-              主页
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="/archives"  >
-              <i class="icon icon-lg icon-archives"></i>
-              Archives
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="/tags"  >
-              <i class="icon icon-lg icon-tags"></i>
-              Tags
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="https://github.com/yscoder" target="_blank" >
-              <i class="icon icon-lg icon-github"></i>
-              Github
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="http://www.weibo.com/ysweb" target="_blank" >
-              <i class="icon icon-lg icon-weibo"></i>
-              Weibo
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="/404"  >
-              <i class="icon icon-lg icon-link"></i>
-              测试
-            </a>
-          </li>
-      
-    </ul>
+</aside>
 
-    <footer class="footer">
-  <p><a rel="license" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0;vertical-align:middle;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAAAPCAMAAABEF7i9AAAAllBMVEUAAAD///+rsapERER3d3eIiIjMzMzu7u4iIiKUmZO6v7rKzsoODg4RERFVVVUNDQ0NDg0PEA8zMzNLTEtbXltmZmZydnF9gn2AgICPkI+ZmZmqqqq7u7vFxsXIzMgNDQwZGRkgICAhISEkJSMnKCcuMC4xMzE5Ozk7PTtBQkFCQkJDQ0Nna2eGhoaHh4ezuLLGysbd3d1wVGpAAAAA4UlEQVR42q2T1xqCMAyFk7QsBQeKA9x7j/d/OSm22CpX0nzcpA1/T05aAOuBVkMAScQFHLnEwoCo2f1TnQIGoVMewjZEjVFN4GH1Ue1Cn2jWqwfsOOj6wDwGvotsl/c8lv7KIq1eLOsT0HMFHMIE/RZyHnlphryT9zyV+8WH5e8yQw3wnQvgAFxPTKUVi555SHR/lOfLMgVTeDlSfN+TaoUsiTyeIm+bCkHvCA2FUKG48LDtYBZBknsYP/G8NTw0gaaHyuQf4H5pecrB/FYCT2sL9zAfy1Xyjou6L8X2W7YcLyBZCRtnq/zfAAAAAElFTkSuQmCC" /></a></p>
-  <p>Hexo &copy; 2017</p>
-  <p>Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
-  <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a></p>
-  <a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-2x icon-rss-square"></i></a>
-</footer>
-
-  </div>
-</div>
-
-  </nav>
-  <main id="main">
-    <header class="top-header" id="header">
+    <main id="main">
+        <header class="top-header" id="header">
     <div class="flex-row">
         <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
           <i class="icon icon-lg icon-navicon"></i>
@@ -112,37 +122,52 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input " autocomplete="off" placeholder="输入感兴趣的关键字">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
         </div>
         
         
-        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-share">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
             <i class="icon icon-lg icon-share-alt"></i>
         </a>
         
     </div>
 </header>
-<header class="content-header">
-  <div class="container">
-    <h1 class="author">Hexo</h1>
-    <h5 class="subtitle">
-        
-        
-        
-    </h5>
-  </div>
+<header class="content-header index-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Hexo</h1>
+        <h5 class="subtitle">
+            
+                
+            
+        </h5>
+    </div>
+
+    
+
+
 </header>
 
-    <div class="container body-wrap">
-      <ul class="post-list">
-  
-    <li class="post-list-item">
-        <article id="post-深入理解进程通信"
-  class="article article-type-post" itemprop="blogPost">
-     
+<div class="container body-wrap">
+
+    <ul class="post-list">
+    
+        <li class="post-list-item fade">
+            <article id="post-深入理解进程通信"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2017-04-30 11:40:00" datetime="2017-04-30T03:40:00.000Z"  itemprop="datePublished">2017-04-30</time>
+
+        
+
+
+    </div>
+
+    
 
 
   
@@ -153,40 +178,45 @@
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        管道管道是进程间的一个单向数据流；进程写入管道的数据都由内核定向到另一个进程，随后另一个进程由此从管道中读取数据，两个进程必须有亲缘关系，例如兄弟进程、父子进程。
+//经常会使用到的
+$ ls | more
+管道可以被视为两个“打开的文件”，但它在文件系统中没有响应映象，其原理很简单：pipe()系统调用会返回两个FILE文件指针，分别用于读和写，两个进程分别能够读、写管道的内容。
+    ...
+    
+
+        <a href="/2017/04/30/深入理解进程通信/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-深入理解信号"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2017-04-30T03:40:00.000Z" itemprop="datePublished" class="post-time">
-  2017-04-30
-</time>
+        <time class="post-time" title="2017-04-27 21:40:00" datetime="2017-04-27T13:40:00.000Z"  itemprop="datePublished">2017-04-27</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           管道  管道是进程间的一个单向数据流；进程写入管道的数据都由内核定向到另一个进程，随后另一个进程由此从管道中读取数据， 两个进程必须有亲缘关系，例如兄弟进程、父子进程 。 
-  //经常会使用到的
-$ ls | more
-   管道可以被视为两个“打开的文件”，但它在文件系统中没有响应映象，其原理很简单： pipe() 系统调用会返回两个FILE文件指针，分别用于读和写，两个进程分别能够读、
-    
-    
-        <a href="/2017/04/30/深入理解进程通信/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-深入理解信号"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -197,37 +227,41 @@ $ ls | more
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        信号信号用来通知进程异步事件，可以把它理解为对中断的一种模拟。它是一个很小的消息，用来达到两个目的：（1）告知进程发生了一个特定的事件；（2）强迫进程执行自身所包含的信号处理程序。linux预先定义了一些常规信号，并为它们定义了一些缺省操作。除此之外，还有一类实时信号，它们需要排队进行处理，我们也可以自己定义信号和信号处理方式。既然信号是和进程相关的，那么task_struct中就必然包含有...
+    
+
+        <a href="/2017/04/27/深入理解信号/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-深入理解进程地址空间"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2017-04-27T13:40:00.000Z" itemprop="datePublished" class="post-time">
-  2017-04-27
-</time>
+        <time class="post-time" title="2017-04-25 21:40:00" datetime="2017-04-25T13:40:00.000Z"  itemprop="datePublished">2017-04-25</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           信号  信号用来通知进程异步事件，可以把它理解为对中断的一种模拟。它是一个很小的消息，用来达到两个目的：（1）告知进程发生了一个特定的事件；（2）强迫进程执行自身所包含的信号处理程序。 linux预先定义了一些常规信号，并为它们定义了一些缺省操作。除此之外，还有一类实时信号，它们需要排队进行处理，我们也可以自己定义信号和信号处理方式。 既然信号是和进程相关的，那么 task_struct 中
-    
-    
-        <a href="/2017/04/27/深入理解信号/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-深入理解进程地址空间"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -238,37 +272,41 @@ $ ls | more
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        线性区与内核中的内存分配不同，进程对内存的请求，被认为是不紧迫的。因此内核使用了一种新的资源，也就是线性区。应用程序申请动态内存时，并没有直接获得请求的页框，而是仅仅获得了一个新的线性区使用权。进程的地址空间，就是由所有的“线性区”来表示的，它的所有信息放在mm_struct当中（也就是我们在task_struct当中看到的），定义在mm_types.h当中。mm_struct包含了一个vm...
+    
+
+        <a href="/2017/04/25/深入理解进程地址空间/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-深入理解内存管理"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2017-04-25T13:40:00.000Z" itemprop="datePublished" class="post-time">
-  2017-04-25
-</time>
+        <time class="post-time" title="2017-04-20 11:40:00" datetime="2017-04-20T03:40:00.000Z"  itemprop="datePublished">2017-04-20</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           线性区  与内核中的内存分配不同，进程对内存的请求，被认为是不紧迫的。因此内核使用了一种新的资源，也就是 线性区 。应用程序申请动态内存时，并没有直接获得请求的页框，而是仅仅获得了一个新的 线性区 使用权。进程的地址空间，就是由所有的“线性区”来表示的，它的所有信息放在 mm_struct 当中（也就是我们在task_struct当中看到的），定义在mm_types.h当中。  mm_str
-    
-    
-        <a href="/2017/04/25/深入理解进程地址空间/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-深入理解内存管理"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -279,37 +317,41 @@ $ ls | more
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        页框管理与伙伴系统这里的内存管理，指的是内核如何分配（为自己）动态内存。linux把页框作为一个管理的基本单位，用数据结构page对其进行描述。而所有的page则放在一个mem_map数组当中，进行管理。但计算机存在着一些限制，因此linux把内存划分为了几个管理区，包括ZONE_DMA、ZONE_NORMAL、ZONE_HIGHMEM等；而对页框的分配和释放，也是按照分区来进行管理的：在每...
+    
+
+        <a href="/2017/04/20/深入理解内存管理/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-深入理解进程与调度"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2017-04-20T03:40:00.000Z" itemprop="datePublished" class="post-time">
-  2017-04-20
-</time>
+        <time class="post-time" title="2017-04-15 21:40:00" datetime="2017-04-15T13:40:00.000Z"  itemprop="datePublished">2017-04-15</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           页框管理与伙伴系统  这里的内存管理，指的是内核如何分配（为自己）动态内存。linux把页框作为一个管理的基本单位，用数据结构 page 对其进行描述。而所有的 page 则放在一个 mem_map 数组当中，进行管理。但计算机存在着一些限制，因此linux把内存划分为了几个管理区，包括ZONE_DMA、ZONE_NORMAL、ZONE_HIGHMEM等；而对页框的分配和释放，也是按照分区来
-    
-    
-        <a href="/2017/04/20/深入理解内存管理/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-深入理解进程与调度"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -320,37 +362,41 @@ $ ls | more
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        进程、线程、轻量级进程进程是程序执行的一个实例，也是操作系统分配资源（CPU、内存）的对象，而线程是CPU执行和调度的最小单位。轻量级进程是linux中实现线程的方式，其本质也是一个进程，它与一个内核线程相关联，因此可以像普通程序一样被调度，但它只有最小的执行和调度信息（与普通程序比很“轻量”）。在linux内核中，并没有线程的概念，每一个执行的实体，都是用linux的PCB：  task_...
+    
+
+        <a href="/2017/04/15/深入理解进程与调度/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-深入理解I:O体系结构（二）"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2017-04-15T13:40:00.000Z" itemprop="datePublished" class="post-time">
-  2017-04-15
-</time>
+        <time class="post-time" title="2017-04-11 11:40:00" datetime="2017-04-11T03:40:00.000Z"  itemprop="datePublished">2017-04-11</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           进程、线程、轻量级进程  进程是程序执行的一个实例，也是操作系统分配资源（CPU、内存）的对象，而线程是CPU执行和调度的最小单位。轻量级进程是linux中实现线程的方式，其本质也是一个进程，它与一个内核线程相关联，因此可以像普通程序一样被调度，但它只有最小的执行和调度信息（与普通程序比很“轻量”）。 在linux内核中，并没有线程的概念，每一个执行的实体，都是用linux的PCB：   t
-    
-    
-        <a href="/2017/04/15/深入理解进程与调度/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-深入理解I:O体系结构（二）"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -361,37 +407,41 @@ $ ls | more
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        块设备的驱动和字符设备类似，操作系统中的块设备，也是以文件的形式来访问。这里有一个很拗口的问题：磁盘是一个块设备，块设备有一个块设备文件。那么访问块设备文件和访问普通的磁盘上的文件有什么关系呢？不论是块设备文件还是普通的文件，它们都是通过VFS来统一访问的。只不过对于一个普通文件，它可能已经在RAM中了（高速缓存机制），因此它的访问可能会直接在RAM中进行；但如果说要修改磁盘上的内容，或者文...
+    
+
+        <a href="/2017/04/11/深入理解I:O体系结构（二）/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-深入理解I:O体系结构（一）"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2017-04-11T03:40:00.000Z" itemprop="datePublished" class="post-time">
-  2017-04-11
-</time>
+        <time class="post-time" title="2017-04-10 11:40:00" datetime="2017-04-10T03:40:00.000Z"  itemprop="datePublished">2017-04-10</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           块设备的驱动  和字符设备类似，操作系统中的块设备，也是以文件的形式来访问。这里有一个很拗口的问题：磁盘是一个块设备，块设备有一个块设备文件。那么访问块设备文件和访问普通的磁盘上的文件有什么关系呢？ 不论是块设备文件还是普通的文件，它们都是通过VFS来统一访问的。只不过对于一个普通文件，它可能已经在RAM中了（高速缓存机制），因此它的访问可能会直接在RAM中进行；但如果说要修改磁盘上的内容，
-    
-    
-        <a href="/2017/04/11/深入理解I:O体系结构（二）/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-深入理解I:O体系结构（一）"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -402,79 +452,41 @@ $ ls | more
 
 
 
-    <div class="post-meta">
-        <time datetime="2017-04-10T03:40:00.000Z" itemprop="datePublished" class="post-time">
-  2017-04-10
-</time>
 
-        
-
-
-    </div>
-
-    <div class="post-content" id="post-content" itemprop="postContent" >
+    <div class="post-content" id="post-content" itemprop="postContent">
 
     
-           I/O体系结构  虚拟文件系统利用底层函数，调用每个设备的操作，那么这些操作是如何在设备上执行的，操作系统又是如何知道设备的操作是什么的呢？这些是由操作系统决定的。 我们知道，操作系统的工作，是依赖于数据通路的，它们让信息得以在CPU、RAM、I/O设备之间传递。这些数据通路称为 总线 。这就包括数据总线（PCI、ISA、EISA、SCSI等）、地址总线、控制总线。I/O总线，指的就是用于C
+        I/O体系结构虚拟文件系统利用底层函数，调用每个设备的操作，那么这些操作是如何在设备上执行的，操作系统又是如何知道设备的操作是什么的呢？这些是由操作系统决定的。我们知道，操作系统的工作，是依赖于数据通路的，它们让信息得以在CPU、RAM、I/O设备之间传递。这些数据通路称为总线。这就包括数据总线（PCI、ISA、EISA、SCSI等）、地址总线、控制总线。I/O总线，指的就是用于CPU和I/...
     
-    
+
         <a href="/2017/04/10/深入理解I:O体系结构（一）/" class="post-more waves-effect waves-button">
-            阅读全文...
+            Continue reading...
         </a>
     </div>
     
+    <div class="post-footer">
+        
 	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
 
+    </div>
+    
 </article>
 
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-IDAPython"
-  class="article article-type-post" itemprop="blogPost">
-     
-
-
-  
-    <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/04/05/IDAPython/">IDAPython：入门</a>
-    </h3>
-  
-
-
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-IDAPython-advance1"
+  class="article-card article-type-post" itemprop="blogPost">
 
     <div class="post-meta">
-        <time datetime="2017-04-05T13:40:00.000Z" itemprop="datePublished" class="post-time">
-  2017-04-05
-</time>
+        <time class="post-time" title="2017-04-05 21:40:00" datetime="2017-04-05T13:40:00.000Z"  itemprop="datePublished">2017-04-05</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           取地址   ScreenEA() 和 here() 是最常用的取地址函数，它们会返回一个整数值。  MaxEA() 和 MinxEA() 可以用来取最大和最小地址。  GetDisasm()   GetMnem()   GetOpand()  可以用来取某个地址中的指令、操作符、操作数等。   
-   遍历：Segments，Functions,and Instructions  IDAPy
-    
-    
-        <a href="/2017/04/05/IDAPython/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IDA-pro/">IDA pro</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/静态分析/">静态分析</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-IDAPython-advance1"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -485,38 +497,88 @@ $ ls | more
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        IDAPython:进阶（一）Instruction feature在IDAPython中，时常可以看到使用insn.get_canon_feature()来获取指令“特性”。这里，instruc_t类中包含有两个变量，name和feature，其中feature是一系列的指令特征位。 
+IDA SDKIDA SDK分为很多hpp，不过它的文档不是特别友好，这里我把比较重要的header的作...
+    
+
+        <a href="/2017/04/05/IDAPython-advance1/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/系统安全/">系统安全</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-IDAPython"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2017-04-05T13:40:00.000Z" itemprop="datePublished" class="post-time">
-  2017-04-05
-</time>
+        <time class="post-time" title="2017-04-05 21:40:00" datetime="2017-04-05T13:40:00.000Z"  itemprop="datePublished">2017-04-05</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2017/04/05/IDAPython/">IDAPython：入门</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
 
     
-           IDAPython:进阶（一）    Instruction feature  在IDAPython中，时常可以看到使用 insn.get_canon_feature() 来获取指令“特性”。这里， instruc_t 类中包含有两个变量， name 和 feature ，其中 feature 是一系列的指令特征位。  
-   IDA SDK  IDA SDK分为很多hpp，不过它的文档不是
+        取地址ScreenEA()和here()是最常用的取地址函数，它们会返回一个整数值。MaxEA()和MinxEA()可以用来取最大和最小地址。GetDisasm() GetMnem() GetOpand() 可以用来取某个地址中的指令、操作符、操作数等。  
+遍历：Segments，Functions,and InstructionsIDAPython的强大之处在于迭代。从Segments(...
     
-    
-        <a href="/2017/04/05/IDAPython-advance1/" class="post-more waves-effect waves-button">
-            阅读全文...
+
+        <a href="/2017/04/05/IDAPython/" class="post-more waves-effect waves-button">
+            Continue reading...
         </a>
     </div>
     
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/系统安全/">系统安全</a></li></ul>
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IDA-pro/">IDA pro</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/静态分析/">静态分析</a></li></ul>
 
+    </div>
+    
 </article>
 
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-深入理解文件系统"
-  class="article article-type-post" itemprop="blogPost">
-     
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-深入理解文件系统"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2017-03-30 11:40:00" datetime="2017-03-30T03:40:00.000Z"  itemprop="datePublished">2017-03-30</time>
+
+        
+
+
+    </div>
+
+    
 
 
   
@@ -527,104 +589,142 @@ $ ls | more
 
 
 
-    <div class="post-meta">
-        <time datetime="2017-03-30T03:40:00.000Z" itemprop="datePublished" class="post-time">
-  2017-03-30
-</time>
 
-        
-
-
-    </div>
-
-    <div class="post-content" id="post-content" itemprop="postContent" >
+    <div class="post-content" id="post-content" itemprop="postContent">
 
     
-           虚拟文件系统（VFS）的思想和作用  实际上，看到 Virtaul ，我们就应该想到VFS的作用，是虚拟出一个中间层，来实现某些部分的 统一处理 。实际上，VFS要解决的是，让应用能够“以一种通用的方式”，去访问不同类型的文件系统：   可以看到，对于不同类型的文件系统、网络文件系统、伪文件系统，应用对它们的操作接口都是一致的,而底层的驱动则会完成实际的区分工作。   
-   通用文件模型 
+        虚拟文件系统（VFS）的思想和作用实际上，看到Virtaul，我们就应该想到VFS的作用，是虚拟出一个中间层，来实现某些部分的统一处理。实际上，VFS要解决的是，让应用能够“以一种通用的方式”，去访问不同类型的文件系统：
+                
+                    
+                    
+                
+          ...
     
-    
+
         <a href="/2017/03/30/深入理解文件系统/" class="post-more waves-effect waves-button">
-            阅读全文...
+            Continue reading...
         </a>
     </div>
     
+    <div class="post-footer">
+        
 	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
 
+    </div>
+    
 </article>
 
-    </li>
-  
-</ul>
+        </li>
+    
+    </ul>
 
+    
 <nav id="page-nav">
     <div class="inner">
     <a class="extend prev" rel="prev" href="/">上一页</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/">下一页</a>
     </div>
 </nav>
 
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
     </div>
-  </main>
-<div class="mask" id="mask"></div>
+    <div class="bottom">
+        <p><span>John Doe &copy; 2015 - 2017</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
 
-<script>
-var BLOG_SHARE = {
-    title: "Hexo",
-    pic: "/img/logo.jpg",
-    summary: document.getElementsByName('summary')[0].content,
-    url: "http://yoursite.com/page/2/index.html"
-};
-</script>
-<div class="global-share" id="global-share">
-    <div class="tit">分享到：</div>
+
+
+<div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" href="javascript:;" data-title="微博" data-service="tsina">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/page/2/&title=Hexo&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
       <li>
-        <a class="weixin share-sns" href="javascript:;" data-title="微信" data-service="weixin">
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
           <i class="icon icon-weixin"></i>
         </a>
       </li>
       <li>
-        <a class="qq share-sns" href="javascript:;" data-title=" QQ" data-service="cqq">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/page/2/&title=Hexo&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" href="javascript:;" data-title=" Facebook" data-service="fb">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/page/2/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" href="javascript:;" data-title=" Twitter" data-service="twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=Hexo&url=http://yoursite.com/page/2/&via=http://yoursite.com" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="douban share-sns" href="javascript:;" data-title="豆瓣" data-service="douban">
-          豆
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/page/2/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
         </a>
       </li>
     </ul>
  </div>
 
 
-<script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://yoursite.com/page/2/" alt="微信分享二维码">
+</div>
 
-<script src="/js/main.js"></script>
 
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
 
 
 <div class="search-panel" id="search-panel">
     <ul class="search-result" id="search-result"></ul>
 </div>
-<script type="text/template" id="search-tpl">
+<template id="search-tpl">
 <li class="item">
-    <a href="/{path}" class="waves-block waves-effect">
+    <a href="{path}" class="waves-block waves-effect">
         <div class="title ellipsis" title="{title}">{title}</div>
         <div class="flex-row flex-middle">
             <div class="tags ellipsis">
@@ -634,15 +734,35 @@ var BLOG_SHARE = {
         </div>
     </a>
 </li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
 </script>
-
-<script src="/js/search.js"></script>
-
-
-
-
-
-
 
 
 

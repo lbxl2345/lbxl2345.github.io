@@ -1,16 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  
-  <title>深入理解中断（一） | Hexo | </title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  
-  <meta name="theme-color" content="#3F51B5">
-  
-  
-  <meta name="keywords" content="系统安全,linux,操作系统">
-  <meta name="description" content="什么是中断？中断是能够打断CPU指令序列的事件，它是在CPU内外，由硬件产生的电信号。CPU接收到中断后，就会向OS反映这个信号，从而由OS就会对新到来的数据进行处理。不同的事件，其对应的中断不同，而OS则是通过中断号(也即IRQ线)来找到对应的处理方法。不同体系中，中断可能是固定好的，也可能是动态分配的。中断产生后，首先会告诉中断控制器。中断控制器负责收集所有中断源的中断，它能够控制中断源的优先">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <title>深入理解中断（一） | Hexo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="系统安全,linux,操作系统">
+    <meta name="description" content="什么是中断？中断是能够打断CPU指令序列的事件，它是在CPU内外，由硬件产生的电信号。CPU接收到中断后，就会向OS反映这个信号，从而由OS就会对新到来的数据进行处理。不同的事件，其对应的中断不同，而OS则是通过中断号(也即IRQ线)来找到对应的处理方法。不同体系中，中断可能是固定好的，也可能是动态分配的。中断产生后，首先会告诉中断控制器。中断控制器负责收集所有中断源的中断，它能够控制中断源的优先">
 <meta name="keywords" content="系统安全,linux,操作系统">
 <meta property="og:type" content="article">
 <meta property="og:title" content="深入理解中断（一）">
@@ -37,92 +47,92 @@
 <meta name="twitter:title" content="深入理解中断（一）">
 <meta name="twitter:description" content="什么是中断？中断是能够打断CPU指令序列的事件，它是在CPU内外，由硬件产生的电信号。CPU接收到中断后，就会向OS反映这个信号，从而由OS就会对新到来的数据进行处理。不同的事件，其对应的中断不同，而OS则是通过中断号(也即IRQ线)来找到对应的处理方法。不同体系中，中断可能是固定好的，也可能是动态分配的。中断产生后，首先会告诉中断控制器。中断控制器负责收集所有中断源的中断，它能够控制中断源的优先">
 <meta name="twitter:image" content="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/IDT%E9%97%A8.gif?raw=true">
-  
-    <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
-  
-  <meta name="summary" content="">
-  <link rel="shortcut icon" href="/favicon.ico">
-  <link rel="stylesheet" href="/css/style.css">
+    
+        <link rel="alternate" type="application/atom+xml" title="Hexo" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
 </head>
 
 <body>
-  <div id="loading" class="active"></div>
+    <div id="loading" class="active"></div>
 
-  <nav id="menu" class="hide" >
-   <div class="inner flex-row-vertical">
-  <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-      <i class="icon icon-lg icon-close"></i>
-  </a>
-  <div class="brand-wrap">
-    <div class="brand">
-      <a href="/" class="avatar"><img src="/img/logo.jpg"></a>
-      <hgroup class="introduce">
-        <h5 class="nickname">John Doe</h5>
-        <a href="mailto:634206017@qq.com" title="634206017@qq.com" class="mail">634206017@qq.com</a>
-      </hgroup>
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">John Doe</h5>
+          <a href="mailto:634206017@qq.com" title="634206017@qq.com" class="mail">634206017@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/yscoder" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://www.weibo.com/ysweb" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/custom"  >
+                <i class="icon icon-lg icon-link"></i>
+                测试
+              </a>
+            </li>
+        
+      </ul>
     </div>
   </div>
-  <div class="scroll-wrap flex-col">
-    <ul class="nav">
-      
-          <li class="waves-block waves-effect">
-            <a href="/"  >
-              <i class="icon icon-lg icon-home"></i>
-              主页
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="/archives"  >
-              <i class="icon icon-lg icon-archives"></i>
-              Archives
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="/tags"  >
-              <i class="icon icon-lg icon-tags"></i>
-              Tags
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="https://github.com/yscoder" target="_blank" >
-              <i class="icon icon-lg icon-github"></i>
-              Github
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="http://www.weibo.com/ysweb" target="_blank" >
-              <i class="icon icon-lg icon-weibo"></i>
-              Weibo
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="/404"  >
-              <i class="icon icon-lg icon-link"></i>
-              测试
-            </a>
-          </li>
-      
-    </ul>
+</aside>
 
-    <footer class="footer">
-  <p><a rel="license" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0;vertical-align:middle;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAAAPCAMAAABEF7i9AAAAllBMVEUAAAD///+rsapERER3d3eIiIjMzMzu7u4iIiKUmZO6v7rKzsoODg4RERFVVVUNDQ0NDg0PEA8zMzNLTEtbXltmZmZydnF9gn2AgICPkI+ZmZmqqqq7u7vFxsXIzMgNDQwZGRkgICAhISEkJSMnKCcuMC4xMzE5Ozk7PTtBQkFCQkJDQ0Nna2eGhoaHh4ezuLLGysbd3d1wVGpAAAAA4UlEQVR42q2T1xqCMAyFk7QsBQeKA9x7j/d/OSm22CpX0nzcpA1/T05aAOuBVkMAScQFHLnEwoCo2f1TnQIGoVMewjZEjVFN4GH1Ue1Cn2jWqwfsOOj6wDwGvotsl/c8lv7KIq1eLOsT0HMFHMIE/RZyHnlphryT9zyV+8WH5e8yQw3wnQvgAFxPTKUVi555SHR/lOfLMgVTeDlSfN+TaoUsiTyeIm+bCkHvCA2FUKG48LDtYBZBknsYP/G8NTw0gaaHyuQf4H5pecrB/FYCT2sL9zAfy1Xyjou6L8X2W7YcLyBZCRtnq/zfAAAAAElFTkSuQmCC" /></a></p>
-  <p>Hexo &copy; 2017</p>
-  <p>Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
-  <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a></p>
-  <a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-2x icon-rss-square"></i></a>
-</footer>
-
-  </div>
-</div>
-
-  </nav>
-  <main id="main">
-    <header class="top-header" id="header">
+    <main id="main">
+        <header class="top-header" id="header">
     <div class="flex-row">
         <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
           <i class="icon icon-lg icon-navicon"></i>
@@ -133,96 +143,76 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input " autocomplete="off" placeholder="输入感兴趣的关键字">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
         </div>
         
         
-        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-share">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
             <i class="icon icon-lg icon-share-alt"></i>
         </a>
         
     </div>
 </header>
-<header class="content-header">
-  <div class="container">
-    <h1 class="author">深入理解中断（一）</h1>
-    <h5 class="subtitle">
-        
-            <time datetime="2017-02-15T13:40:00.000Z" itemprop="datePublished" class="page-time">
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">深入理解中断（一）</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-02-15T13:40:00.000Z" itemprop="datePublished" class="page-time">
   2017-02-15
 </time>
 
 
-        
-    </h5>
-  </div>
+            
+        </h5>
+    </div>
+
+    
+
+
 </header>
 
-    <div class="container body-wrap">
-      <article id="post-中断相关" 
-  class="article article-type-post" itemprop="blogPost">
-    <div class="post-meta flex-row">
-        
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/系统安全/">系统安全</a></li></ul>
 
-    </div>
-    <div class="post-body">
-        <aside class="post-widget" id="post-widget">
-
-            
-            <div class="post-share" id="post-share">
-    <div class="tit">分享到：</div>
-    <ul class="reset share-icons">
-      <li>
-        <a class="weibo share-sns" href="javascript:;" data-title="微博" data-service="tsina">
-          <i class="icon icon-weibo"></i>
-        </a>
-      </li>
-      <li>
-        <a class="weixin share-sns" href="javascript:;" data-title="微信" data-service="weixin">
-          <i class="icon icon-weixin"></i>
-        </a>
-      </li>
-      <li>
-        <a class="qq share-sns" href="javascript:;" data-title=" QQ" data-service="cqq">
-          <i class="icon icon-qq"></i>
-        </a>
-      </li>
-      <li>
-        <a class="facebook share-sns" href="javascript:;" data-title=" Facebook" data-service="fb">
-          <i class="icon icon-facebook"></i>
-        </a>
-      </li>
-      <li>
-        <a class="twitter share-sns" href="javascript:;" data-title=" Twitter" data-service="twitter">
-          <i class="icon icon-twitter"></i>
-        </a>
-      </li>
-      <li>
-        <a class="douban share-sns" href="javascript:;" data-title="豆瓣" data-service="douban">
-          豆
-        </a>
-      </li>
-    </ul>
- </div>
-
-            
-
-            
-            <nav class="post-toc-wrap" id="post-toc">
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap" id="post-toc">
+            <h4>TOC</h4>
             <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#什么是中断？"><span class="post-toc-number">1.</span> <span class="post-toc-text">什么是中断？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#中断描述符表"><span class="post-toc-number">2.</span> <span class="post-toc-text">中断描述符表</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#实模式和保护模式"><span class="post-toc-number">3.</span> <span class="post-toc-text">实模式和保护模式</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#x64寻址"><span class="post-toc-number">4.</span> <span class="post-toc-text">x64寻址</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#IDT，LDT和GDT"><span class="post-toc-number">5.</span> <span class="post-toc-text">IDT，LDT和GDT</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#中断的处理过程"><span class="post-toc-number">6.</span> <span class="post-toc-text">中断的处理过程</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#64-bit模式下的中断处理"><span class="post-toc-number">7.</span> <span class="post-toc-text">64-bit模式下的中断处理</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#保护机制"><span class="post-toc-number">8.</span> <span class="post-toc-text">保护机制</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#Limit-Checking"><span class="post-toc-number">8.0.1.</span> <span class="post-toc-text">Limit Checking</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#Type-checking"><span class="post-toc-number">8.0.2.</span> <span class="post-toc-text">Type checking</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#Privilege-levels"><span class="post-toc-number">8.0.3.</span> <span class="post-toc-text">Privilege levels</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#TSS"><span class="post-toc-number">9.</span> <span class="post-toc-text">TSS</span></a></li></ol>
-            </nav>
+        </nav>
+    </aside>
+    
+<article id="post-中断相关"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">深入理解中断（一）</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-02-15 21:40:00" datetime="2017-02-15T13:40:00.000Z"  itemprop="datePublished">2017-02-15</time>
+
             
-        </aside>
 
-        <div class="post-main">
 
-            <div class="post-content" id="post-content" itemprop="postContent">
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
             <h3 id="什么是中断？"><a href="#什么是中断？" class="headerlink" title="什么是中断？"></a>什么是中断？</h3><p>中断是能够打断CPU指令序列的事件，它是在CPU内外，由硬件产生的电信号。CPU接收到中断后，就会向OS反映这个信号，从而由OS就会对新到来的数据进行处理。不同的事件，其对应的中断不同，而OS则是通过<strong>中断号</strong>(也即IRQ线)来找到对应的处理方法。不同体系中，中断可能是固定好的，也可能是动态分配的。<br>中断产生后，首先会告诉中断控制器。中断控制器负责收集所有中断源的中断，它能够控制中断源的优先级、中断的类型，指定中断发给哪一个CPU处理。<br>中断控制器通知CPU后，对于一个中断，会有一个CPU来响应这个中断请求。CPU会暂停正在执行的程序，转而去执行相应的处理程序，也即OS当中的中断处理程序。这里，中断处理程序是和特定的中断相关联的。  </p>
-<h3 id="中断描述符表"><a href="#中断描述符表" class="headerlink" title="中断描述符表"></a>中断描述符表</h3><p>那么CPU是如何找到中断服务程序的呢？为了让CPU由中断号去查找到对应的中断程序入口，就需要在内存中建立一张查询表，也即中断描述符(IDT)。在CPU当中，有专门的寄存器IDTR来保存IDT在内存中的位置。这里需要注意的是，常说的中断向量表，是在实模式下的，中断向量是直接指出处理过程的入口，而中断描述符表除了入口地址还有别的信息。<br>IDTR有48位，前32位保存了IDT在内存中的线性地址，后16位则是保存IDT的大小。而IDT自身，则是一个最大为256项的表（对应了8位的中断码），表中的每个向量，是一个入口。这里IDT表项的异常类型可以分为三种，其表项的格式也不同：<br>任务门：利用新的任务方式去处理，需要切换TSS。它包含有一个进程的TSS段选择符，其偏移量部分没有用，linux没有采用它来进行任务切换。<br>中断门：适宜处理中断，在进入中断处理时，处理器会清IF标志，避免嵌套中断发生。中断门中的DPL(Descriptor privilege Level)为0，因此用户态不能访问中断门，中断处理程序都是用中断门来激活的，并且限制在内核态。<br>陷阱门：适宜处理异常，和中断门类似，但它不会屏蔽中断。<br>以下是<strong>32bit</strong>中的IDT表项。<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/IDT%E9%97%A8.gif?raw=true" alt="IDT门"><br>值得注意的是，CPU还提供一种门，<strong>调用门</strong>，它是linux内核特别设置的，通常通过CALL和JMP指令来使用，能够转移特权级。</p>
+<h3 id="中断描述符表"><a href="#中断描述符表" class="headerlink" title="中断描述符表"></a>中断描述符表</h3><p>那么CPU是如何找到中断服务程序的呢？为了让CPU由中断号去查找到对应的中断程序入口，就需要在内存中建立一张查询表，也即中断描述符(IDT)。在CPU当中，有专门的寄存器IDTR来保存IDT在内存中的位置。这里需要注意的是，常说的中断向量表，是在实模式下的，中断向量是直接指出处理过程的入口，而中断描述符表除了入口地址还有别的信息。<br>IDTR有48位，前32位保存了IDT在内存中的线性地址，后16位则是保存IDT的大小。而IDT自身，则是一个最大为256项的表（对应了8位的中断码），表中的每个向量，是一个入口。这里IDT表项的异常类型可以分为三种，其表项的格式也不同：<br>任务门：利用新的任务方式去处理，需要切换TSS。它包含有一个进程的TSS段选择符，其偏移量部分没有用，linux没有采用它来进行任务切换。<br>中断门：适宜处理中断，在进入中断处理时，处理器会清IF标志，避免嵌套中断发生。中断门中的DPL(Descriptor privilege Level)为0，因此用户态不能访问中断门，中断处理程序都是用中断门来激活的，并且限制在内核态。<br>陷阱门：适宜处理异常，和中断门类似，但它不会屏蔽中断。<br>以下是<strong>32bit</strong>中的IDT表项。<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/IDT%E9%97%A8.gif?raw=true" alt="IDT门" title="">
+                </div>
+                <div class="image-caption">IDT门</div>
+            </figure><br>值得注意的是，CPU还提供一种门，<strong>调用门</strong>，它是linux内核特别设置的，通常通过CALL和JMP指令来使用，能够转移特权级。</p>
 <h3 id="实模式和保护模式"><a href="#实模式和保护模式" class="headerlink" title="实模式和保护模式"></a>实模式和保护模式</h3><p>在了解CPU是如何通过中断向量表调用具体的服务程序之前，首先需要了解CPU的工作方式。<br>对于IA-32架构，它支持实模式、保护模式和系统管理模式。<br><strong>实模式</strong>以拓展对方式实现了8086CPU的程序运行环境，处理器在刚刚上电和重启后时，处于实模式，其寻址空间最大为1M(2^20)。实模式的主要意义，在于提供更好的兼容性，开发者能够直接使用BIOS中断，从而在boot阶段不必关注硬件的具体实现。实模式主要还是为进入保护模式进行准备。<br>8086处理器有16-bit寄存器和16-bit的外部数据总线，但能够访问20-bit的地址，因为它引入了“分段机制”，一个16bit的段寄存器包含了一个64KB的段的基址。而段寄存器＋16bit的指针，就能够提供20bits的地址空间。其计算方式为：16位基地址左移4位＋16位偏移量＝20位。<br><strong>保护模式</strong>是处理器的根本模式。保护模式可以直接为实模式程序提供保护的，多任务的环境，这种特性被称为虚拟8086模式，它实际上是保护模式的一种属性。保护模式能够为任何任务提供这种属性。在保护模式中，地址依然通过“段＋偏移量”的形式来实现，但此时段寄存器中保存的不再是一个段的基址，而是一个索引。通过这个索引可以找到一个表项，里面存放了段基址等许多属性，这个表项也就是段描述符，而这个表也就是GDT表。<br>保护模式的最大寻址是2^32次方，也即4G，并且可以通过PAE模式访问超过4G的部分。它有4个安全级别，内存操作时，有安全检查。其分页功能带来了虚拟地址和物理地址的区别。<br><strong>系统管理模式</strong>为操作系统或者执行程序提供透明的机制去实现平台相关的特性，例如电源管理、系统安全。<br>对于Intel 64架构，它增加了两种子模式。<br><strong>兼容模式</strong>允许绝大部分16bit-32bit应用无需编译就能在64bit下运行，它类似于保护模式，有4G的地址空间限制。<br><strong>64bit模式</strong>在64bit线性地址空间上运行应用程序，通用寄存器被增加到64bits。它取消了分段机制，其默认地址长度为64bits。</p>
 <h3 id="x64寻址"><a href="#x64寻址" class="headerlink" title="x64寻址"></a>x64寻址</h3><p>在保护模式下(32bit)，物理地址的翻译分为两步：逻辑地址翻译(段)和线性地址翻译(页)。逻辑地址利用16bit segment selector和32bit offset来表示。处理器首先要将逻辑地址翻译为线性地址(32bit)。这个翻译过程如下：  </p>
 <ol>
@@ -231,15 +221,39 @@
 <li>将段基地址和偏移量相加来获取线性地址的值。  </li>
 </ol>
 <p>在IA-32e模式下(64bit)，逻辑地址的翻译步骤和上述过程类似，唯一不同的是，其段基地址和偏移量，都是64bit，而不是32bit的。线性地址同理也是32bit的。  </p>
-<p>段寻址，也即将内存分成不同的段，利用段寄存器能够找到其对应的段描述符，从而获得相关的段基址、大小、权限等信息。<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/%E6%AE%B5%E5%AF%BB%E5%9D%80.png?raw=true" alt="段寻址"><br>段选择子Segment selector的示意图如下：<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/%E6%AE%B5%E9%80%89%E6%8B%A9%E5%AD%90.png?raw=true" alt="段选择子"><br>段选择子会被存在段寄存器当中，其中最低两位为RPL(cs寄存器不同，最低位位CPL)。而第三位Table Indicator则是表示该从GDT还是LDT寻找对应的段描述符，后面的bits就是对应的index了。<br>为了减少地址翻译的开销，处理器提供了6个段寄存器，CS，SS，DS，ES，FS，GS。通常来说一个程序至少有CS、DS、SS三个selector。假设程序要使用段来访问地址，那么必须将segment selector载入段寄存器当中。对此，Intel是提供了特殊的指令的，直接载入的指令包括MOV，POP，LDS，LES等。而隐含的载入则包括CALL，JMP，RET，SYSENTER等等。它们会改变CS寄存器(有时也会改变其它段寄存器)的内容。  </p>
+<p>段寻址，也即将内存分成不同的段，利用段寄存器能够找到其对应的段描述符，从而获得相关的段基址、大小、权限等信息。<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/%E6%AE%B5%E5%AF%BB%E5%9D%80.png?raw=true" alt="段寻址"><br>段选择子Segment selector的示意图如下：<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/%E6%AE%B5%E9%80%89%E6%8B%A9%E5%AD%90.png?raw=true" alt="段选择子" title="">
+                </div>
+                <div class="image-caption">段选择子</div>
+            </figure><br>段选择子会被存在段寄存器当中，其中最低两位为RPL(cs寄存器不同，最低位位CPL)。而第三位Table Indicator则是表示该从GDT还是LDT寻找对应的段描述符，后面的bits就是对应的index了。<br>为了减少地址翻译的开销，处理器提供了6个段寄存器，CS，SS，DS，ES，FS，GS。通常来说一个程序至少有CS、DS、SS三个selector。假设程序要使用段来访问地址，那么必须将segment selector载入段寄存器当中。对此，Intel是提供了特殊的指令的，直接载入的指令包括MOV，POP，LDS，LES等。而隐含的载入则包括CALL，JMP，RET，SYSENTER等等。它们会改变CS寄存器(有时也会改变其它段寄存器)的内容。  </p>
 <p>而在IA-32e模式下(64bit mode)，ES，DS，SS段寄存器都不会使用了，因此它们的域会被忽视掉，而且某些load指令也被视为违法的，例如LDS。与ES，DS，SS段有关的地址计算，会被视为segment base为0。为了保证兼容性，在64bit mode当中，段load指令会正常执行，从GDT、LDT中读取时，也会读取寄存器的隐藏部分，并且值都会正常的载入。但是data、stack的segment selector和描述符都会被忽略掉。<br>而FS和GS段在64bit mode能够手动使用，它们的计算方式为(FS/GS).base+index+displacement。用这种方式去进行内存访问时，是不会进行检查的。载入的时候不会载入Visible Part，也即Segment Selector，也就是把段机制给忽略了。</p>
-<h3 id="IDT，LDT和GDT"><a href="#IDT，LDT和GDT" class="headerlink" title="IDT，LDT和GDT"></a>IDT，LDT和GDT</h3><p>中断向量表提供了一个入口，但这个入口还需要进一步的计算。这个入口的计算，是通过段寻址来实现的。而段的信息，则是保存在LDT和GDT当中。<br>段描述符的结构如下图：<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/%E6%AE%B5%E6%8F%8F%E8%BF%B0%E7%AC%A6.png?raw=true" alt="段描述符"><br>段描述符最重要的部分是DPL位，它会在权限检查的时候使用。在进程需要装载一个新的段选择子时，会判断当前的CPL和RPL是否都比相应的DPL权限高，如果是则允许加载新的段选择子，否则产生GP。<br>在操作系统中，全局描述符只有一张，也即一个CPU对应一个GDT。GDT可以存放在内存中的任何地址，但CPU必须知道GDT的入口，因此有一个寄存器GDTR用来存放GDT的入口地址，它存放了GDT在内存中的基址和表长。<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/GDT&amp;LDT.png?raw=true" alt="GDT&amp;LDT"><br>但是在64位系统当中，段机制就被取代了，而页表项也能够达到数据访问的保护目的。但是对于不同特权级之间的控制流转移，还是和原来的机制一样。在64-bit模式中，GDT依然存在，但不会改变，而其寄存器被拓展到了80bit。<br>而GDT中会包含一个LDT段的段描述符，LDT是通过它的段描述符来访问的。  </p>
+<h3 id="IDT，LDT和GDT"><a href="#IDT，LDT和GDT" class="headerlink" title="IDT，LDT和GDT"></a>IDT，LDT和GDT</h3><p>中断向量表提供了一个入口，但这个入口还需要进一步的计算。这个入口的计算，是通过段寻址来实现的。而段的信息，则是保存在LDT和GDT当中。<br>段描述符的结构如下图：<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/%E6%AE%B5%E6%8F%8F%E8%BF%B0%E7%AC%A6.png?raw=true" alt="段描述符" title="">
+                </div>
+                <div class="image-caption">段描述符</div>
+            </figure><br>段描述符最重要的部分是DPL位，它会在权限检查的时候使用。在进程需要装载一个新的段选择子时，会判断当前的CPL和RPL是否都比相应的DPL权限高，如果是则允许加载新的段选择子，否则产生GP。<br>在操作系统中，全局描述符只有一张，也即一个CPU对应一个GDT。GDT可以存放在内存中的任何地址，但CPU必须知道GDT的入口，因此有一个寄存器GDTR用来存放GDT的入口地址，它存放了GDT在内存中的基址和表长。<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/GDT&amp;LDT.png?raw=true" alt="GDT&amp;LDT"><br>但是在64位系统当中，段机制就被取代了，而页表项也能够达到数据访问的保护目的。但是对于不同特权级之间的控制流转移，还是和原来的机制一样。在64-bit模式中，GDT依然存在，但不会改变，而其寄存器被拓展到了80bit。<br>而GDT中会包含一个LDT段的段描述符，LDT是通过它的段描述符来访问的。  </p>
 <p>在IA-32e模式下，段描述符表可以包含2^13个8-byte描述符。这里，描述符分为两种，段描述符会占据一个entry(8bit)，而系统描述符会占据两个entry(16bit)。而GDTR和LDTR被拓展为能够保存64bit的基地址。其中，IDT描述符、LDT、TSS描述符和调用门描述符都被拓展称为了16bytes。</p>
 <p>64bit IDT描述符的格式如下  </p>
 <p><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/64bitIDT.png?raw=true" alt="64bit IDT"></p>
 <p>64bit LDT描述符的格式如下  </p>
 <p><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/64bitLDT.png?raw=true" alt="64 bit LDT"></p>
-<h3 id="中断的处理过程"><a href="#中断的处理过程" class="headerlink" title="中断的处理过程"></a>中断的处理过程</h3><p>在intel 手册上看到的大图，很详细的解释了IA-32模式和IA-32e模式下的系统架构，它也就包含了中断处理和线性地址的翻译过程。<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/IA-32.png?raw=true" alt="IA-32"><br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/IA-32e.png?raw=true" alt="IA-32e"><br>在中断产生之后，处理器会将中断向量号作为索引，在IDT表中找到对应的处理程序。IDT表将每个中断/异常向量和一个门描述符关联起来。在保护模式下，它是一个8-byte的描述符（与GDT，LDT类似），IDT最大有256项。IDT能够保存在内存中的任何位置，处理器用IDTR寄存器来保存它的值。<br>在中断/陷阱门描述符中，segment selector指向了GDT或当前LDT中的代码段描述符，而offser域指向了exception/interrupt的处理过程。<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/Int.png?raw=true" alt="IA-32e"><br>在执行call这一步的时候，倘若handler过程会在一个更低的权限执行，那么就会涉及到stack switch。当stack switch发生时，segment selector和新的栈指针都需要通过TSS来获取，在这个栈上，处理器会把之前的segment selector和栈指针压入栈中。处理器还将保存当前的状态寄存器在新的栈上。<br>如果handler过程会在相同的权限执行，处理器会把状态寄存器的值保存在当前的栈上。<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/Stackswitch.png?raw=true" alt="IA-32e"><br>从中断处理程序返回时，handler必须使用IRET指令。它与RET类似，但它会将保存的标志位恢复到EFLAGS寄存器中。如果stack switch在调用过程中发生了那么IRET会切换到中断前的stack上。在中断过程中，权限级的保护与CALL调用过程类似，会对CPL进行检查。</p>
+<h3 id="中断的处理过程"><a href="#中断的处理过程" class="headerlink" title="中断的处理过程"></a>中断的处理过程</h3><p>在intel 手册上看到的大图，很详细的解释了IA-32模式和IA-32e模式下的系统架构，它也就包含了中断处理和线性地址的翻译过程。<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/IA-32.png?raw=true" alt="IA-32"><br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/IA-32e.png?raw=true" alt="IA-32e" title="">
+                </div>
+                <div class="image-caption">IA-32e</div>
+            </figure><br>在中断产生之后，处理器会将中断向量号作为索引，在IDT表中找到对应的处理程序。IDT表将每个中断/异常向量和一个门描述符关联起来。在保护模式下，它是一个8-byte的描述符（与GDT，LDT类似），IDT最大有256项。IDT能够保存在内存中的任何位置，处理器用IDTR寄存器来保存它的值。<br>在中断/陷阱门描述符中，segment selector指向了GDT或当前LDT中的代码段描述符，而offser域指向了exception/interrupt的处理过程。<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/Int.png?raw=true" alt="IA-32e" title="">
+                </div>
+                <div class="image-caption">IA-32e</div>
+            </figure><br>在执行call这一步的时候，倘若handler过程会在一个更低的权限执行，那么就会涉及到stack switch。当stack switch发生时，segment selector和新的栈指针都需要通过TSS来获取，在这个栈上，处理器会把之前的segment selector和栈指针压入栈中。处理器还将保存当前的状态寄存器在新的栈上。<br>如果handler过程会在相同的权限执行，处理器会把状态寄存器的值保存在当前的栈上。<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/Stackswitch.png?raw=true" alt="IA-32e"><br>从中断处理程序返回时，handler必须使用IRET指令。它与RET类似，但它会将保存的标志位恢复到EFLAGS寄存器中。如果stack switch在调用过程中发生了那么IRET会切换到中断前的stack上。在中断过程中，权限级的保护与CALL调用过程类似，会对CPL进行检查。</p>
 <h3 id="64-bit模式下的中断处理"><a href="#64-bit模式下的中断处理" class="headerlink" title="64-bit模式下的中断处理"></a>64-bit模式下的中断处理</h3><p>在64bit模式下，中断和异常的处理与非64bit模式下几本一致，但也存在一些不同的地方。包括有：</p>
 <ul>
 <li>IDT所指向的代码是64bit代码  </li>
@@ -262,7 +276,13 @@
 <li>Restriction of instruction set</li>
 </ul>
 <p>通过CR0寄存器当中的PE flag能够开启保护模式，打开段保护机制；而页保护机制则是在分页机制启用时，自动开启的。虽然64bit中，不再使用分段机制了，但<strong>代码段</strong>依然存在。对于地址计算来说，其段地址被视为0，CS描述符当中的内容被忽略，但其余部分保持一致。代码段描述符、selector依然存在，它们在处理器的操作模式、执行权限级上依然发挥作用。其工作方式如下：</p>
-<p>CS描述符中会使用一个保留位，Bit 53被定义为64 bit flag位(L)，并且被用来在64bit/兼容模式之间切换。当CS.L ＝ 0时，CPU处于兼容模式，CS.D则决定了数据和地址的位数为16/32bit。如果CS.L为1，那么只有CS.D = 1是合法的，并且地址和数据的位数是64bit。在IA-32e模式下，CS描述符当中的DPL位被用来做执行权限的检查(与32bit模式一样)。<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/%E4%BB%A3%E7%A0%81%E6%AE%B5.png?raw=true" alt="代码段">  </p>
+<p>CS描述符中会使用一个保留位，Bit 53被定义为64 bit flag位(L)，并且被用来在64bit/兼容模式之间切换。当CS.L ＝ 0时，CPU处于兼容模式，CS.D则决定了数据和地址的位数为16/32bit。如果CS.L为1，那么只有CS.D = 1是合法的，并且地址和数据的位数是64bit。在IA-32e模式下，CS描述符当中的DPL位被用来做执行权限的检查(与32bit模式一样)。<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/%E4%BB%A3%E7%A0%81%E6%AE%B5.png?raw=true" alt="代码段" title="">
+                </div>
+                <div class="image-caption">代码段</div>
+            </figure>  </p>
 <h5 id="Limit-Checking"><a href="#Limit-Checking" class="headerlink" title="Limit Checking"></a>Limit Checking</h5><p>在段描述符当中，有一个limit field，它防止程序访问某个段之外的的内存位置，其有效值由G flag来决定，对于数据段来说，其limit还由E flag和B flag决定。在64bit模式下，处理器不会对代码段活着数据段进行limit check，但是会对<strong>描述符表</strong>的limit进行检查。  </p>
 <h5 id="Type-checking"><a href="#Type-checking" class="headerlink" title="Type checking"></a>Type checking</h5><p>段描述符包含两个type 信息，S flag和type field。处理器会使用这个信息，来检查对段和门的不正确使用。S flag表示descriptor的类型，它包括系统/代码/数据三种类型。在处理一个段选择子时，处理器会在：<br>将segment selector载入段寄存器：寄存器只能包含对应的描述符类型<br>指令访问段时：段只能被相应的指令访问<br>指令包含segment selector时：指令只能对某些特定类型的段/门进行访问<br>进行某些具体操作时：far call、far jump，对调用门、任务门的call/jump等，会判断描述符中的类型是否符合要求。</p>
 <h5 id="Privilege-levels"><a href="#Privilege-levels" class="headerlink" title="Privilege levels"></a>Privilege levels</h5><p>处理器的段保护机制包含有4个privilege levels，从0到3，0最高，3最低。处理器利用这种机制，来防止一个低权限的进程，访问更高权限的部分。为了实现这个目的，处理器使用3种类型的权限级：<br>CPL：当前执行任务的权限级。它保存在CS和SS段寄存器的bit 0-1中。通常，CPL和当前代码段的权限一致，当跳转到一个有不同权限的代码段时，CPL会发生变化。如果目标是一致代码段，则会延续当前的CPL。<br>DPL：segment或者gate的权限级。它保存在段或者门的描述符当中，当当前的代码段执行，需要访问一个段或者gate的时候，这个段/门的DPL就会被拿来与CPL和RPL进行比较。在不同的环境下，DPL的意义也是不同的。<br>RPL：与segment selector有关的，能够对权限进行覆盖的权限级。它保存在segment selector的bit 0-1中。处理器会通过CPL和RPL来判断对segment的访问是否合法。即使请求访问某个段的程序，拥有比段更高的权限，如果RPL不是有效的，访问还是会被拒绝。也就是说如果RPL把CPL高，那么RPL会覆盖CPL。RPL能够保证提权的代码，不能随意访问一个segment段，除非它自身有这个权限。直观的说，必须CPL和RPL都比DPL要高，只有这种情况下，才会允许这个段的访问。其主要目的，是允许高权限为低权限提供服务的时候，能够通过较低的权限来加载段。<br>门调用符与权限检查：<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/gate.png?raw=true" alt="gate">  </p>
@@ -275,30 +295,106 @@
 <li>EFLAGS寄存器中的NT flag</li>
 </ul>
 <p>为了恢复一个task，处理器所需要的信息，保存在一个系统段中，它被称为TSS。在64bit模式下，它的格式如下：</p>
-<p><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/64bitTSS.png?raw=true" alt="gate">  </p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/64bitTSS.png?raw=true" alt="gate" title="">
+                </div>
+                <div class="image-caption">gate</div>
+            </figure>  
 <p>而TSS描述符，则和其他的段一样，是由一个段描述符来定义的，它的结构在上文中已经给出了（与LDT是一致的），它只能放在GDT当中，不能放在LDT或者IDT当中。  </p>
 <p>Task寄存器保存了当前TSS的段选择子和整个段描述符。它包含可见和不可见两个部分（能否被软件修改）。段选择子位于可见部分，指向GDT当中的TSS描述符。不可见部分则是用来保存TSS的段描述符（能够提高执行效率）。  </p>
 <p><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/TaskRegister.png?raw=true" alt="gate">  </p>
 
+        </div>
+
+        <blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2017-07-28T09:04:47.000Z" itemprop="dateUpdated">2017-07-28 17:04:47</time>
+</span><br>
+
+
+        
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2017/02/15/中断相关/" target="_blank" rel="external">http://yoursite.com/2017/02/15/中断相关/</a>
+        
+    </div>
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/avatar.jpg" alt="John Doe">
+            John Doe
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/系统安全/">系统安全</a></li></ul>
+
 
             
-            <div class="post-reward">
-                <a id="rewardBtn" href="javascript:;" class="post-reward-btn waves-effect waves-circle waves-light">赏</a>
-            </div>
-            
-            
-            <blockquote>
-                <p>
-                本文地址：
-                <a href="http://yoursite.com/2017/02/15/中断相关/" target="_blank" rel="external">http://yoursite.com/2017/02/15/中断相关/</a>
-                </p>
-                <footer><cite><a href="http://yoursite.com">@Hexo</a></cite></footer>
-            </blockquote>
-            </div>
-            
-<nav class="post-nav">
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2017/02/15/中断相关/&title=《深入理解中断（一）》 — Hexo&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2017/02/15/中断相关/&title=《深入理解中断（一）》 — Hexo&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2017/02/15/中断相关/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《深入理解中断（一）》 — Hexo&url=http://yoursite.com/2017/02/15/中断相关/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2017/02/15/中断相关/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
   
-    <div class="waves-block waves-effect prev fl">
+    <div class="waves-block waves-effect prev">
       <a href="/2017/03/06/中断的发生/" id="post-prev" class="post-nav-link">
         <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
         <h4 class="title">深入理解中断（二）</h4>
@@ -307,7 +403,7 @@
   
 
   
-    <div class="waves-block waves-effect next fr">
+    <div class="waves-block waves-effect next">
       <a href="/2017/01/17/kvm-sgx笔记/" id="post-next" class="post-nav-link">
         <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
         <h4 class="title">SGX虚拟化相关</h4>
@@ -317,121 +413,151 @@
 </nav>
 
 
-            
-            
-<div class="duoshuo">
-	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="中断相关" data-title="深入理解中断（一）" data-url="http://yoursite.com/2017/02/15/中断相关/index.html"></div>
-	<!-- 多说评论框 end -->
-	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-	<script type="text/javascript">
-	var duoshuoQuery = {short_name:"ysblog"};
-	(function() {
-		var ds = document.createElement('script');
-		ds.type = 'text/javascript';ds.async = true;
-		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-		ds.charset = 'UTF-8';
-		(document.getElementsByTagName('head')[0] 
-		 || document.getElementsByTagName('body')[0]).appendChild(ds);
-	})();
-	</script>
-	<!-- 多说公共JS代码 end -->
-</div>
+
+    
 
 
 
 
 
-        </div>
-    </div>
+
+
+
+
+
+
+
+
+
 </article>
 
-<div id="reward" class="reward-lay">
-    <a class="reward-off" id="rewardOff" href="javascript:;"><i class="icon icon-close"></i></a>
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <h3 class="reward-title">
         <i class="icon icon-quote-left"></i>
         谢谢大爷~
         <i class="icon icon-quote-right"></i>
     </h3>
-    <ul class="reward-items">
+    <div class="reward-content">
         
-        <li>
-            <img src="/img/wechat.jpg" title="微信打赏二维码" alt="微信打赏二维码">
-            <p>微信</p>
-        </li>
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
         
-
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
         
-        <li>
-            <img src="/img/alipay.jpg" title="支付宝打赏二维码" alt="支付宝打赏二维码">
-            <p>支付宝</p>
-        </li>
-        
-    </ul>
+    </div>
 </div>
 
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
     </div>
-  </main>
-<div class="mask" id="mask"></div>
+    <div class="bottom">
+        <p><span>John Doe &copy; 2015 - 2017</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
 
-<script>
-var BLOG_SHARE = {
-    title: "深入理解中断（一）",
-    pic: "/img/logo.jpg",
-    summary: document.getElementsByName('summary')[0].content,
-    url: "http://yoursite.com/2017/02/15/中断相关/index.html"
-};
-</script>
-<div class="global-share" id="global-share">
-    <div class="tit">分享到：</div>
+
+
+<div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" href="javascript:;" data-title="微博" data-service="tsina">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2017/02/15/中断相关/&title=《深入理解中断（一）》 — Hexo&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
       <li>
-        <a class="weixin share-sns" href="javascript:;" data-title="微信" data-service="weixin">
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
           <i class="icon icon-weixin"></i>
         </a>
       </li>
       <li>
-        <a class="qq share-sns" href="javascript:;" data-title=" QQ" data-service="cqq">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2017/02/15/中断相关/&title=《深入理解中断（一）》 — Hexo&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" href="javascript:;" data-title=" Facebook" data-service="fb">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2017/02/15/中断相关/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" href="javascript:;" data-title=" Twitter" data-service="twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《深入理解中断（一）》 — Hexo&url=http://yoursite.com/2017/02/15/中断相关/&via=http://yoursite.com" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="douban share-sns" href="javascript:;" data-title="豆瓣" data-service="douban">
-          豆
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2017/02/15/中断相关/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
         </a>
       </li>
     </ul>
  </div>
 
 
-<script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://yoursite.com/2017/02/15/中断相关/" alt="微信分享二维码">
+</div>
 
-<script src="/js/main.js"></script>
 
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
 
 
 <div class="search-panel" id="search-panel">
     <ul class="search-result" id="search-result"></ul>
 </div>
-<script type="text/template" id="search-tpl">
+<template id="search-tpl">
 <li class="item">
-    <a href="/{path}" class="waves-block waves-effect">
+    <a href="{path}" class="waves-block waves-effect">
         <div class="title ellipsis" title="{title}">{title}</div>
         <div class="flex-row flex-middle">
             <div class="tags ellipsis">
@@ -441,15 +567,35 @@ var BLOG_SHARE = {
         </div>
     </a>
 </li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
 </script>
-
-<script src="/js/search.js"></script>
-
-
-
-
-
-
 
 
 

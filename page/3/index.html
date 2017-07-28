@@ -1,107 +1,117 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  
-  <title>Hexo | </title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  
-  <meta name="theme-color" content="#3F51B5">
-  
-  
-  <meta name="keywords" content="">
-  <meta property="og:type" content="website">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <title>Hexo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="">
+    <meta property="og:type" content="website">
 <meta property="og:title" content="Hexo">
 <meta property="og:url" content="http://yoursite.com/page/3/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hexo">
-  
-    <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
-  
-  <meta name="summary" content="">
-  <link rel="shortcut icon" href="/favicon.ico">
-  <link rel="stylesheet" href="/css/style.css">
+    
+        <link rel="alternate" type="application/atom+xml" title="Hexo" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
 </head>
 
 <body>
-  <div id="loading" class="active"></div>
+    <div id="loading" class="active"></div>
 
-  <nav id="menu"  >
-   <div class="inner flex-row-vertical">
-  <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-      <i class="icon icon-lg icon-close"></i>
-  </a>
-  <div class="brand-wrap">
-    <div class="brand">
-      <a href="/" class="avatar"><img src="/img/logo.jpg"></a>
-      <hgroup class="introduce">
-        <h5 class="nickname">John Doe</h5>
-        <a href="mailto:634206017@qq.com" title="634206017@qq.com" class="mail">634206017@qq.com</a>
-      </hgroup>
+    <aside id="menu"  >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">John Doe</h5>
+          <a href="mailto:634206017@qq.com" title="634206017@qq.com" class="mail">634206017@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/yscoder" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://www.weibo.com/ysweb" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/custom"  >
+                <i class="icon icon-lg icon-link"></i>
+                测试
+              </a>
+            </li>
+        
+      </ul>
     </div>
   </div>
-  <div class="scroll-wrap flex-col">
-    <ul class="nav">
-      
-          <li class="waves-block waves-effect">
-            <a href="/"  >
-              <i class="icon icon-lg icon-home"></i>
-              主页
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="/archives"  >
-              <i class="icon icon-lg icon-archives"></i>
-              Archives
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="/tags"  >
-              <i class="icon icon-lg icon-tags"></i>
-              Tags
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="https://github.com/yscoder" target="_blank" >
-              <i class="icon icon-lg icon-github"></i>
-              Github
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="http://www.weibo.com/ysweb" target="_blank" >
-              <i class="icon icon-lg icon-weibo"></i>
-              Weibo
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="/404"  >
-              <i class="icon icon-lg icon-link"></i>
-              测试
-            </a>
-          </li>
-      
-    </ul>
+</aside>
 
-    <footer class="footer">
-  <p><a rel="license" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0;vertical-align:middle;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAAAPCAMAAABEF7i9AAAAllBMVEUAAAD///+rsapERER3d3eIiIjMzMzu7u4iIiKUmZO6v7rKzsoODg4RERFVVVUNDQ0NDg0PEA8zMzNLTEtbXltmZmZydnF9gn2AgICPkI+ZmZmqqqq7u7vFxsXIzMgNDQwZGRkgICAhISEkJSMnKCcuMC4xMzE5Ozk7PTtBQkFCQkJDQ0Nna2eGhoaHh4ezuLLGysbd3d1wVGpAAAAA4UlEQVR42q2T1xqCMAyFk7QsBQeKA9x7j/d/OSm22CpX0nzcpA1/T05aAOuBVkMAScQFHLnEwoCo2f1TnQIGoVMewjZEjVFN4GH1Ue1Cn2jWqwfsOOj6wDwGvotsl/c8lv7KIq1eLOsT0HMFHMIE/RZyHnlphryT9zyV+8WH5e8yQw3wnQvgAFxPTKUVi555SHR/lOfLMgVTeDlSfN+TaoUsiTyeIm+bCkHvCA2FUKG48LDtYBZBknsYP/G8NTw0gaaHyuQf4H5pecrB/FYCT2sL9zAfy1Xyjou6L8X2W7YcLyBZCRtnq/zfAAAAAElFTkSuQmCC" /></a></p>
-  <p>Hexo &copy; 2017</p>
-  <p>Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
-  <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a></p>
-  <a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-2x icon-rss-square"></i></a>
-</footer>
-
-  </div>
-</div>
-
-  </nav>
-  <main id="main">
-    <header class="top-header" id="header">
+    <main id="main">
+        <header class="top-header" id="header">
     <div class="flex-row">
         <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
           <i class="icon icon-lg icon-navicon"></i>
@@ -112,37 +122,52 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input " autocomplete="off" placeholder="输入感兴趣的关键字">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
         </div>
         
         
-        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-share">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
             <i class="icon icon-lg icon-share-alt"></i>
         </a>
         
     </div>
 </header>
-<header class="content-header">
-  <div class="container">
-    <h1 class="author">Hexo</h1>
-    <h5 class="subtitle">
-        
-        
-        
-    </h5>
-  </div>
+<header class="content-header index-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Hexo</h1>
+        <h5 class="subtitle">
+            
+                
+            
+        </h5>
+    </div>
+
+    
+
+
 </header>
 
-    <div class="container body-wrap">
-      <ul class="post-list">
-  
-    <li class="post-list-item">
-        <article id="post-ocaml-3"
-  class="article article-type-post" itemprop="blogPost">
-     
+<div class="container body-wrap">
+
+    <ul class="post-list">
+    
+        <li class="post-list-item fade">
+            <article id="post-ocaml-3"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2017-03-27 22:40:00" datetime="2017-03-27T14:40:00.000Z"  itemprop="datePublished">2017-03-27</time>
+
+        
+
+
+    </div>
+
+    
 
 
   
@@ -153,41 +178,45 @@
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        模块OCaml把每一段代码，都包装成一个模块。例如两个文件amodule.ml和bmodule.ml都会定义一个模块，分别为Amodule和Bmodule。通常模块是一个个编译的，比如
+ocamlopt -c amodule.ml
+ocamlopt -c bmodule.ml
+ocamlopt -o hello amodule.cmx bmodule.cmx
+那么访问模块中的内容可以使用op...
+    
+
+        <a href="/2017/03/27/ocaml-3/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Ocaml/">Ocaml</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/静态分析/">静态分析</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-ocaml"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2017-03-27T14:40:00.000Z" itemprop="datePublished" class="post-time">
-  2017-03-27
-</time>
+        <time class="post-time" title="2017-03-27 18:40:00" datetime="2017-03-27T10:40:00.000Z"  itemprop="datePublished">2017-03-27</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           模块  OCaml把每一段代码，都包装成一个模块。例如两个文件 amodule.ml 和 bmodule.ml 都会定义一个模块，分别为Amodule和Bmodule。 通常模块是一个个编译的，比如 
-  ocamlopt -c amodule.ml
-ocamlopt -c bmodule.ml
-ocamlopt -o hello amodule.cmx bmodule.cmx
-   那么访
-    
-    
-        <a href="/2017/03/27/ocaml-3/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Ocaml/">Ocaml</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/静态分析/">静态分析</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-ocaml"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -198,38 +227,43 @@ ocamlopt -o hello amodule.cmx bmodule.cmx
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        Ocaml网上关于Ocaml的资料比较少，可见它是一门偏小众的语言。不过在DSL和程序分析方面，Ocaml是十分强大的。由于目前研究需要使用的Uroboros(https://github.com/s3team/uroboros)是由Ocaml来编写的，因此我也打算一探究竟，学一学这门语言。
+函数的定义和调用Ocaml中，定义函数的语法很简单。这个函数是输入两个浮点数后计算它们的平均值。
+l...
+    
+
+        <a href="/2017/03/27/ocaml/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Ocaml/">Ocaml</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/静态分析/">静态分析</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-LLVM笔记"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2017-03-27T10:40:00.000Z" itemprop="datePublished" class="post-time">
-  2017-03-27
-</time>
+        <time class="post-time" title="2017-03-23 15:27:32" datetime="2017-03-23T07:27:32.000Z"  itemprop="datePublished">2017-03-23</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           Ocaml  网上关于Ocaml的资料比较少，可见它是一门偏小众的语言。不过在DSL和程序分析方面，Ocaml是十分强大的。由于目前研究需要使用的Uroboros( https://github.com/s3team/uroboros )是由Ocaml来编写的，因此我也打算一探究竟，学一学这门语言。 
-   函数的定义和调用  Ocaml中，定义函数的语法很简单。这个函数是输入两个浮点数后计
-    
-    
-        <a href="/2017/03/27/ocaml/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Ocaml/">Ocaml</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/静态分析/">静态分析</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-LLVM笔记"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -240,37 +274,41 @@ ocamlopt -o hello amodule.cmx bmodule.cmx
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        LLVM简介传统的编译器，采用的是针对单语言源代码，生成对应平台机器码的方式，类似于：而LLVM则采用了一种多前端，多后端的方式，如下：在LLVM当中，LLVM IR是一种low-level的，虚拟指令集。所有的前端语言都能够生成LLVM，从而能够被统一的进行处理。在LLVM当中，还提供了对LLVM IR Optimization进行优化的方式，能够对现有的源码进行搜索，匹配对应的patte...
+    
+
+        <a href="/2017/03/23/LLVM笔记/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/llvm/">llvm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译器/">编译器</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译安全/">编译安全</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-深入理解内核同步"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2017-03-23T07:27:32.000Z" itemprop="datePublished" class="post-time">
-  2017-03-23
-</time>
+        <time class="post-time" title="2017-03-15 21:40:00" datetime="2017-03-15T13:40:00.000Z"  itemprop="datePublished">2017-03-15</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           LLVM简介  传统的编译器，采用的是针对单语言源代码，生成对应平台机器码的方式，类似于：   而LLVM则采用了一种多前端，多后端的方式，如下：   在LLVM当中，LLVM IR是一种low-level的，虚拟指令集。所有的前端语言都能够生成LLVM，从而能够被统一的进行处理。在LLVM当中，还提供了对LLVM IR Optimization进行优化的方式，能够对现有的源码进行搜索，匹配
-    
-    
-        <a href="/2017/03/23/LLVM笔记/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/llvm/">llvm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译器/">编译器</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译安全/">编译安全</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-深入理解内核同步"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -281,38 +319,42 @@ ocamlopt -o hello amodule.cmx bmodule.cmx
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        内核同步对于内核，其实有一个很形象的理解：我们可以把内核理解成一个服务器，它为自身和用户提供各种服务。因此它必须要保证每项服务在处理时，不会互相造成影响，也就是解决“并发”的问题。自身的请求，也即中断；客户的请求，也即用户态的系统调用或异常。内核的同步，就是对内核中的任务进行调度，使它们按照正确的方式运行。  
+内核抢占这里，“内核抢占”指的是进程A在内核态运行时，被具有更高优先级的进程B取...
+    
+
+        <a href="/2017/03/15/深入理解内核同步/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-中断的发生"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2017-03-15T13:40:00.000Z" itemprop="datePublished" class="post-time">
-  2017-03-15
-</time>
+        <time class="post-time" title="2017-03-06 11:40:00" datetime="2017-03-06T03:40:00.000Z"  itemprop="datePublished">2017-03-06</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           内核同步  对于内核，其实有一个很形象的理解：我们可以把内核理解成一个服务器，它为自身和用户提供各种服务。因此它必须要保证每项服务在处理时，不会互相造成影响，也就是解决“并发”的问题。自身的请求，也即中断；客户的请求，也即用户态的系统调用或异常。内核的同步，就是对内核中的任务进行调度，使它们按照正确的方式运行。   
-   内核抢占  这里，“内核抢占”指的是进程A在内核态运行时，被具有更高
-    
-    
-        <a href="/2017/03/15/深入理解内核同步/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-中断的发生"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -323,37 +365,41 @@ ocamlopt -o hello amodule.cmx bmodule.cmx
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        中断的发生中断指的是CPU在运行时，系统内发生了需要“急需处理”的事件，于是乎CPU暂停了当前正在执行对程序，转而去执行相应的时间处理程序，在处理完之后返回原来的地方执行。那么这些事件包含：（1）外部中断指的是那些CPU外的周边原件引发的中断，例如I/O中断，I/O设备异常（接下来我们把它称为“中断”）；（2）内部中断指的是在CPU内部执行时，由程序自身、异常、陷阱（例如程序中的断点）产生的...
+    
+
+        <a href="/2017/03/06/中断的发生/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-中断相关"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2017-03-06T03:40:00.000Z" itemprop="datePublished" class="post-time">
-  2017-03-06
-</time>
+        <time class="post-time" title="2017-02-15 21:40:00" datetime="2017-02-15T13:40:00.000Z"  itemprop="datePublished">2017-02-15</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           中断的发生  中断指的是CPU在运行时，系统内发生了需要“急需处理”的事件，于是乎CPU暂停了当前正在执行对程序，转而去执行相应的时间处理程序，在处理完之后返回原来的地方执行。那么这些事件包含：（1）外部中断指的是那些CPU外的周边原件引发的中断，例如I/O中断，I/O设备异常（接下来我们把它称为“中断”）；（2）内部中断指的是在CPU内部执行时，由程序自身、异常、陷阱（例如程序中的断点）产
-    
-    
-        <a href="/2017/03/06/中断的发生/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-中断相关"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -364,37 +410,41 @@ ocamlopt -o hello amodule.cmx bmodule.cmx
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        什么是中断？中断是能够打断CPU指令序列的事件，它是在CPU内外，由硬件产生的电信号。CPU接收到中断后，就会向OS反映这个信号，从而由OS就会对新到来的数据进行处理。不同的事件，其对应的中断不同，而OS则是通过中断号(也即IRQ线)来找到对应的处理方法。不同体系中，中断可能是固定好的，也可能是动态分配的。中断产生后，首先会告诉中断控制器。中断控制器负责收集所有中断源的中断，它能够控制中断源...
+    
+
+        <a href="/2017/02/15/中断相关/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/系统安全/">系统安全</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-kvm-sgx笔记"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2017-02-15T13:40:00.000Z" itemprop="datePublished" class="post-time">
-  2017-02-15
-</time>
+        <time class="post-time" title="2017-01-17 12:00:00" datetime="2017-01-17T04:00:00.000Z"  itemprop="datePublished">2017-01-17</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           什么是中断？  中断是能够打断CPU指令序列的事件，它是在CPU内外，由硬件产生的电信号。CPU接收到中断后，就会向OS反映这个信号，从而由OS就会对新到来的数据进行处理。不同的事件，其对应的中断不同，而OS则是通过 中断号 (也即IRQ线)来找到对应的处理方法。不同体系中，中断可能是固定好的，也可能是动态分配的。 中断产生后，首先会告诉中断控制器。中断控制器负责收集所有中断源的中断，它能够
-    
-    
-        <a href="/2017/02/15/中断相关/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/系统安全/">系统安全</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-kvm-sgx笔记"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -405,42 +455,46 @@ ocamlopt -o hello amodule.cmx bmodule.cmx
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        KVM-SGX虚拟机中的epc，使用sgx_vm_epc_buffer结构来管理的。其数据结构如下：  
+  struct sgx_vm_epc_buffer {
+    struct list_head buf_list;
+    struct list_head page_list;
+    unsigned int nr_pages;
+    unsigned long userspa...
+    
+
+        <a href="/2017/01/17/kvm-sgx笔记/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/KVM/">KVM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/QEMU/">QEMU</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SGX/">SGX</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-Chrome浏览器安全"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2017-01-17T04:00:00.000Z" itemprop="datePublished" class="post-time">
-  2017-01-17
-</time>
+        <time class="post-time" title="2016-12-27 21:00:00" datetime="2016-12-27T13:00:00.000Z"  itemprop="datePublished">2016-12-27</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           KVM-SGX  虚拟机中的epc，使用sgx_vm_epc_buffer结构来管理的。其数据结构如下：   
-    struct sgx_vm_epc_buffer {
-    struct list_head buf_list;
-    struct list_head page_list;
-    unsigned int nr_pages;
-    unsigned long us
-    
-    
-        <a href="/2017/01/17/kvm-sgx笔记/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/KVM/">KVM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/QEMU/">QEMU</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SGX/">SGX</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-Chrome浏览器安全"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -451,37 +505,41 @@ ocamlopt -o hello amodule.cmx bmodule.cmx
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        The “Web/Local” Boundary is FuzzyProcess-based隔离，是浏览器安全的基础。Chrome的设计，并不隔离每个web源，而是主要保证“本地系统”和“web”，但是由于Dropbox，Google Drive这样的web端云服务(这些服务和本地系统一体化了)，浏览器不再能保证web和本地系统的隔离了。这篇文章提出了chrome中存在的一个问题，如果pro...
+    
+
+        <a href="/2016/12/27/Chrome浏览器安全/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/chrome/">chrome</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/浏览器安全/">浏览器安全</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-memory-war"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2016-12-27T13:00:00.000Z" itemprop="datePublished" class="post-time">
-  2016-12-27
-</time>
+        <time class="post-time" title="2016-12-05 17:40:00" datetime="2016-12-05T09:40:00.000Z"  itemprop="datePublished">2016-12-05</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           The “Web/Local” Boundary is Fuzzy  Process-based隔离，是浏览器安全的基础。Chrome的设计，并不隔离每个web源，而是主要保证“本地系统”和“web”，但是由于Dropbox，Google Drive这样的web端云服务(这些服务和本地系统一体化了)，浏览器不再能保证web和本地系统的隔离了。这篇文章提出了chrome中存在的一个问题，如果p
-    
-    
-        <a href="/2016/12/27/Chrome浏览器安全/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/chrome/">chrome</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/浏览器安全/">浏览器安全</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-memory-war"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -492,41 +550,45 @@ ocamlopt -o hello amodule.cmx bmodule.cmx
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        memory corruptionStep 1: 一个指针变成非法的指针第一种:越过它所引用的对象的边界(out-of-bounds pointer)，spatial error第二种:它所指向的对象已经被释放(dangling pointer)，temporal error  
+
+Bugs lead to Out-of-bounds:  
+
+allocation failure –&gt;...
+    
+
+        <a href="/2016/12/05/memory-war/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/二进制/">二进制</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/底层安全/">底层安全</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-linux-sgx-sdk"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2016-12-05T09:40:00.000Z" itemprop="datePublished" class="post-time">
-  2016-12-05
-</time>
+        <time class="post-time" title="2016-11-24 11:40:00" datetime="2016-11-24T03:40:00.000Z"  itemprop="datePublished">2016-11-24</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           memory corruption  Step 1: 一个指针变成非法的指针 第一种:越过它所引用的对象的边界(out-of-bounds pointer)， spatial error  第二种:它所指向的对象已经被释放(dangling pointer)， temporal error    
- 
-  Bugs lead to Out-of-bounds:    
- 
- allocati
-    
-    
-        <a href="/2016/12/05/memory-war/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/二进制/">二进制</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/底层安全/">底层安全</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-linux-sgx-sdk"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -537,107 +599,141 @@ ocamlopt -o hello amodule.cmx bmodule.cmx
 
 
 
-    <div class="post-meta">
-        <time datetime="2016-11-24T03:40:00.000Z" itemprop="datePublished" class="post-time">
-  2016-11-24
-</time>
 
-        
-
-
-    </div>
-
-    <div class="post-content" id="post-content" itemprop="postContent" >
+    <div class="post-content" id="post-content" itemprop="postContent">
 
     
-           Enclave Definition Language  EDL文件，用来描述enclave当中的trusted和untrusted部分。在Linux中，Edger8r Tool通过这个文件来创建enclave的C wrapper函数，也即ECALL和OCALL所使用的函数。  
-  //EDL Template
+        Enclave Definition LanguageEDL文件，用来描述enclave当中的trusted和untrusted部分。在Linux中，Edger8r Tool通过这个文件来创建enclave的C wrapper函数，也即ECALL和OCALL所使用的函数。 
+//EDL Template
 enclave    {
     //包含文件和作为参数的数据结构
-    t
+    truste...
     
-    
+
         <a href="/2016/11/24/linux-sgx-sdk/" class="post-more waves-effect waves-button">
-            阅读全文...
+            Continue reading...
         </a>
     </div>
     
+    <div class="post-footer">
+        
 	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SGX/">SGX</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/系统安全/">系统安全</a></li></ul>
 
+    </div>
+    
 </article>
 
-    </li>
-  
-</ul>
+        </li>
+    
+    </ul>
 
+    
 <nav id="page-nav">
     <div class="inner">
     <a class="extend prev" rel="prev" href="/page/2/">上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/">下一页</a>
     </div>
 </nav>
 
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
     </div>
-  </main>
-<div class="mask" id="mask"></div>
+    <div class="bottom">
+        <p><span>John Doe &copy; 2015 - 2017</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
 
-<script>
-var BLOG_SHARE = {
-    title: "Hexo",
-    pic: "/img/logo.jpg",
-    summary: document.getElementsByName('summary')[0].content,
-    url: "http://yoursite.com/page/3/index.html"
-};
-</script>
-<div class="global-share" id="global-share">
-    <div class="tit">分享到：</div>
+
+
+<div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" href="javascript:;" data-title="微博" data-service="tsina">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/page/3/&title=Hexo&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
       <li>
-        <a class="weixin share-sns" href="javascript:;" data-title="微信" data-service="weixin">
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
           <i class="icon icon-weixin"></i>
         </a>
       </li>
       <li>
-        <a class="qq share-sns" href="javascript:;" data-title=" QQ" data-service="cqq">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/page/3/&title=Hexo&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" href="javascript:;" data-title=" Facebook" data-service="fb">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/page/3/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" href="javascript:;" data-title=" Twitter" data-service="twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=Hexo&url=http://yoursite.com/page/3/&via=http://yoursite.com" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="douban share-sns" href="javascript:;" data-title="豆瓣" data-service="douban">
-          豆
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/page/3/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
         </a>
       </li>
     </ul>
  </div>
 
 
-<script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://yoursite.com/page/3/" alt="微信分享二维码">
+</div>
 
-<script src="/js/main.js"></script>
 
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
 
 
 <div class="search-panel" id="search-panel">
     <ul class="search-result" id="search-result"></ul>
 </div>
-<script type="text/template" id="search-tpl">
+<template id="search-tpl">
 <li class="item">
-    <a href="/{path}" class="waves-block waves-effect">
+    <a href="{path}" class="waves-block waves-effect">
         <div class="title ellipsis" title="{title}">{title}</div>
         <div class="flex-row flex-middle">
             <div class="tags ellipsis">
@@ -647,15 +743,35 @@ var BLOG_SHARE = {
         </div>
     </a>
 </li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
 </script>
-
-<script src="/js/search.js"></script>
-
-
-
-
-
-
 
 
 

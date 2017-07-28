@@ -1,107 +1,117 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  
-  <title>Hexo | </title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  
-  <meta name="theme-color" content="#3F51B5">
-  
-  
-  <meta name="keywords" content="">
-  <meta property="og:type" content="website">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <title>Hexo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="">
+    <meta property="og:type" content="website">
 <meta property="og:title" content="Hexo">
 <meta property="og:url" content="http://yoursite.com/page/5/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hexo">
-  
-    <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
-  
-  <meta name="summary" content="">
-  <link rel="shortcut icon" href="/favicon.ico">
-  <link rel="stylesheet" href="/css/style.css">
+    
+        <link rel="alternate" type="application/atom+xml" title="Hexo" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
 </head>
 
 <body>
-  <div id="loading" class="active"></div>
+    <div id="loading" class="active"></div>
 
-  <nav id="menu"  >
-   <div class="inner flex-row-vertical">
-  <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-      <i class="icon icon-lg icon-close"></i>
-  </a>
-  <div class="brand-wrap">
-    <div class="brand">
-      <a href="/" class="avatar"><img src="/img/logo.jpg"></a>
-      <hgroup class="introduce">
-        <h5 class="nickname">John Doe</h5>
-        <a href="mailto:634206017@qq.com" title="634206017@qq.com" class="mail">634206017@qq.com</a>
-      </hgroup>
+    <aside id="menu"  >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">John Doe</h5>
+          <a href="mailto:634206017@qq.com" title="634206017@qq.com" class="mail">634206017@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/yscoder" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://www.weibo.com/ysweb" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/custom"  >
+                <i class="icon icon-lg icon-link"></i>
+                测试
+              </a>
+            </li>
+        
+      </ul>
     </div>
   </div>
-  <div class="scroll-wrap flex-col">
-    <ul class="nav">
-      
-          <li class="waves-block waves-effect">
-            <a href="/"  >
-              <i class="icon icon-lg icon-home"></i>
-              主页
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="/archives"  >
-              <i class="icon icon-lg icon-archives"></i>
-              Archives
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="/tags"  >
-              <i class="icon icon-lg icon-tags"></i>
-              Tags
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="https://github.com/yscoder" target="_blank" >
-              <i class="icon icon-lg icon-github"></i>
-              Github
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="http://www.weibo.com/ysweb" target="_blank" >
-              <i class="icon icon-lg icon-weibo"></i>
-              Weibo
-            </a>
-          </li>
-      
-          <li class="waves-block waves-effect">
-            <a href="/404"  >
-              <i class="icon icon-lg icon-link"></i>
-              测试
-            </a>
-          </li>
-      
-    </ul>
+</aside>
 
-    <footer class="footer">
-  <p><a rel="license" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0;vertical-align:middle;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAAAPCAMAAABEF7i9AAAAllBMVEUAAAD///+rsapERER3d3eIiIjMzMzu7u4iIiKUmZO6v7rKzsoODg4RERFVVVUNDQ0NDg0PEA8zMzNLTEtbXltmZmZydnF9gn2AgICPkI+ZmZmqqqq7u7vFxsXIzMgNDQwZGRkgICAhISEkJSMnKCcuMC4xMzE5Ozk7PTtBQkFCQkJDQ0Nna2eGhoaHh4ezuLLGysbd3d1wVGpAAAAA4UlEQVR42q2T1xqCMAyFk7QsBQeKA9x7j/d/OSm22CpX0nzcpA1/T05aAOuBVkMAScQFHLnEwoCo2f1TnQIGoVMewjZEjVFN4GH1Ue1Cn2jWqwfsOOj6wDwGvotsl/c8lv7KIq1eLOsT0HMFHMIE/RZyHnlphryT9zyV+8WH5e8yQw3wnQvgAFxPTKUVi555SHR/lOfLMgVTeDlSfN+TaoUsiTyeIm+bCkHvCA2FUKG48LDtYBZBknsYP/G8NTw0gaaHyuQf4H5pecrB/FYCT2sL9zAfy1Xyjou6L8X2W7YcLyBZCRtnq/zfAAAAAElFTkSuQmCC" /></a></p>
-  <p>Hexo &copy; 2017</p>
-  <p>Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
-  <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a></p>
-  <a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-2x icon-rss-square"></i></a>
-</footer>
-
-  </div>
-</div>
-
-  </nav>
-  <main id="main">
-    <header class="top-header" id="header">
+    <main id="main">
+        <header class="top-header" id="header">
     <div class="flex-row">
         <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
           <i class="icon icon-lg icon-navicon"></i>
@@ -112,37 +122,52 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input " autocomplete="off" placeholder="输入感兴趣的关键字">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
         </div>
         
         
-        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-share">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
             <i class="icon icon-lg icon-share-alt"></i>
         </a>
         
     </div>
 </header>
-<header class="content-header">
-  <div class="container">
-    <h1 class="author">Hexo</h1>
-    <h5 class="subtitle">
-        
-        
-        
-    </h5>
-  </div>
+<header class="content-header index-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Hexo</h1>
+        <h5 class="subtitle">
+            
+                
+            
+        </h5>
+    </div>
+
+    
+
+
 </header>
 
-    <div class="container body-wrap">
-      <ul class="post-list">
-  
-    <li class="post-list-item">
-        <article id="post-virtio"
-  class="article article-type-post" itemprop="blogPost">
-     
+<div class="container body-wrap">
+
+    <ul class="post-list">
+    
+        <li class="post-list-item fade">
+            <article id="post-virtio"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2016-05-06 17:40:00" datetime="2016-05-06T09:40:00.000Z"  itemprop="datePublished">2016-05-06</time>
+
+        
+
+
+    </div>
+
+    
 
 
   
@@ -153,37 +178,41 @@
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        virtio简介virtio是KVM虚拟环境下，针对I/O虚拟化的通用框架。virtio是一个半虚拟化驱动。首先说明一下全虚拟化和半虚拟化的区别。全虚拟化是指guest操作系统运行在物理机器上的hypervisor上，它不知道自己已被虚拟化，不需要任何更改就可以工作。半虚拟化指的是guest操作系统不仅知道它运行在hypervisor上，还包括让guest操作系统更高效与hyperviosr...
+    
+
+        <a href="/2016/05/06/virtio/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/虚拟化/">虚拟化</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-I:O体系结构"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2016-05-06T09:40:00.000Z" itemprop="datePublished" class="post-time">
-  2016-05-06
-</time>
+        <time class="post-time" title="2016-05-05 17:40:00" datetime="2016-05-05T09:40:00.000Z"  itemprop="datePublished">2016-05-05</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           virtio简介  virtio是KVM虚拟环境下，针对I/O虚拟化的通用框架。virtio是一个半虚拟化驱动。首先说明一下全虚拟化和半虚拟化的区别。全虚拟化是指guest操作系统运行在物理机器上的hypervisor上，它不知道自己已被虚拟化，不需要任何更改就可以工作。半虚拟化指的是guest操作系统不仅知道它运行在hypervisor上，还包括让guest操作系统更高效与hypervio
-    
-    
-        <a href="/2016/05/06/virtio/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/虚拟化/">虚拟化</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-I:O体系结构"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -194,37 +223,41 @@
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        驱动程序操作系统对设备以及文件系统的抽象可以分为两层。第一层是在物理介质上的抽象，用“记录块”去抽象磁道、扇区；第二层则将记录块抽象成为文件系统。linux将设备分为块设备和字符设备两大类。块设备是以记录块或扇区为单位，成块进行输入/输出的设备，称为“字符设备”，例如磁盘。字符设备是以字符为单位，逐个进行输入/输出的设备，例如键盘。要使一项设备在系统中可见的，首先要在文件系统中有一个代表它的...
+    
+
+        <a href="/2016/05/05/I:O体系结构/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/I-O/">I/O</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-linux文件系统"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2016-05-05T09:40:00.000Z" itemprop="datePublished" class="post-time">
-  2016-05-05
-</time>
+        <time class="post-time" title="2016-04-28 17:40:00" datetime="2016-04-28T09:40:00.000Z"  itemprop="datePublished">2016-04-28</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           驱动程序  操作系统对设备以及文件系统的抽象可以分为两层。第一层是在物理介质上的抽象，用“记录块”去抽象磁道、扇区；第二层则将记录块抽象成为文件系统。 linux将设备分为块设备和字符设备两大类。块设备是以记录块或扇区为单位，成块进行输入/输出的设备，称为“字符设备”，例如磁盘。字符设备是以字符为单位，逐个进行输入/输出的设备，例如键盘。 要使一项设备在系统中可见的，首先要在文件系统中有一个
-    
-    
-        <a href="/2016/05/05/I:O体系结构/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/I-O/">I/O</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-linux文件系统"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -235,38 +268,42 @@
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        虚拟文件系统(VFS)是linux的内核软件层，它能够为各种文件系统提供通用的接口，例如linux，unix，windows系统。它是一个位于应用程序和具体文件之间的中间层。VFS引入了一个通用文件模型，它能够表示所有支持的文件系统，它包含有超级块对象、索引节点对象、文件对象、目录项对象。
+超级块对象super_block存放已安装文件系统的有关信息，对基于磁盘的文件系统，它通常对应于存放在...
+    
+
+        <a href="/2016/04/28/linux文件系统/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/文件系统/">文件系统</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-操作系统寻址"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2016-04-28T09:40:00.000Z" itemprop="datePublished" class="post-time">
-  2016-04-28
-</time>
+        <time class="post-time" title="2016-04-21 17:40:00" datetime="2016-04-21T09:40:00.000Z"  itemprop="datePublished">2016-04-21</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-         虚拟文件系统(VFS)是linux的内核软件层，它能够为各种文件系统提供通用的接口，例如linux，unix，windows系统。它是一个位于应用程序和具体文件之间的中间层。VFS引入了一个通用文件模型，它能够表示所有支持的文件系统，它包含有超级块对象、索引节点对象、文件对象、目录项对象。 
-   超级块对象  super_block存放已安装文件系统的有关信息，对基于磁盘的文件系统，它通常对应
-    
-    
-        <a href="/2016/04/28/linux文件系统/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/文件系统/">文件系统</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-操作系统寻址"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -277,38 +314,42 @@
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        x32/x64内存寻址逻辑地址&lt;–&gt;线性地址&lt;–&gt;物理地址逻辑地址：段标识符和指定段内相对地址的偏移量线性地址：虚拟地址物理地址：物理硬盘上的地址  
+线性地址到物理地址的转换，采用的是多级映射的方式。其中，32bit采用的是三级映射，而64bit采用的四级映射。根据页的大小，采用的映射模型有所不同。但一般采用4k大小的页面，它使用使用PML4T，PDPT，PDT和P...
+    
+
+        <a href="/2016/04/21/操作系统寻址/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/memory/">memory</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-shell小记"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2016-04-21T09:40:00.000Z" itemprop="datePublished" class="post-time">
-  2016-04-21
-</time>
+        <time class="post-time" title="2016-04-20 17:40:00" datetime="2016-04-20T09:40:00.000Z"  itemprop="datePublished">2016-04-20</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           x32/x64内存寻址  逻辑地址&lt;–&gt;线性地址&lt;–&gt;物理地址 逻辑地址：段标识符和指定段内相对地址的偏移量 线性地址：虚拟地址 物理地址：物理硬盘上的地址   
- 线性地址到物理地址的转换，采用的是多级映射的方式。其中，32bit采用的是三级映射，而64bit采用的四级映射。根据页的大小，采用的映射模型有所不同。但一般采用4k大小的页面，它使用使用PML4T，PDP
-    
-    
-        <a href="/2016/04/21/操作系统寻址/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/memory/">memory</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-shell小记"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -319,39 +360,43 @@
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        文件管理在某些场景中，需要统计一个文件夹下的所有文件大小，或者对它们排序。例如在一些安全软件中，常常有垃圾清理，文件整理这样的功能。这里做了一道题目，将一个文件夹中包含的所有文件(包含子文件夹下)按照大小进行排序。这里最后我的答案是
+find . -type f -exec ls -lh {} \;|sort -k 5
+似乎并不是最好的答案。使用shell的话，利用ls是比较好的选择。在ls...
+    
+
+        <a href="/2016/04/20/shell小记/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell/">shell</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-GCC内联汇编笔记"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2016-04-20T09:40:00.000Z" itemprop="datePublished" class="post-time">
-  2016-04-20
-</time>
+        <time class="post-time" title="2016-03-22 17:40:00" datetime="2016-03-22T09:40:00.000Z"  itemprop="datePublished">2016-03-22</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           文件管理  在某些场景中，需要统计一个文件夹下的所有文件大小，或者对它们排序。例如在一些安全软件中，常常有垃圾清理，文件整理这样的功能。这里做了一道题目，将一个文件夹中包含的所有文件(包含子文件夹下)按照大小进行排序。 这里最后我的答案是 
-  find . -type f -exec ls -lh {} \;|sort -k 5
-   似乎并不是最好的答案。 使用shell的话，利用ls是
-    
-    
-        <a href="/2016/04/20/shell小记/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell/">shell</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-GCC内联汇编笔记"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -362,44 +407,50 @@
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        GCC汇编语法GCC使用的是AT&amp;T语法。一些基本的语法如下:  
+
+源地址/目的地址语序：Opcode src dst  
+寄存器命名：寄存器添加前缀”%”  
+立即操作数：立即操作数和静态C变量要有前缀”$”  
+操作数大小：内存操作数大小取决于opcode对最后一个字母，例如”b”,”q”等  
+内存操作数：用”()”来进行内存引用  
+偏移量：写在”()”之前  
+
+tips...
+    
+
+        <a href="/2016/03/22/GCC内联汇编笔记/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/x64-assembly/">x64 assembly</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-x64函数参数的传递"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2016-03-22T09:40:00.000Z" itemprop="datePublished" class="post-time">
-  2016-03-22
-</time>
+        <time class="post-time" title="2016-03-21 17:40:00" datetime="2016-03-21T09:40:00.000Z"  itemprop="datePublished">2016-03-21</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           GCC汇编语法  GCC使用的是AT&amp;T语法。一些基本的语法如下:   
- 
- 源地址/目的地址语序：Opcode src dst   
- 寄存器命名：寄存器添加前缀”%”   
- 立即操作数：立即操作数和静态C变量要有前缀”$”   
- 操作数大小：内存操作数大小取决于opcode对最后一个字母，例如”b”,”q”等   
- 内存操作数：用”()”来进行内存引用   
- 偏移量：写
-    
-    
-        <a href="/2016/03/22/GCC内联汇编笔记/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/x64-assembly/">x64 assembly</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-x64函数参数的传递"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -410,42 +461,46 @@
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        x64寄存器x64体系提供了16个通用寄存器，以及16个通用寄存器，以及16个浮点寄存器XMM/YMM寄存器。这些寄存器分为两类： 
+
+易失寄存器：由调用方假想的临时寄存器，并要在调用过程中销毁。
+非易失寄存器：需要在整个函数调用过程中保留其值，一旦使用，必须由调用方保存。
+
+也就是说，易失寄存器被定义为随时会改变，不用恢复它的初始值。但是如果要嵌入一些汇编语句，还是要对它们进行保护和恢复。...
+    
+
+        <a href="/2016/03/21/x64函数参数的传递/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/x86-64/">x86-64</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-nginx笔记2"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2016-03-21T09:40:00.000Z" itemprop="datePublished" class="post-time">
-  2016-03-21
-</time>
+        <time class="post-time" title="2016-03-14 17:40:00" datetime="2016-03-14T09:40:00.000Z"  itemprop="datePublished">2016-03-14</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           x64寄存器  x64体系提供了16个通用寄存器，以及16个通用寄存器，以及16个浮点寄存器XMM/YMM寄存器。这些寄存器分为两类：  
- 
- 易失寄存器：由调用方假想的临时寄存器，并要在调用过程中销毁。 
- 非易失寄存器：需要在整个函数调用过程中保留其值，一旦使用，必须由调用方保存。 
- 
- 也就是说，易失寄存器被定义为随时会改变，不用恢复它的初始值。但是如果要嵌入一些汇编语句，还是要对
-    
-    
-        <a href="/2016/03/21/x64函数参数的传递/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/x86-64/">x86-64</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-nginx笔记2"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -456,38 +511,42 @@
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        nginx多站点配置nginx提供了一个配置文件:./nginx/cosnf/nginx.conf。在启动时，nginx也只能使用一个配置文件。那么如何把多个站点的配置文件分开呢？对于不同的站点，可以对每个站点分别编写一个conf文件，然后在nginx.conf中，用include命令把它们包含起来。通常将其放在两个文件夹下:  
+mkdir ./nginx/sites-available/...
+    
+
+        <a href="/2016/03/14/nginx笔记2/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/">nginx</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/server/">server</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-nginx笔记1"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2016-03-14T09:40:00.000Z" itemprop="datePublished" class="post-time">
-  2016-03-14
-</time>
+        <time class="post-time" title="2016-03-11 17:40:00" datetime="2016-03-11T09:40:00.000Z"  itemprop="datePublished">2016-03-11</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           nginx多站点配置  nginx提供了一个配置文件:./nginx/cosnf/nginx.conf。在启动时，nginx也只能使用一个配置文件。那么如何把多个站点的配置文件分开呢？对于不同的站点，可以对每个站点分别编写一个conf文件，然后在nginx.conf中，用 include 命令把它们包含起来。通常将其放在两个文件夹下:   
-  mkdir ./nginx/sites-ava
-    
-    
-        <a href="/2016/03/14/nginx笔记2/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/">nginx</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/server/">server</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-nginx笔记1"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -498,42 +557,46 @@
 
 
 
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        nginx 启动/终止/重载入启动:运行主程序即启动控制:
+nginx -s [signal]
+signal:stop, quit, reload, ropen
+应用新的配置:
+nginx -s reload
+配置文件nginx包含由配置文件中的directives（simple, block）来控制的模块。包含其他directives的block被称为context。不被任何context...
+    
+
+        <a href="/2016/03/11/nginx笔记1/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/">nginx</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/server/">server</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-寒假小结"
+  class="article-card article-type-post" itemprop="blogPost">
+
     <div class="post-meta">
-        <time datetime="2016-03-11T09:40:00.000Z" itemprop="datePublished" class="post-time">
-  2016-03-11
-</time>
+        <time class="post-time" title="2016-02-17 14:16:04" datetime="2016-02-17T06:16:04.000Z"  itemprop="datePublished">2016-02-17</time>
 
         
 
 
     </div>
 
-    <div class="post-content" id="post-content" itemprop="postContent" >
-
     
-           nginx 启动/终止/重载入  启动:运行主程序即启动 控制: 
-  nginx -s [signal]
-signal:stop, quit, reload, ropen
-应用新的配置:
-nginx -s reload
-     配置文件  nginx包含由配置文件中的 directives （simple, block）来控制的模块。包含其他directives的block被称为cont
-    
-    
-        <a href="/2016/03/11/nginx笔记1/" class="post-more waves-effect waves-button">
-            阅读全文...
-        </a>
-    </div>
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/">nginx</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/server/">server</a></li></ul>
-
-</article>
-
-    </li>
-  
-    <li class="post-list-item">
-        <article id="post-寒假小结"
-  class="article article-type-post" itemprop="blogPost">
-     
 
 
   
@@ -544,110 +607,144 @@ nginx -s reload
 
 
 
-    <div class="post-meta">
-        <time datetime="2016-02-17T06:16:04.000Z" itemprop="datePublished" class="post-time">
-  2016-02-17
-</time>
 
-        
-
-
-    </div>
-
-    <div class="post-content" id="post-content" itemprop="postContent" >
+    <div class="post-content" id="post-content" itemprop="postContent">
 
     
-           时间安排&amp;进展  春节休息八天，其余时间学习。 实验室的工作：   
- 
- 掌握了glibc中切换到程序时的代码位置。   
- 按照预想情况，切换EPT时会产生错误的缺页。   
- 通过syscall在汇编代码中加入了输出语句，来证明切换确实执行了。   
- 虽然切换完成了，但是仍存在错误的缺页。   
- 
-   glibc：程序的入口  glibc中的csu/libc-start.
+        时间安排&amp;进展春节休息八天，其余时间学习。实验室的工作：  
+
+掌握了glibc中切换到程序时的代码位置。  
+按照预想情况，切换EPT时会产生错误的缺页。  
+通过syscall在汇编代码中加入了输出语句，来证明切换确实执行了。  
+虽然切换完成了，但是仍存在错误的缺页。  
+
+glibc：程序的入口glibc中的csu/libc-start.c中，完成了从动态链接器到程序入口的工...
     
-    
+
         <a href="/2016/02/17/寒假小结/" class="post-more waves-effect waves-button">
-            阅读全文...
+            Continue reading...
         </a>
     </div>
     
+    <div class="post-footer">
+        
 	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/x64-assembly/">x64 assembly</a></li></ul>
 
+    </div>
+    
 </article>
 
-    </li>
-  
-</ul>
+        </li>
+    
+    </ul>
 
+    
 <nav id="page-nav">
     <div class="inner">
     <a class="extend prev" rel="prev" href="/page/4/">上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span>
     </div>
 </nav>
 
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
     </div>
-  </main>
-<div class="mask" id="mask"></div>
+    <div class="bottom">
+        <p><span>John Doe &copy; 2015 - 2017</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
 
-<script>
-var BLOG_SHARE = {
-    title: "Hexo",
-    pic: "/img/logo.jpg",
-    summary: document.getElementsByName('summary')[0].content,
-    url: "http://yoursite.com/page/5/index.html"
-};
-</script>
-<div class="global-share" id="global-share">
-    <div class="tit">分享到：</div>
+
+
+<div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" href="javascript:;" data-title="微博" data-service="tsina">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/page/5/&title=Hexo&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
       <li>
-        <a class="weixin share-sns" href="javascript:;" data-title="微信" data-service="weixin">
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
           <i class="icon icon-weixin"></i>
         </a>
       </li>
       <li>
-        <a class="qq share-sns" href="javascript:;" data-title=" QQ" data-service="cqq">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/page/5/&title=Hexo&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" href="javascript:;" data-title=" Facebook" data-service="fb">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/page/5/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" href="javascript:;" data-title=" Twitter" data-service="twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=Hexo&url=http://yoursite.com/page/5/&via=http://yoursite.com" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="douban share-sns" href="javascript:;" data-title="豆瓣" data-service="douban">
-          豆
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/page/5/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
         </a>
       </li>
     </ul>
  </div>
 
 
-<script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://yoursite.com/page/5/" alt="微信分享二维码">
+</div>
 
-<script src="/js/main.js"></script>
 
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
 
 
 <div class="search-panel" id="search-panel">
     <ul class="search-result" id="search-result"></ul>
 </div>
-<script type="text/template" id="search-tpl">
+<template id="search-tpl">
 <li class="item">
-    <a href="/{path}" class="waves-block waves-effect">
+    <a href="{path}" class="waves-block waves-effect">
         <div class="title ellipsis" title="{title}">{title}</div>
         <div class="flex-row flex-middle">
             <div class="tags ellipsis">
@@ -657,15 +754,35 @@ var BLOG_SHARE = {
         </div>
     </a>
 </li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
 </script>
-
-<script src="/js/search.js"></script>
-
-
-
-
-
-
 
 
 
