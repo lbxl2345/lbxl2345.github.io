@@ -30,7 +30,7 @@
 <meta property="og:image" content="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/%E9%A1%B5%E6%A1%86%E5%88%86%E9%85%8D.jpg?raw=true">
 <meta property="og:image" content="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/slab%E5%88%86%E9%85%8D%E5%99%A8.png?raw=true =500x400">
 <meta property="og:image" content="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/slab%E7%AE%A1%E7%90%86.png?raw=true =500x350">
-<meta property="og:updated_time" content="2017-07-28T09:04:47.000Z">
+<meta property="og:updated_time" content="2017-08-07T08:44:23.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入理解内存管理">
 <meta name="twitter:description" content="页框管理与伙伴系统这里的内存管理，指的是内核如何分配（为自己）动态内存。linux把页框作为一个管理的基本单位，用数据结构page对其进行描述。而所有的page则放在一个mem_map数组当中，进行管理。但计算机存在着一些限制，因此linux把内存划分为了几个管理区，包括ZONE_DMA、ZONE_NORMAL、ZONE_HIGHMEM等；而对页框的分配和释放，也是按照分区来进行管理的：在每个分区">
@@ -110,7 +110,7 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
@@ -212,7 +212,7 @@ struct list_head full;
 };
 </code></pre><p><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/slab%E7%AE%A1%E7%90%86.png?raw=true =500x350" alt="">  </p>
 <p>值得一提的是，<code>kmalloc</code>的实现也是也是基于slab来实现的，它包含一个数组，存放了一些用于不同长度的slab缓存，这也就是我们所说的“内存池”。  </p>
-<h4 id="slab着色"><a href="#slab着色" class="headerlink" title="slab着色"></a>slab着色</h4><p>slab着色与颜色并没有关系，它要解决的问题与硬件高速缓存有关。硬件高速缓存倾向于把大小一样的对象放在高速缓存内的相同便宜位置；而不同slab当中相同偏移量的对象，就会映射在高速缓存的同一行当中；这样高速缓存可能就会频繁的对同一高速缓存行进行更新，从而造成性能损失。<br>slab着色就是给每个slab分配一个随机的“颜色”，把它作为slab中对象需要移动的特定偏移量来使用，这样对象就会被放置到不同的缓存行。  </p>
+<h4 id="slab着色"><a href="#slab着色" class="headerlink" title="slab着色"></a>slab着色</h4><p>slab着色与颜色并没有关系，它要解决的问题与硬件高速缓存有关。硬件高速缓存倾向于把大小一样的对象放在高速缓存内的相同偏移位置；而不同slab当中相同偏移量的对象，就会映射在高速缓存的同一行当中；这样高速缓存可能就会频繁的对同一高速缓存行进行更新，从而造成性能损失。<br>slab着色就是给每个slab分配一个随机的“颜色”，把它作为slab中对象需要移动的特定偏移量来使用，这样对象就会被放置到不同的缓存行。  </p>
 
         </div>
 
@@ -352,7 +352,7 @@ struct list_head full;
             
                 <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
             
-            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
         </p>
     </div>
     <div class="bottom">
