@@ -101,7 +101,7 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
@@ -135,6 +135,55 @@
     <ul class="post-list">
     
         <li class="post-list-item fade">
+            <article id="post-linux-sgx-sdk"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2016-11-24 11:40:00" datetime="2016-11-24T03:40:00.000Z"  itemprop="datePublished">2016-11-24</time>
+
+        
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2016/11/24/linux-sgx-sdk/">SGX SDK相关</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        Enclave Definition LanguageEDL文件，用来描述enclave当中的trusted和untrusted部分。在Linux中，Edger8r Tool通过这个文件来创建enclave的C wrapper函数，也即ECALL和OCALL所使用的函数。 
+//EDL Template
+enclave    {
+    //包含文件和作为参数的数据结构
+    truste...
+    
+
+        <a href="/2016/11/24/linux-sgx-sdk/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SGX/">SGX</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/系统安全/">系统安全</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
             <article id="post-PIDnamespace"
   class="article-card article-type-post" itemprop="blogPost">
 
@@ -165,7 +214,7 @@
     
 
         <a href="/2016/10/10/PIDnamespace/" class="post-more waves-effect waves-button">
-            阅读全文…
+            Continue reading...
         </a>
     </div>
     
@@ -211,7 +260,7 @@ clone通过clone，可以创建一个namespace，它是一个创建新的process
     
 
         <a href="/2016/10/10/userspaceAPI/" class="post-more waves-effect waves-button">
-            阅读全文…
+            Continue reading...
         </a>
     </div>
     
@@ -257,7 +306,7 @@ mount namespacesmount namespace(CLONE_NEWNS)隔离一...
     
 
         <a href="/2016/10/10/namespace相关/" class="post-more waves-effect waves-button">
-            阅读全文…
+            Continue reading...
         </a>
     </div>
     
@@ -305,7 +354,7 @@ Trusted Run-Time System:在SGX enclave内部执行的部分，...
     
 
         <a href="/2016/09/18/SGX/" class="post-more waves-effect waves-button">
-            阅读全文…
+            Continue reading...
         </a>
     </div>
     
@@ -351,7 +400,7 @@ Trusted Run-Time System:在SGX enclave内部执行的部分，...
     
 
         <a href="/2016/06/27/kvm内存虚拟化/" class="post-more waves-effect waves-button">
-            阅读全文…
+            Continue reading...
         </a>
     </div>
     
@@ -396,7 +445,7 @@ Trusted Run-Time System:在SGX enclave内部执行的部分，...
     
 
         <a href="/2016/06/15/Intel VT-x:EPT解读/" class="post-more waves-effect waves-button">
-            阅读全文…
+            Continue reading...
         </a>
     </div>
     
@@ -441,7 +490,7 @@ Trusted Run-Time System:在SGX enclave内部执行的部分，...
     
 
         <a href="/2016/06/13/Intel：针对ROP攻击的特性/" class="post-more waves-effect waves-button">
-            阅读全文…
+            Continue reading...
         </a>
     </div>
     
@@ -486,7 +535,7 @@ Trusted Run-Time System:在SGX enclave内部执行的部分，...
     
 
         <a href="/2016/06/08/I:O与page cache/" class="post-more waves-effect waves-button">
-            阅读全文…
+            Continue reading...
         </a>
     </div>
     
@@ -531,7 +580,7 @@ Trusted Run-Time System:在SGX enclave内部执行的部分，...
     
 
         <a href="/2016/05/26/详解virtio/" class="post-more waves-effect waves-button">
-            阅读全文…
+            Continue reading...
         </a>
     </div>
     
@@ -545,58 +594,12 @@ Trusted Run-Time System:在SGX enclave内部执行的部分，...
 
         </li>
     
-        <li class="post-list-item fade">
-            <article id="post-爬虫入门"
-  class="article-card article-type-post" itemprop="blogPost">
-
-    <div class="post-meta">
-        <time class="post-time" title="2016-05-13 17:40:00" datetime="2016-05-13T09:40:00.000Z"  itemprop="datePublished">2016-05-13</time>
-
-        
-
-
-    </div>
-
-    
-
-
-  
-    <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2016/05/13/爬虫入门/">初学爬虫</a>
-    </h3>
-  
-
-
-
-
-    <div class="post-content" id="post-content" itemprop="postContent">
-
-    
-        工作原理爬虫，就是伪造一个用户身份，通过URL去访问某个网页，将这个网页上的某些感兴趣的内容，利用正则式的方式提取出来。对于google，baidu的搜索部门，爬虫可以说是核心技术之一。
-python spiderpython为实现基本的爬虫，提供了十分方便的模块。通常利用urllib来实现简单的爬虫。首先确定访问的url，然后对这个url生成一个request。request并不仅仅是一个...
-    
-
-        <a href="/2016/05/13/爬虫入门/" class="post-more waves-effect waves-button">
-            阅读全文…
-        </a>
-    </div>
-    
-    <div class="post-footer">
-        
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/爬虫/">爬虫</a></li></ul>
-
-    </div>
-    
-</article>
-
-        </li>
-    
     </ul>
 
     
 <nav id="page-nav">
     <div class="inner">
-    <a class="extend prev" rel="prev" href="/page/3/">上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/5/">下一页</a>
+    <a class="extend prev" rel="prev" href="/page/3/">上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/5/">下一页</a>
     </div>
 </nav>
 
@@ -620,7 +623,7 @@ python spiderpython为实现基本的爬虫，提供了十分方便的模块。�
             
                 <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
             
-            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
         </p>
     </div>
     <div class="bottom">

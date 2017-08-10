@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <title>关于中断虚拟化 | Benxi&#39;s blog | 心如止水，乱则不明</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="linux,操作系统">
+    <meta name="description" content="中断虚拟化做了什么？我们首先回忆一下中断的过程：中断由设备发送给了I/O APIC，随后交给CPU本地的LAPIC进行处理。LAPIC把它交给CPU，然后由操作系统根据相应的IDT表进行处理。很明显，如果虚拟机内的操作系统，要正常的去处理中断，就必须要由VMM来完成这两个部分：（1）虚拟化LAPIC，并虚拟化客户机对APIC寄存器的访问（2）虚拟化到达客户机的所有中断    APIC的虚拟化当虚拟">
+<meta name="keywords" content="linux,操作系统">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于中断虚拟化">
+<meta property="og:url" content="http://sec-lbx.tk/2017/07/30/详解中断虚拟化/index.html">
+<meta property="og:site_name" content="Benxi&#39;s blog">
+<meta property="og:description" content="中断虚拟化做了什么？我们首先回忆一下中断的过程：中断由设备发送给了I/O APIC，随后交给CPU本地的LAPIC进行处理。LAPIC把它交给CPU，然后由操作系统根据相应的IDT表进行处理。很明显，如果虚拟机内的操作系统，要正常的去处理中断，就必须要由VMM来完成这两个部分：（1）虚拟化LAPIC，并虚拟化客户机对APIC寄存器的访问（2）虚拟化到达客户机的所有中断    APIC的虚拟化当虚拟">
+<meta property="og:image" content="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/VT-x/APIC.png?raw=true =400x300">
+<meta property="og:image" content="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/VT-x/PI.png?raw=true =500x200">
+<meta property="og:image" content="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/VT-x/posted-interrupt.jpg?raw=true">
+<meta property="og:updated_time" content="2017-08-10T09:02:23.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="关于中断虚拟化">
+<meta name="twitter:description" content="中断虚拟化做了什么？我们首先回忆一下中断的过程：中断由设备发送给了I/O APIC，随后交给CPU本地的LAPIC进行处理。LAPIC把它交给CPU，然后由操作系统根据相应的IDT表进行处理。很明显，如果虚拟机内的操作系统，要正常的去处理中断，就必须要由VMM来完成这两个部分：（1）虚拟化LAPIC，并虚拟化客户机对APIC寄存器的访问（2）虚拟化到达客户机的所有中断    APIC的虚拟化当虚拟">
+<meta name="twitter:image" content="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/VT-x/APIC.png?raw=true =400x300">
+    
+        <link rel="alternate" type="application/atom+xml" title="Benxi&#39;s blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/back.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Benxi Liu</h5>
+          <a href="mailto:lbxhust@163.com" title="lbxhust@163.com" class="mail">lbxhust@163.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/lbxl2345" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">关于中断虚拟化</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">关于中断虚拟化</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-07-30T13:40:00.000Z" itemprop="datePublished" class="page-time">
+  2017-07-30
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#中断虚拟化做了什么？"><span class="post-toc-number">1.</span> <span class="post-toc-text">中断虚拟化做了什么？</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#APIC的虚拟化"><span class="post-toc-number">2.</span> <span class="post-toc-text">APIC的虚拟化</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#APIC-access-page和Virtual-APIC-accesses"><span class="post-toc-number">3.</span> <span class="post-toc-text">APIC-access page和Virtual APIC accesses</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#中断的evaluation和delivery"><span class="post-toc-number">4.</span> <span class="post-toc-text">中断的evaluation和delivery</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#posted-interrupt处理"><span class="post-toc-number">5.</span> <span class="post-toc-text">posted interrupt处理</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#小结"><span class="post-toc-number">6.</span> <span class="post-toc-text">小结</span></a></li></ol>
+        </nav>
+    </aside>
+    
+<article id="post-详解中断虚拟化"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">关于中断虚拟化</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-07-30 21:40:00" datetime="2017-07-30T13:40:00.000Z"  itemprop="datePublished">2017-07-30</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h4 id="中断虚拟化做了什么？"><a href="#中断虚拟化做了什么？" class="headerlink" title="中断虚拟化做了什么？"></a>中断虚拟化做了什么？</h4><p>我们首先回忆一下中断的过程：中断由设备发送给了I/O APIC，随后交给CPU本地的LAPIC进行处理。LAPIC把它交给CPU，然后由操作系统根据相应的IDT表进行处理。<br>很明显，如果虚拟机内的操作系统，要正常的去处理中断，就必须要由VMM来完成这两个部分：<br>（1）虚拟化LAPIC，并虚拟化客户机对APIC寄存器的访问<br>（2）虚拟化到达客户机的所有中断   </p>
+<h4 id="APIC的虚拟化"><a href="#APIC的虚拟化" class="headerlink" title="APIC的虚拟化"></a>APIC的虚拟化</h4><p>当虚拟机访问local APIC寄存器时，最终同样会对物理上的local APIC进行读写。那么VMM该如何对它进行控制，防止其干扰宿主机的环境呢？VMM有两种方式，来对local APIC进行限制：<br>（1）通过EPT来进行保护，处理对local APIC的读写，但这样每次都会触发EPT violation，无疑会引入开销；<br>（2）利用Virtual-APIC机制，guest对local APIC的访问实际上是对virtual-APIC页进行访问。  </p>
+<p>通过设置VMCS中的<code>Virtualize APIC accesses</code>字段为1，会开启第二种方式：当guest访问APIC-access page时，会根据<code>APIC-register virtualization</code>当中的设置，来决定这次访问的方式：  </p>
+<p>（1）产生APIC access VM EXIT，或者APIC write VM EXIT<br>（2）通过virtual-APIC机制  </p>
+<p>这里，我们详细讨论一下virtual-APIC方式。  </p>
+<h4 id="APIC-access-page和Virtual-APIC-accesses"><a href="#APIC-access-page和Virtual-APIC-accesses" class="headerlink" title="APIC-access page和Virtual APIC accesses"></a>APIC-access page和Virtual APIC accesses</h4><p>当<code>Virtualize APIC accesses</code>开启时，处理器会启用<code>APIC-access page</code>。此时<code>APIC-access page</code>对应着物理的local APIC页面，其地址保存在VMCS的<code>APIC-access address</code>当中。从硬件上，CPU能够帮助我们去监控这个页，这样一来，只要guest尝试线性访问local APIC，就会访问APIC-access page。那么此时，会根据“APIC-register virtualization”位的设置，进行不同的处理：  </p>
+<ol>
+<li>发生APIC access VM-exit，或者APIC write VM-exit </li>
+<li>直接访问virtual-APIC page中的数据（某些寄存器）</li>
+</ol>
+<p><code>virtual-APIC page</code>是什么？当“use TPR shadow”为1时，会引入<code>virtual-APIC page</code>，它是local APIC的影子页面，其地址保存在VMCS的<code>virtual-APIC address</code>当中。它保存了一份TPR数据，也即virtual TPR寄存器。实际上，<code>virtual-APIC page</code>的唯一用处就是对寄存器进行虚拟化，这样每个VCPU都能够有不同的<code>TPR、VEOI、VLDR等寄存器</code>，其中TPR寄存器保存在<code>virtual-APIC page</code>的80H位置。  </p>
+<p>那么<code>APIC-access page</code>和<code>virtual-APIC page</code>之间是什么关系呢？实际上是一种类似映射的关系，当guest尝试线性访问（注意，只有线性访问）APIC-access page页面时，会实际上访问vritual-APIC page页面中的数据：<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/VT-x/APIC.png?raw=true =400x300" alt="">  </p>
+<p>在虚拟机访问<code>APIC access page</code>时：<br>（1）如果线性访问了没有虚拟化支持的offset位置，会产生APIC-access VM-exit<br>（2）采用guest-physical方式访问<code>APIC-access page</code>页中的任何offset位置，都会发生APIC-access VM-exit<br>（3）采用physical方式访问<code>APIC-access page</code>，可能发生APIC-access VM-exit  </p>
+<p>这里我们主要关注线性访问的情况，来具体说明<code>APIC-access page</code>和<code>virtual-APIC page</code>的工作原理。<br><strong>读APIC-access page</strong><br>在如下情况时，访问<code>APIC-access page</code>时，都会产生<code>APIC-access VM-exit</code>:<br>（1）“use TPR shadow”为0<br>（2）尝试执行APIC-access page<br>（3）访问数据超过32位<br>（4）访问APIC-access page的动作发生在虚拟化写APIC-access page过程中<br>（5）尝试进行跨过local APIC寄存器边界的访问<br>在除上述原因之外的情况下，读取时，会根据<code>APIC-register virtualizaion</code>位的设置，来进行读取：<br>（1）如果<code>APIC-register virtualization</code>为0，则如果线性读取TPR，直接从<code>virtual-APIC page</code>返回；否则直接产生APIC-access VM-exit<br>（2）如果<code>APIC-register virtualization</code>为1，如果访问的是某些特定的偏移量，那么就会返回virtual-APIC page中的数据；否则直接产生APIC-access VM-exit<br><strong>写APIC-access page</strong><br>在如下情况时，访问<code>APIC-access page</code>时，都会产生<code>APIC access VM-exit</code>：<br>（1）“use TPR shadow”为0<br>（2）访问数据超过32位<br>（3）访问APIC-access page的动作发生在虚拟化写APIC-access page过程中<br>（4）尝试进行跨过local APIC寄存器边界的访问<br>在除上述原因之外的情况下，读取时，会根据<code>APIC-register virtualizaion</code>和<code>virtual-interrupt delivery</code>位的设置，来进行写入：<br>（1）如果<code>APIC-register virtualization</code>和<code>virtual-interrupt deliverty</code>都为0，那么如果线性写TPR时，会写入VTPR中（virtual-APIC page），其他位置都会产生APIC-access VM-exit<br>（2）如果<code>APIC-register virtualization</code>为0，但<code>virtual-interrupt deliverty</code>为1，那么线性写TPR、EOI、ICR时，会写入virtual-APIC page中对应的虚拟寄存器当中，其他位置都会产生APIC-access VM-exit<br>（3）如果<code>APIC-register virtualization</code>为1，则会允许更多的虚拟寄存器写入virtual APIC，其他位置则产生APIC-access VM-exit<br>但是写入是一个更为复杂的过程，在写入对应的虚拟寄存器之后，处理器还要进行后续的处理，也即APIC-write emulation：根据<code>virtual-interrupt deliverty</code>的设置，产生APIC-write VM-exit，或者对local APIC进行虚拟化操作（TPR、EOI、Self-IPI等）。<br><strong>小结</strong><br>APIC虚拟化的过程，实际上也是借助了硬件的力量。根据CPU的设置，可以把不同VCPU的虚拟寄存器保存在不同的页中。这样不仅避免了虚拟机对素主机的污染，还能够减少VM-exit的发生，并且能够让每个VCPU拥有独立的寄存器，对性能是有极大提高的。  </p>
+<h4 id="中断的evaluation和delivery"><a href="#中断的evaluation和delivery" class="headerlink" title="中断的evaluation和delivery"></a>中断的evaluation和delivery</h4><p>现在，我们来看看VMM是如何判断一个中断是否应该交给虚拟机进行处理，并且将它转交给虚拟机的。<br>VMCS中有一个<code>External-interrupt exiting</code>位。当这个位设置为1时，如果CPU处于<code>non-root</code>模式，那么所有中断都会产生VM-exit；如果设置为0，则所有中断都会直接交给虚拟机进行处理。这无疑是很不安全的，所以一般情况下外部中断都会造成VM-exit，并且在虚拟化层处理完反回虚拟机（VM-entry）时，就需要做中断的evaluation（判断是否有中断要交给虚拟机处理）和delivery（将中断交给IDT处理）了。<br>在这几种情况下，会引发中断的evaluation和delivery：  </p>
+<p>（1）TPR虚拟化、EOI虚拟化、Self-IPI虚拟化。<br>（2）在VM-entry操作时引发。<br>（3）在利用“post-interrupt processing”机制处理外部中断时引发。  </p>
+<p>中断的注入，是通过由VMM将中断写入VMCS对应的信息位来实现的，当中断完成后，通过读取中断的返回信息，来分析中断是否正确。在中断注入之后，处理器会完成evaluation和delivery的工作（还有另一种方式是posted interrupt 处理）<br>那么evalutaion会根据什么来判断一个虚拟中断是否应该pending呢？处理器首先根据虚拟中断的优先级别进行判断，只有在<code>RVI[7:4]</code>大于<code>VPPR[7:4]</code>时，处理器才会组织一次虚拟中断pending。随后处理器还要检查虚拟中断是否被阻塞，只有不被阻塞打时候，会通过guest-IDT来进行deliver执行。<br>在evaluation之后，虚拟中断就会通过guest-IDT进行delivery。这时处理器将会更新virtual-APIC的状态，包括VIRR、VISR、RVI、SVI状态等，随后处理器根据虚拟中断向量号，通过guest-IDT表进行deliver执行。  </p>
+<h4 id="posted-interrupt处理"><a href="#posted-interrupt处理" class="headerlink" title="posted interrupt处理"></a>posted interrupt处理</h4><p>前面我们也提到了，外部中断通常都会造成VM-exit的下陷。posted interrupt处理，能够直接把中断注入到guest当中去，而不需要产生VM-exit。<br>假如启用了posted interrupt处理，那么处理器对外部中断的处理就不同了：<br>（1）一般情况下，如果external-interrupt exiting为1，那么外部中断产生VM-exit；否则直接通过guest IDT表处理；<br>（2）在posted interrupt机制下，如果处理器接收到的外部中断向量号是预先定义的通知向量号时，不会产生VM-exit，而是通过PIR的pending处理。<br>那么这个不产生VM-exit的过程是如何发生的呢？<br>VMM会在<code>posted-interrupt notification vector</code>当中设置通知向量号，一旦local APIC接到对应的外部中断，那么就会通知guest进行post-interrupt处理。此时posted interrupt描述符内的PIR请求列表会复制到VIRR（virtual-APIC页的另一个用途），形成新的虚拟中断请求列表，然后再对这个虚拟中断请求表中的中断请求进行evaluation和delivery。<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/VT-x/PI.png?raw=true =500x200" alt=""><br>而如果外部中断向量号不等于通告的向量，那么依然会触发VM-exit，处理器获取外部中断的信息，通过VMCS中的字段来进行注入中断。  </p>
+<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/VT-x/posted-interrupt.jpg?raw=true" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>可以看到，中断虚拟化方式的改变，是随着硬件特性的改变而改变的。硬件的支持，主要就是为了<del>提升效率</del>。我们知道，VM-exit无疑会给虚拟机的性能带来损耗，而中断的特殊性，又使得它极有可能造成VM-exit。所以intel的工作，一直都致力于减少VM-exit的发生，提升虚拟机的性能。让虚拟机直接接管硬件一直是虚拟化中极为重要的一种思想，不论是IO还是中断，或者是内存，都是如此。    </p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    <div class="content">
+        
+
+        
+        欢迎转载我的文章，本文链接：<a href="/2017/07/30/详解中断虚拟化/" target="_blank" rel="external">http://sec-lbx.tk/2017/07/30/详解中断虚拟化/</a>
+        
+    </div>
+    <footer>
+        <a href="http://sec-lbx.tk">
+            <img src="/img/avatar.jpg" alt="Benxi Liu">
+            Benxi Liu
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/07/30/详解中断虚拟化/&title=《关于中断虚拟化》 — Benxi's blog&pic=http://sec-lbx.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/07/30/详解中断虚拟化/&title=《关于中断虚拟化》 — Benxi's blog&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://sec-lbx.tk/2017/07/30/详解中断虚拟化/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《关于中断虚拟化》 — Benxi's blog&url=http://sec-lbx.tk/2017/07/30/详解中断虚拟化/&via=http://sec-lbx.tk" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://sec-lbx.tk/2017/07/30/详解中断虚拟化/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/07/15/浅谈GCC编译优化/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">浅谈GCC编译优化</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Benxi Liu &copy; 2015 - 2017</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/07/30/详解中断虚拟化/&title=《关于中断虚拟化》 — Benxi's blog&pic=http://sec-lbx.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/07/30/详解中断虚拟化/&title=《关于中断虚拟化》 — Benxi's blog&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://sec-lbx.tk/2017/07/30/详解中断虚拟化/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《关于中断虚拟化》 — Benxi's blog&url=http://sec-lbx.tk/2017/07/30/详解中断虚拟化/&via=http://sec-lbx.tk" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://sec-lbx.tk/2017/07/30/详解中断虚拟化/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://sec-lbx.tk/2017/07/30/详解中断虚拟化/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

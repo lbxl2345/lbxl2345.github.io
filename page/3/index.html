@@ -101,7 +101,7 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
@@ -133,6 +133,56 @@
 <div class="container body-wrap">
 
     <ul class="post-list">
+    
+        <li class="post-list-item fade">
+            <article id="post-深入理解文件系统"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2017-03-30 11:40:00" datetime="2017-03-30T03:40:00.000Z"  itemprop="datePublished">2017-03-30</time>
+
+        
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2017/03/30/深入理解文件系统/">深入理解文件系统</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        虚拟文件系统（VFS）的思想和作用实际上，看到Virtaul，我们就应该想到VFS的作用，是虚拟出一个中间层，来实现某些部分的统一处理。实际上，VFS要解决的是，让应用能够“以一种通用的方式”，去访问不同类型的文件系统：
+                
+                    
+                    
+                
+          ...
+    
+
+        <a href="/2017/03/30/深入理解文件系统/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
     
         <li class="post-list-item fade">
             <article id="post-ocaml-3"
@@ -169,7 +219,7 @@ ocamlopt -o hello amodule.cmx bmodule.cmx
     
 
         <a href="/2017/03/27/ocaml-3/" class="post-more waves-effect waves-button">
-            阅读全文…
+            Continue reading...
         </a>
     </div>
     
@@ -216,7 +266,7 @@ l...
     
 
         <a href="/2017/03/27/ocaml/" class="post-more waves-effect waves-button">
-            阅读全文…
+            Continue reading...
         </a>
     </div>
     
@@ -261,7 +311,7 @@ l...
     
 
         <a href="/2017/03/23/LLVM笔记/" class="post-more waves-effect waves-button">
-            阅读全文…
+            Continue reading...
         </a>
     </div>
     
@@ -307,7 +357,7 @@ l...
     
 
         <a href="/2017/03/15/深入理解内核同步/" class="post-more waves-effect waves-button">
-            阅读全文…
+            Continue reading...
         </a>
     </div>
     
@@ -352,7 +402,7 @@ l...
     
 
         <a href="/2017/03/06/中断的发生/" class="post-more waves-effect waves-button">
-            阅读全文…
+            Continue reading...
         </a>
     </div>
     
@@ -397,7 +447,7 @@ l...
     
 
         <a href="/2017/02/15/中断相关/" class="post-more waves-effect waves-button">
-            阅读全文…
+            Continue reading...
         </a>
     </div>
     
@@ -447,7 +497,7 @@ l...
     
 
         <a href="/2017/01/17/kvm-sgx笔记/" class="post-more waves-effect waves-button">
-            阅读全文…
+            Continue reading...
         </a>
     </div>
     
@@ -492,7 +542,7 @@ l...
     
 
         <a href="/2016/12/27/Chrome浏览器安全/" class="post-more waves-effect waves-button">
-            阅读全文…
+            Continue reading...
         </a>
     </div>
     
@@ -541,7 +591,7 @@ allocation failure –&gt;...
     
 
         <a href="/2016/12/05/memory-war/" class="post-more waves-effect waves-button">
-            阅读全文…
+            Continue reading...
         </a>
     </div>
     
@@ -555,61 +605,12 @@ allocation failure –&gt;...
 
         </li>
     
-        <li class="post-list-item fade">
-            <article id="post-linux-sgx-sdk"
-  class="article-card article-type-post" itemprop="blogPost">
-
-    <div class="post-meta">
-        <time class="post-time" title="2016-11-24 11:40:00" datetime="2016-11-24T03:40:00.000Z"  itemprop="datePublished">2016-11-24</time>
-
-        
-
-
-    </div>
-
-    
-
-
-  
-    <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2016/11/24/linux-sgx-sdk/">SGX SDK相关</a>
-    </h3>
-  
-
-
-
-
-    <div class="post-content" id="post-content" itemprop="postContent">
-
-    
-        Enclave Definition LanguageEDL文件，用来描述enclave当中的trusted和untrusted部分。在Linux中，Edger8r Tool通过这个文件来创建enclave的C wrapper函数，也即ECALL和OCALL所使用的函数。 
-//EDL Template
-enclave    {
-    //包含文件和作为参数的数据结构
-    truste...
-    
-
-        <a href="/2016/11/24/linux-sgx-sdk/" class="post-more waves-effect waves-button">
-            阅读全文…
-        </a>
-    </div>
-    
-    <div class="post-footer">
-        
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SGX/">SGX</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/系统安全/">系统安全</a></li></ul>
-
-    </div>
-    
-</article>
-
-        </li>
-    
     </ul>
 
     
 <nav id="page-nav">
     <div class="inner">
-    <a class="extend prev" rel="prev" href="/page/2/">上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/">下一页</a>
+    <a class="extend prev" rel="prev" href="/page/2/">上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/4/">下一页</a>
     </div>
 </nav>
 
@@ -633,7 +634,7 @@ enclave    {
             
                 <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
             
-            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
         </p>
     </div>
     <div class="bottom">

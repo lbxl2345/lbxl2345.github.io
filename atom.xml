@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://sec-lbx.tk/"/>
-  <updated>2017-07-28T09:04:47.000Z</updated>
+  <updated>2017-08-10T09:02:23.000Z</updated>
   <id>http://sec-lbx.tk/</id>
   
   <author>
@@ -14,6 +14,54 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>关于中断虚拟化</title>
+    <link href="http://sec-lbx.tk/2017/07/30/%E8%AF%A6%E8%A7%A3%E4%B8%AD%E6%96%AD%E8%99%9A%E6%8B%9F%E5%8C%96/"/>
+    <id>http://sec-lbx.tk/2017/07/30/详解中断虚拟化/</id>
+    <published>2017-07-30T13:40:00.000Z</published>
+    <updated>2017-08-10T09:02:23.000Z</updated>
+    
+    <content type="html"><![CDATA[<h4 id="中断虚拟化做了什么？"><a href="#中断虚拟化做了什么？" class="headerlink" title="中断虚拟化做了什么？"></a>中断虚拟化做了什么？</h4><p>我们首先回忆一下中断的过程：中断由设备发送给了I/O APIC，随后交给CPU本地的LAPIC进行处理。LAPIC把它交给CPU，然后由操作系统根据相应的IDT表进行处理。<br>很明显，如果虚拟机内的操作系统，要正常的去处理中断，就必须要由VMM来完成这两个部分：<br>（1）虚拟化LAPIC，并虚拟化客户机对APIC寄存器的访问<br>（2）虚拟化到达客户机的所有中断   </p>
+<h4 id="APIC的虚拟化"><a href="#APIC的虚拟化" class="headerlink" title="APIC的虚拟化"></a>APIC的虚拟化</h4><p>当虚拟机访问local APIC寄存器时，最终同样会对物理上的local APIC进行读写。那么VMM该如何对它进行控制，防止其干扰宿主机的环境呢？VMM有两种方式，来对local APIC进行限制：<br>（1）通过EPT来进行保护，处理对local APIC的读写，但这样每次都会触发EPT violation，无疑会引入开销；<br>（2）利用Virtual-APIC机制，guest对local APIC的访问实际上是对virtual-APIC页进行访问。  </p>
+<p>通过设置VMCS中的<code>Virtualize APIC accesses</code>字段为1，会开启第二种方式：当guest访问APIC-access page时，会根据<code>APIC-register virtualization</code>当中的设置，来决定这次访问的方式：  </p>
+<p>（1）产生APIC access VM EXIT，或者APIC write VM EXIT<br>（2）通过virtual-APIC机制  </p>
+<p>这里，我们详细讨论一下virtual-APIC方式。  </p>
+<h4 id="APIC-access-page和Virtual-APIC-accesses"><a href="#APIC-access-page和Virtual-APIC-accesses" class="headerlink" title="APIC-access page和Virtual APIC accesses"></a>APIC-access page和Virtual APIC accesses</h4><p>当<code>Virtualize APIC accesses</code>开启时，处理器会启用<code>APIC-access page</code>。此时<code>APIC-access page</code>对应着物理的local APIC页面，其地址保存在VMCS的<code>APIC-access address</code>当中。从硬件上，CPU能够帮助我们去监控这个页，这样一来，只要guest尝试线性访问local APIC，就会访问APIC-access page。那么此时，会根据“APIC-register virtualization”位的设置，进行不同的处理：  </p>
+<ol>
+<li>发生APIC access VM-exit，或者APIC write VM-exit </li>
+<li>直接访问virtual-APIC page中的数据（某些寄存器）</li>
+</ol>
+<p><code>virtual-APIC page</code>是什么？当“use TPR shadow”为1时，会引入<code>virtual-APIC page</code>，它是local APIC的影子页面，其地址保存在VMCS的<code>virtual-APIC address</code>当中。它保存了一份TPR数据，也即virtual TPR寄存器。实际上，<code>virtual-APIC page</code>的唯一用处就是对寄存器进行虚拟化，这样每个VCPU都能够有不同的<code>TPR、VEOI、VLDR等寄存器</code>，其中TPR寄存器保存在<code>virtual-APIC page</code>的80H位置。  </p>
+<p>那么<code>APIC-access page</code>和<code>virtual-APIC page</code>之间是什么关系呢？实际上是一种类似映射的关系，当guest尝试线性访问（注意，只有线性访问）APIC-access page页面时，会实际上访问vritual-APIC page页面中的数据：<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/VT-x/APIC.png?raw=true =400x300" alt="">  </p>
+<p>在虚拟机访问<code>APIC access page</code>时：<br>（1）如果线性访问了没有虚拟化支持的offset位置，会产生APIC-access VM-exit<br>（2）采用guest-physical方式访问<code>APIC-access page</code>页中的任何offset位置，都会发生APIC-access VM-exit<br>（3）采用physical方式访问<code>APIC-access page</code>，可能发生APIC-access VM-exit  </p>
+<p>这里我们主要关注线性访问的情况，来具体说明<code>APIC-access page</code>和<code>virtual-APIC page</code>的工作原理。<br><strong>读APIC-access page</strong><br>在如下情况时，访问<code>APIC-access page</code>时，都会产生<code>APIC-access VM-exit</code>:<br>（1）“use TPR shadow”为0<br>（2）尝试执行APIC-access page<br>（3）访问数据超过32位<br>（4）访问APIC-access page的动作发生在虚拟化写APIC-access page过程中<br>（5）尝试进行跨过local APIC寄存器边界的访问<br>在除上述原因之外的情况下，读取时，会根据<code>APIC-register virtualizaion</code>位的设置，来进行读取：<br>（1）如果<code>APIC-register virtualization</code>为0，则如果线性读取TPR，直接从<code>virtual-APIC page</code>返回；否则直接产生APIC-access VM-exit<br>（2）如果<code>APIC-register virtualization</code>为1，如果访问的是某些特定的偏移量，那么就会返回virtual-APIC page中的数据；否则直接产生APIC-access VM-exit<br><strong>写APIC-access page</strong><br>在如下情况时，访问<code>APIC-access page</code>时，都会产生<code>APIC access VM-exit</code>：<br>（1）“use TPR shadow”为0<br>（2）访问数据超过32位<br>（3）访问APIC-access page的动作发生在虚拟化写APIC-access page过程中<br>（4）尝试进行跨过local APIC寄存器边界的访问<br>在除上述原因之外的情况下，读取时，会根据<code>APIC-register virtualizaion</code>和<code>virtual-interrupt delivery</code>位的设置，来进行写入：<br>（1）如果<code>APIC-register virtualization</code>和<code>virtual-interrupt deliverty</code>都为0，那么如果线性写TPR时，会写入VTPR中（virtual-APIC page），其他位置都会产生APIC-access VM-exit<br>（2）如果<code>APIC-register virtualization</code>为0，但<code>virtual-interrupt deliverty</code>为1，那么线性写TPR、EOI、ICR时，会写入virtual-APIC page中对应的虚拟寄存器当中，其他位置都会产生APIC-access VM-exit<br>（3）如果<code>APIC-register virtualization</code>为1，则会允许更多的虚拟寄存器写入virtual APIC，其他位置则产生APIC-access VM-exit<br>但是写入是一个更为复杂的过程，在写入对应的虚拟寄存器之后，处理器还要进行后续的处理，也即APIC-write emulation：根据<code>virtual-interrupt deliverty</code>的设置，产生APIC-write VM-exit，或者对local APIC进行虚拟化操作（TPR、EOI、Self-IPI等）。<br><strong>小结</strong><br>APIC虚拟化的过程，实际上也是借助了硬件的力量。根据CPU的设置，可以把不同VCPU的虚拟寄存器保存在不同的页中。这样不仅避免了虚拟机对素主机的污染，还能够减少VM-exit的发生，并且能够让每个VCPU拥有独立的寄存器，对性能是有极大提高的。  </p>
+<h4 id="中断的evaluation和delivery"><a href="#中断的evaluation和delivery" class="headerlink" title="中断的evaluation和delivery"></a>中断的evaluation和delivery</h4><p>现在，我们来看看VMM是如何判断一个中断是否应该交给虚拟机进行处理，并且将它转交给虚拟机的。<br>VMCS中有一个<code>External-interrupt exiting</code>位。当这个位设置为1时，如果CPU处于<code>non-root</code>模式，那么所有中断都会产生VM-exit；如果设置为0，则所有中断都会直接交给虚拟机进行处理。这无疑是很不安全的，所以一般情况下外部中断都会造成VM-exit，并且在虚拟化层处理完反回虚拟机（VM-entry）时，就需要做中断的evaluation（判断是否有中断要交给虚拟机处理）和delivery（将中断交给IDT处理）了。<br>在这几种情况下，会引发中断的evaluation和delivery：  </p>
+<p>（1）TPR虚拟化、EOI虚拟化、Self-IPI虚拟化。<br>（2）在VM-entry操作时引发。<br>（3）在利用“post-interrupt processing”机制处理外部中断时引发。  </p>
+<p>中断的注入，是通过由VMM将中断写入VMCS对应的信息位来实现的，当中断完成后，通过读取中断的返回信息，来分析中断是否正确。在中断注入之后，处理器会完成evaluation和delivery的工作（还有另一种方式是posted interrupt 处理）<br>那么evalutaion会根据什么来判断一个虚拟中断是否应该pending呢？处理器首先根据虚拟中断的优先级别进行判断，只有在<code>RVI[7:4]</code>大于<code>VPPR[7:4]</code>时，处理器才会组织一次虚拟中断pending。随后处理器还要检查虚拟中断是否被阻塞，只有不被阻塞打时候，会通过guest-IDT来进行deliver执行。<br>在evaluation之后，虚拟中断就会通过guest-IDT进行delivery。这时处理器将会更新virtual-APIC的状态，包括VIRR、VISR、RVI、SVI状态等，随后处理器根据虚拟中断向量号，通过guest-IDT表进行deliver执行。  </p>
+<h4 id="posted-interrupt处理"><a href="#posted-interrupt处理" class="headerlink" title="posted interrupt处理"></a>posted interrupt处理</h4><p>前面我们也提到了，外部中断通常都会造成VM-exit的下陷。posted interrupt处理，能够直接把中断注入到guest当中去，而不需要产生VM-exit。<br>假如启用了posted interrupt处理，那么处理器对外部中断的处理就不同了：<br>（1）一般情况下，如果external-interrupt exiting为1，那么外部中断产生VM-exit；否则直接通过guest IDT表处理；<br>（2）在posted interrupt机制下，如果处理器接收到的外部中断向量号是预先定义的通知向量号时，不会产生VM-exit，而是通过PIR的pending处理。<br>那么这个不产生VM-exit的过程是如何发生的呢？<br>VMM会在<code>posted-interrupt notification vector</code>当中设置通知向量号，一旦local APIC接到对应的外部中断，那么就会通知guest进行post-interrupt处理。此时posted interrupt描述符内的PIR请求列表会复制到VIRR（virtual-APIC页的另一个用途），形成新的虚拟中断请求列表，然后再对这个虚拟中断请求表中的中断请求进行evaluation和delivery。<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/VT-x/PI.png?raw=true =500x200" alt=""><br>而如果外部中断向量号不等于通告的向量，那么依然会触发VM-exit，处理器获取外部中断的信息，通过VMCS中的字段来进行注入中断。  </p>
+<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/VT-x/posted-interrupt.jpg?raw=true" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>可以看到，中断虚拟化方式的改变，是随着硬件特性的改变而改变的。硬件的支持，主要就是为了<del>提升效率</del>。我们知道，VM-exit无疑会给虚拟机的性能带来损耗，而中断的特殊性，又使得它极有可能造成VM-exit。所以intel的工作，一直都致力于减少VM-exit的发生，提升虚拟机的性能。让虚拟机直接接管硬件一直是虚拟化中极为重要的一种思想，不论是IO还是中断，或者是内存，都是如此。    </p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h4 id=&quot;中断虚拟化做了什么？&quot;&gt;&lt;a href=&quot;#中断虚拟化做了什么？&quot; class=&quot;headerlink&quot; title=&quot;中断虚拟化做了什么？&quot;&gt;&lt;/a&gt;中断虚拟化做了什么？&lt;/h4&gt;&lt;p&gt;我们首先回忆一下中断的过程：中断由设备发送给了I/O APIC，随后交给CP
+    
+    </summary>
+    
+    
+      <category term="linux" scheme="http://sec-lbx.tk/tags/linux/"/>
+    
+      <category term="操作系统" scheme="http://sec-lbx.tk/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+  </entry>
   
   <entry>
     <title>浅谈GCC编译优化</title>
@@ -1783,52 +1831,6 @@ unsigned int count;
   </entry>
   
   <entry>
-    <title>IDAPython:进阶（一）</title>
-    <link href="http://sec-lbx.tk/2017/04/05/IDAPython-advance1/"/>
-    <id>http://sec-lbx.tk/2017/04/05/IDAPython-advance1/</id>
-    <published>2017-04-05T13:40:00.000Z</published>
-    <updated>2017-07-28T09:04:47.000Z</updated>
-    
-    <content type="html"><![CDATA[<h4 id="IDAPython-进阶（一）"><a href="#IDAPython-进阶（一）" class="headerlink" title="IDAPython:进阶（一）"></a>IDAPython:进阶（一）</h4><h4 id="Instruction-feature"><a href="#Instruction-feature" class="headerlink" title="Instruction feature"></a>Instruction feature</h4><p>在IDAPython中，时常可以看到使用<code>insn.get_canon_feature()</code>来获取指令“特性”。这里，<code>instruc_t</code>类中包含有两个变量，<code>name</code>和<code>feature</code>，其中<code>feature</code>是一系列的指令特征位。 </p>
-<h4 id="IDA-SDK"><a href="#IDA-SDK" class="headerlink" title="IDA SDK"></a>IDA SDK</h4><p>IDA SDK分为很多hpp，不过它的文档不是特别友好，这里我把比较重要的header的作用给列出来，方便日后进行分析和使用：  </p>
-<ul>
-<li>area:程序中地址范围的集合，它表示一段连续的地址范围，由起始地址和终止地址来表示，例如程序中的segments就是用area来表示的，它在IDA的数据库当中，是采用B树的形式来保存的。  </li>
-<li>bitrange:用来管理一段连续bits的容器，类似一个数组。  </li>
-<li>bytes:处理byte特性的函数，在程序中，每个byte都被识别成一个32-bit的值，他被IDA称为<code>flags</code>。对于bits和flags，都只能通过特定的函数去修改、访问。flags被保存在*.id1这样的文件当中。  </li>
-<li>diskio:IDA的文件IO函数，通常不使用标准的C来进行I/O，而使用这个hpp当中的函数。  </li>
-<li>entry:处理entry入口的函数，每个entry包含有地址、名称、序号。  </li>
-<li>fixup:处理地址、偏移量的修正等。  </li>
-<li>frame:处理栈桢，包括参数、返回值、保存的寄存器和局部变量等。  </li>
-<li>funcs:处理反汇编程序的函数，函数由多个chunk组成。  </li>
-<li>idp:包含IDP模块的接口，包括有目标的汇编器，以及当前处理器的信息。例如判断一条指令是否为jmp、ret等，都可以使用这种方式。</li>
-<li>lines:处理反汇编text line的生成。</li>
-<li>name:处理命名，给一个特定地址命名等，但是指令和数据的中间是不能命名的。  </li>
-<li>netnode:database的底层接口，程序被以B树的形式保存，而B树的信息则是存放在netnode当中的。  </li>
-<li>offset:用来处理offset的函数，一个操作数可能自身，或者一部分表示了程序中的偏移量。  </li>
-<li>search:中间层的搜索函数，包括寻找数据、代码等。  </li>
-<li>segments:用来和程序中段进行交互的函数，IDA需要程序中的所有地址，属于一个segment(每个地址都必须属于一个segment)，如果地址不属于一个segment，那么这些bytes不能被转换为指令、不能用有名字、不能拥有注释。每个segment都有一个selector。  </li>
-<li>ua:处理程序指令的反汇编。它包含两种函数，第一类是通过kernel来反汇编，第二类是通过IDP模块来反汇编，它们是“helper”。反汇编可以分为三步：分析、仿真、转化为文字。  </li>
-<li>xref:处理交叉引用的情况。包括有CODE和DATA的引用。  </li>
-</ul>
-<h4 id="获取文件名"><a href="#获取文件名" class="headerlink" title="获取文件名"></a>获取文件名</h4><p>SDK提供了两个api，idaapi.get_root_filename能够用来获取当前的文件名，而idaapi.get_input_file_path能够用来获取包含路径的文件名。这两个函数定义在nalt当中。  </p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h4 id=&quot;IDAPython-进阶（一）&quot;&gt;&lt;a href=&quot;#IDAPython-进阶（一）&quot; class=&quot;headerlink&quot; title=&quot;IDAPython:进阶（一）&quot;&gt;&lt;/a&gt;IDAPython:进阶（一）&lt;/h4&gt;&lt;h4 id=&quot;Instruction-f
-    
-    </summary>
-    
-    
-      <category term="系统安全" scheme="http://sec-lbx.tk/tags/%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/"/>
-    
-      <category term="linux" scheme="http://sec-lbx.tk/tags/linux/"/>
-    
-      <category term="操作系统" scheme="http://sec-lbx.tk/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
-    
-  </entry>
-  
-  <entry>
     <title>IDAPython：入门</title>
     <link href="http://sec-lbx.tk/2017/04/05/IDAPython/"/>
     <id>http://sec-lbx.tk/2017/04/05/IDAPython/</id>
@@ -1881,163 +1883,44 @@ for x in range(0,5):
   </entry>
   
   <entry>
-    <title>深入理解文件系统</title>
-    <link href="http://sec-lbx.tk/2017/03/30/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/"/>
-    <id>http://sec-lbx.tk/2017/03/30/深入理解文件系统/</id>
-    <published>2017-03-30T03:40:00.000Z</published>
+    <title>IDAPython:进阶（一）</title>
+    <link href="http://sec-lbx.tk/2017/04/05/IDAPython-advance1/"/>
+    <id>http://sec-lbx.tk/2017/04/05/IDAPython-advance1/</id>
+    <published>2017-04-05T13:40:00.000Z</published>
     <updated>2017-07-28T09:04:47.000Z</updated>
     
-    <content type="html"><![CDATA[<h4 id="虚拟文件系统（VFS）的思想和作用"><a href="#虚拟文件系统（VFS）的思想和作用" class="headerlink" title="虚拟文件系统（VFS）的思想和作用"></a>虚拟文件系统（VFS）的思想和作用</h4><p>实际上，看到<strong>Virtaul</strong>，我们就应该想到VFS的作用，是虚拟出一个中间层，来实现某些部分的<strong>统一处理</strong>。实际上，VFS要解决的是，让应用能够“以一种通用的方式”，去访问不同类型的文件系统：<br><figure class="image-bubble">
-                <div class="img-lightbox">
-                    <div class="overlay"></div>
-                    <img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/VFS.png?raw=true" alt="=100" title="">
-                </div>
-                <div class="image-caption">=100</div>
-            </figure><br>可以看到，对于不同类型的文件系统、网络文件系统、伪文件系统，应用对它们的操作接口都是一致的,而底层的驱动则会完成实际的区分工作。  </p>
-<h4 id="通用文件模型"><a href="#通用文件模型" class="headerlink" title="通用文件模型"></a>通用文件模型</h4><p>VFS通过一个通用文件模型，来表示一个文件系统，它从顶层到底层，一共维护四个数据结构。这里我们通过磁盘文件系统来举例子说明：<br>file：文件<strong>对象</strong>。如果一个进程要和一个对象进行交互，那么久要在访问期间存放一个文件对象在内核内存中。<br>dentry：目录项<strong>对象</strong>。用来存放目录项和对应文件链接信息，每个磁盘文件系统，都有特殊的方式，将该类信息存在磁盘上。<br>inode：索引节点<strong>对象</strong>。用来存放关于具体文件的一般信息，对基于磁盘的文件系统来说，通常对应于存放在磁盘上的文件控制块，其节点号唯一标识文件系统中的文件。<br>superblock：超级块<strong>对象</strong>。对应安装的文件系统的信息，他对应磁盘上的文件系统控制块。</p>
-<figure class="image-bubble">
-                <div class="img-lightbox">
-                    <div class="overlay"></div>
-                    <img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/%E9%80%9A%E7%94%A8%E6%A8%A1%E5%9E%8B.png?raw=true" alt="＝100" title="">
-                </div>
-                <div class="image-caption">＝100</div>
-            </figure>
-<p>这张图反映出了在一次访问中，各个对象是如何参与到过程中去的。这里我为什么要把<strong>对象</strong>给加粗呢？VFS实际采用的是一种面向对象的方式（虽然它是用C语言写的）。每个object，都有一系列的“操作方式”，VFS为这些对象提供了“统一的”接口，而具体的文件系统则提供了千差万别的实现方式，这是由一个函数指针表来实现的。  </p>
-<h4 id="文件对象"><a href="#文件对象" class="headerlink" title="文件对象"></a>文件对象</h4><p>这里我们从文件对象开始说。如果留意进程的<code>task_struct</code>（定义在sched.h当中），你会发现一个<code>fs_struct</code>结构，以及一个<code>files_struct</code>结构。<br>其中<code>fs_struct</code>保存了当前点工作目录和根目录：</p>
-<pre><code>struct fs_struct {
-int users;
-spinlock_t lock;
-seqcount_t seq;
-int umask;
-int in_exec;
-struct path root, pwd;
-};
-</code></pre><p>而<code>files_struct</code>结构则保存了当前进程所打开的所有文件，它们保存在<code>fdtable</code>中：</p>
-<pre><code>struct fdtable {
-unsigned int max_fds;
-struct file __rcu **fd;      /* current fd array */
-unsigned long *close_on_exec;
-unsigned long *open_fds;
-struct rcu_head rcu;
-};
-</code></pre><p>当<code>open()</code>系统调用发生时，文件描述符实际上是fd中的下标。现在我们终于看到<code>file</code>结构了，这里我只列出了重要的部分：</p>
-<pre><code>struct file {
-union {
-    struct llist_node    fu_llist;
-    struct rcu_head     fu_rcuhead;
-} f_u;
-struct path        f_path;
-struct inode        *f_inode;    /* cached value */
-const struct file_operations    *f_op;  
-
-struct mutex        f_pos_lock;
-loff_t            f_pos;
-
-} __attribute__((aligned(4)));    
-</code></pre><p>这里，<code>loff_t</code>是平时我们用来在文件读写上用于定位的指针，显然这个值必须放在file当中，因为可能会有几个进程同时访问一个文件。<br>而<code>f_op</code>正反映出了“通用文件模型的”特点，它保存了文件操作的对应指针；这个值是在进程打开文件时，从文件索引节点中的i_fop中复制的。<br>当然在<code>file</code>中我们也看到了<code>dentry</code>和<code>inode</code>的影子：<code>f_path</code>包含了<code>dentry *</code>，而*f_indoe也是file的一个域，它们分别指向了对应文件点dentry对象和inode对象，我们将会在接下来对它们进行详细的说明。  </p>
-<h4 id="目录项对象"><a href="#目录项对象" class="headerlink" title="目录项对象"></a>目录项对象</h4><p>在上一节中，我们知道了文件对象描述了应用和文件的联系。这里，目录项是用来描述具体的文件系统中的目录项的，他的作用是：<strong>用来快速找到一个路径，并且与文件相关联</strong>。假设进程需要查找一个路径，那么路径中的每一个分量，都会有一个目录项与之对应。并且，目录项会把每个分量和它对应的索引节点联系起来。<code>dentry</code>的定义如下：  </p>
-<pre><code>struct dentry {
-unsigned int d_flags;        
-seqcount_t d_seq;        
-struct hlist_bl_node d_hash;    /* 哈希链表 */
-struct dentry *d_parent;    /* 父目录项 */
-struct qstr d_name;            /* 目录名 */
-struct inode *d_inode;        /* 对应的索引节点 */
-unsigned char d_iname[DNAME_INLINE_LEN];    /* small names */
-
-struct lockref d_lockref;    /* per-dentry lock and refcount */
-const struct dentry_operations *d_op;    /* dentry操作 */
-struct super_block *d_sb;    /* 文件的超级块对象 */
-unsigned long d_time;        
-void *d_fsdata;            
-
-struct list_head d_lru;        /* LRU list */
-struct list_head d_child;    /* child of parent list */
-struct list_head d_subdirs;    /* our children */
-
-union {
-    struct hlist_node d_alias;    /* inode alias list */
-     struct rcu_head d_rcu;
-} d_u;
-};  
-</code></pre><p>这里可以看到，除开自身的名称、引用计数等，目录项对象中有这些关键的结构：<code>d_op</code>描述了目录项所对应的操作（通用模型的特点）；<code>d_sb</code>则是    文件的超级块对象，至于<code>d_inode</code>则是这个目录项关联的索引节点（当然它们并不是一一对应的关系）。注意，这里还有个很重要的变量：<code>d_lockref</code>，它其实就是一个计数器，说明了这个目录项对象的引用次数。</p>
-<p>目录项对象保存在<strong>dentry cache</strong>中。linux操作系统为了提高目录项对象的处理效率，设计了这个高速缓存。这是因为，从磁盘中读取目录项，并且构造相应的目录项对象是需要花费大量的时间的，因此，在完成对目录项对象的操作之后，在内存中（尽量）保存它们具有很重要的意义。这个dentry cache，其本质是一个哈希链表，它定义在list_bl.h当中（它的hash计算在<code>d_hash</code>中完成）。我注意到，对于每一个dentry，都有一个d_flags，它的可能的值，定义在dcache.h当中。因为dentry cache的大小也是有限的，因此我们也不可能无限制地把dentry保存在cache中。因此linux首先把dentry的状态进行了定义：  </p>
-<p>free：该状态目录项对象不包含有效信息，未被VFS使用<br>unused：目前没有被内核使用，d_count的值为0，d_inode仍然指向相关的索引节点<br>in use：正在被使用，d_count的值大于0，d_inode仍然指向相关的索引节点<br>negative：与目录项关联的索引节点不存在，相应的磁盘索引节点已经被删除（d_inode为负数）。 </p>
-<p>那么对于unused和negative这一类目录项，linux使用了一个LRU（最近最少使用）的双向链表，一旦dentry cache的大小吃紧，就从这个LRU链表中删除dentry。  </p>
-<h4 id="索引节点对象"><a href="#索引节点对象" class="headerlink" title="索引节点对象"></a>索引节点对象</h4><p>索引节点对象，是VFS当中最为重要的一个数据结构。它的作用是<strong>表示文件的相关信息</strong>。这里的相关信息，不包括文件本身的内容，而是诸如文件大小、拥有者、创建时间等信息。在一个文件被首次访问时，内核会在内存中构造它的索引节点对象。我们在操作系统中，可以任意修改一个文件的名字，但是索引节点和文件是一一对应的（由索引节点号标识），只要文件存在它就会存在（注意，超级块对象和索引节点对象在硬盘上都是有对应的实体数据结构的，在使用时利用硬盘上的内容，在内存中构造索引节点对象）。目录项是用来找到一个对应的索引节点实体，而具体与文件关联的工作则是由索引节点完成的。<br>让我们来看看索引节点的数据结构（只取了重要的部分），其定义在fs.h当中：</p>
-<pre><code>struct inode {
-    struct hlist_node    i_hash;     /* 散列表，用于快速查找inode */
-    struct list_head    i_list;        /* 相同状态索引节点链表 */
-    struct list_head    i_sb_list;  /* 文件系统中所有节点链表  */
-    struct list_head    i_dentry;   /* 目录项链表 */
-    unsigned long        i_ino;      /* 节点号 */
-    atomic_t        i_count;        /* 引用计数 */
-    unsigned int        i_nlink;    /* 硬链接数 */
-    uid_t            i_uid;          /* 使用者id */
-    gid_t            i_gid;          /* 使用组id */
-    struct timespec        i_atime;    /* 最后访问时间 */
-    struct timespec        i_mtime;    /* 最后修改时间 */
-    struct timespec        i_ctime;    /* 最后改变时间 */
-    const struct inode_operations    *i_op;  /* 索引节点操作函数 */
-    const struct file_operations    *i_fop;    /* 缺省的索引节点操作 */
-    struct super_block    *i_sb;              /* 相关的超级块 */
-    struct address_space    *i_mapping;     /* 相关的地址映射 */
-    struct address_space    i_data;         /* 设备地址映射 */
-    unsigned int        i_flags;            /* 文件系统标志 */
-    void            *i_private;             /* fs 私有指针 */
-    unsigned long i_state;
-};
-</code></pre><p>可以看到，inode同样采用了多个链表来保存。<code>i_hash</code>用来快速查找inode，<code>i_list</code>则是相同状态索引结点形成的双链表，这包含有未用索引节点链表，正在使用索引节点链表和脏索引节点链表等。<code>i_dentry</code>是所有使用该节点的dentry链表。值得注意的是，inode不仅仅包含了自身索引节点的操作函数<code>i_op</code>，还有指向（缺省）文件操作的指针<code>i_fop</code>。当然，inode还会和super_block有联系。<code>i_sb</code>是索引节点所在的超级块，而i_sb_list则是超级块中的所有节点的链表。<br>当在某个目录下创建、打开一个文件时，内核就会调用<code>create()</code>为这个文件创建一个inode。VFS通过inode的i_op-&gt;create()函数来完成这个工作；它将目录的inode、新打开文件的dentry、访问权限作为参数；<code>lookup()</code>函数用来查找指定文件的dentry，<code>link()</code>和<code>symlink()</code>分别用来创建硬链接和软链接。</p>
-<h4 id="超级块对象"><a href="#超级块对象" class="headerlink" title="超级块对象"></a>超级块对象</h4><p>与前面几类对象不同的是，超级块对象表述的内容更加庞大一些：它表示的是一个“已安装的文件系统”。它在文件系统安装时建立，在文件系统卸载时删除。其定义在fs.h当中，这里我只列举出了较为关键的域。</p>
-<pre><code>struct super_block {
-        struct list_head        s_list;         //超级块链表的指针
-        dev_t                   s_dev;          //设备标识符
-        unsigned char           s_blocksize_bits;
-        unsigned long           s_blocksize;
-        loff_t                  s_maxbytes;     //文件的最长长度
-        struct file_system_type *s_type;
-        const struct super_operations   *s_op;  //超级块的操作
-        const struct dquot_operations   *dq_op; 
-        const struct quotactl_ops       *s_qcop;
-        const struct export_operations *s_export_op;
-        unsigned long           s_flags;    //安装标识
-        struct dentry           *s_root;    //根目录的目录项
-        int                     s_count;
-        const struct xattr_handler **s_xattr;
-        struct list_head        s_inodes;       //所有的inodes链（打开文件的inodes链）
-
-        struct block_device     *s_bdev;    //块设备
-          char s_id[32];                          //块设备名称
-        u8 s_uuid[16];                          //UUID            fmode_t                 s_mode;
-
-        char *s_subtype;
-        const struct dentry_operations *s_d_op; //default d_op for dentries
-        void *s_fs_indo;     //文件系统的信息指针
-        };
-</code></pre><p>在linux中，每个超级块代表一个已安装的文件系统。所有的超级块链表，是以一种双向环形链表的形式链接在一起的。其<code>prev</code>、<code>next</code>保存在<code>list_head</code>域中。超级块对象中，保存有其根目录的<code>dentry</code>，以及其所有的<code>inode</code>。<code>s_fs_info</code>则指向了文件系统的超级块信息。而对于超级块来说，同样定义有<code>s_op</code>，也即超级块的操作表。<br>超级块一般是储存在磁盘的特定扇区当中，但如果是基于内存对文件系统，比如proc、sysfs，则是保存在内存当中，而超级块对象，则是在使用时创建的，它保存在内存中。  </p>
-<h4 id="硬链接和软链接与复制"><a href="#硬链接和软链接与复制" class="headerlink" title="硬链接和软链接与复制"></a>硬链接和软链接与复制</h4><p>linux里面，可以把文件分成三个部分：文件名（dentry），inode，数据。<br>复制的定义很明确，就是为这三个部分，都创建一个新的副本。<br>硬链接的本质是一个“文件名”，一个文件可能有多个“文件名”，inode并不包含文件名，而只是有一个索引节点号。硬链接实际上就是为链接文件创建一个新的dentry，并将dentry写入父目录的数据中，而硬链接所对应的inode依然没有变。所以删除硬链接只是删除了dentry，而inode结点数减少1而已。<br>软链接就是一个普通的文件，只不过它的数据保存的是另一个文件的路径。软链接的创建，调用了<code>__ext4_new_inode()</code>来创建一个新的inode，并把<code>dentry-&gt;name</code>作为了它的内容。也就是说，软链接也同时创建了这三个部分。<br>二者的区别在哪里呢？首先，硬链接共享了inode，因此它不能跨文件系统；但是软链接不受这个限制。由于相同的原因，硬链接只能对存在的文件进行创建，而软链接不是。而且硬链接有可能会在目录中引入循环，所以不能指向目录；但软链接不会，因为它有一个inode实体可以跟踪。不过不论删除软链接还是硬链接，都不会对原文件、具有相同inode号的文件造成影响。但如果原文件被删除，软链接会变成死链接，硬链接不会，因为inode的计数并没有变成0。<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/%E9%93%BE%E6%8E%A5.png?raw=true" alt="">    </p>
-<h4 id="路径名查找"><a href="#路径名查找" class="headerlink" title="路径名查找"></a>路径名查找</h4><p>每当进程需要识别一个文件时，就把它的文件路径名，传递给某个VFS系统调用，比如<code>open()</code>。在路径查找中，有个辅助的数据结构：<code>nameidata</code>，它用来向函数传递参数，并且保存查找的结果：  </p>
-<pre><code>struct nameidata {
-    struct path    path;
-    struct qstr    last;
-    struct path    root;
-    struct inode    *inode; /* path.dentry.d_inode */
-    unsigned int    flags;
-    unsigned    seq, m_seq;
-    int        last_type;
-    unsigned    depth;
-    struct file    *base;
-    char *saved_names[MAX_NESTED_LINKS + 1];
-};
-</code></pre><p>在查找完成后，<code>path</code>中保存了目录项，<code>depth</code>表示了当前路径的深度，<code>saved_names</code>保存了符号链接处理中的路径名。<br>路径查找的复杂性，主要体现在VFS系统的一些特点上：（1）必须对目录的访问权限进行检查；（2）文件名可能是符号链接；（3）要考虑符号链接可能带来的循环引用；（4）文件名可能是文件系统的安装点（5）路径名和进程的命名空间有关等。<br>路径名查找的入口是<code>path_lookup()</code>，它调用了<code>filename_lookup()</code>。这个函数对nameidata进行了简单的填充，随后调用<code>lookupat()</code>。<br><code>lookupat()</code>函数中通过一个循环，和<code>path_init()</code>函数，逐级向下进行查找，检查目录的访问权限，并且考虑符号链接等情况。  </p>
+    <content type="html"><![CDATA[<h4 id="IDAPython-进阶（一）"><a href="#IDAPython-进阶（一）" class="headerlink" title="IDAPython:进阶（一）"></a>IDAPython:进阶（一）</h4><h4 id="Instruction-feature"><a href="#Instruction-feature" class="headerlink" title="Instruction feature"></a>Instruction feature</h4><p>在IDAPython中，时常可以看到使用<code>insn.get_canon_feature()</code>来获取指令“特性”。这里，<code>instruc_t</code>类中包含有两个变量，<code>name</code>和<code>feature</code>，其中<code>feature</code>是一系列的指令特征位。 </p>
+<h4 id="IDA-SDK"><a href="#IDA-SDK" class="headerlink" title="IDA SDK"></a>IDA SDK</h4><p>IDA SDK分为很多hpp，不过它的文档不是特别友好，这里我把比较重要的header的作用给列出来，方便日后进行分析和使用：  </p>
+<ul>
+<li>area:程序中地址范围的集合，它表示一段连续的地址范围，由起始地址和终止地址来表示，例如程序中的segments就是用area来表示的，它在IDA的数据库当中，是采用B树的形式来保存的。  </li>
+<li>bitrange:用来管理一段连续bits的容器，类似一个数组。  </li>
+<li>bytes:处理byte特性的函数，在程序中，每个byte都被识别成一个32-bit的值，他被IDA称为<code>flags</code>。对于bits和flags，都只能通过特定的函数去修改、访问。flags被保存在*.id1这样的文件当中。  </li>
+<li>diskio:IDA的文件IO函数，通常不使用标准的C来进行I/O，而使用这个hpp当中的函数。  </li>
+<li>entry:处理entry入口的函数，每个entry包含有地址、名称、序号。  </li>
+<li>fixup:处理地址、偏移量的修正等。  </li>
+<li>frame:处理栈桢，包括参数、返回值、保存的寄存器和局部变量等。  </li>
+<li>funcs:处理反汇编程序的函数，函数由多个chunk组成。  </li>
+<li>idp:包含IDP模块的接口，包括有目标的汇编器，以及当前处理器的信息。例如判断一条指令是否为jmp、ret等，都可以使用这种方式。</li>
+<li>lines:处理反汇编text line的生成。</li>
+<li>name:处理命名，给一个特定地址命名等，但是指令和数据的中间是不能命名的。  </li>
+<li>netnode:database的底层接口，程序被以B树的形式保存，而B树的信息则是存放在netnode当中的。  </li>
+<li>offset:用来处理offset的函数，一个操作数可能自身，或者一部分表示了程序中的偏移量。  </li>
+<li>search:中间层的搜索函数，包括寻找数据、代码等。  </li>
+<li>segments:用来和程序中段进行交互的函数，IDA需要程序中的所有地址，属于一个segment(每个地址都必须属于一个segment)，如果地址不属于一个segment，那么这些bytes不能被转换为指令、不能用有名字、不能拥有注释。每个segment都有一个selector。  </li>
+<li>ua:处理程序指令的反汇编。它包含两种函数，第一类是通过kernel来反汇编，第二类是通过IDP模块来反汇编，它们是“helper”。反汇编可以分为三步：分析、仿真、转化为文字。  </li>
+<li>xref:处理交叉引用的情况。包括有CODE和DATA的引用。  </li>
+</ul>
+<h4 id="获取文件名"><a href="#获取文件名" class="headerlink" title="获取文件名"></a>获取文件名</h4><p>SDK提供了两个api，idaapi.get_root_filename能够用来获取当前的文件名，而idaapi.get_input_file_path能够用来获取包含路径的文件名。这两个函数定义在nalt当中。  </p>
 ]]></content>
     
     <summary type="html">
     
-      &lt;h4 id=&quot;虚拟文件系统（VFS）的思想和作用&quot;&gt;&lt;a href=&quot;#虚拟文件系统（VFS）的思想和作用&quot; class=&quot;headerlink&quot; title=&quot;虚拟文件系统（VFS）的思想和作用&quot;&gt;&lt;/a&gt;虚拟文件系统（VFS）的思想和作用&lt;/h4&gt;&lt;p&gt;实际上，看到&lt;str
+      &lt;h4 id=&quot;IDAPython-进阶（一）&quot;&gt;&lt;a href=&quot;#IDAPython-进阶（一）&quot; class=&quot;headerlink&quot; title=&quot;IDAPython:进阶（一）&quot;&gt;&lt;/a&gt;IDAPython:进阶（一）&lt;/h4&gt;&lt;h4 id=&quot;Instruction-f
     
     </summary>
     
+    
+      <category term="系统安全" scheme="http://sec-lbx.tk/tags/%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/"/>
     
       <category term="linux" scheme="http://sec-lbx.tk/tags/linux/"/>
     
