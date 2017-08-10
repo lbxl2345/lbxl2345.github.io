@@ -110,7 +110,7 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="搜尋">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
@@ -172,7 +172,19 @@
 
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
-            <h4 id="中断的发生"><a href="#中断的发生" class="headerlink" title="中断的发生"></a>中断的发生</h4><p>中断指的是CPU在运行时，系统内发生了需要“急需处理”的事件，于是乎CPU暂停了当前正在执行对程序，转而去执行相应的时间处理程序，在处理完之后返回原来的地方执行。那么这些事件包含：（1）外部中断指的是那些CPU外的周边原件引发的中断，例如I/O中断，I/O设备异常（接下来我们把它称为“中断”）；（2）内部中断指的是在CPU内部执行时，由程序自身、异常、陷阱（例如程序中的断点）产生的中断（包括硬件中断和软件中断，其中软件中断是指一系列的指令）（接下来我们把它称作“异常”）。<br>这两种中断类型不同，产生方式也不一样：<br>（1）中断因为是由外设硬件发出的，所以需要由中断控制器（APIC）参与其中。在中断发出后，首先由APIC来进行处理。这种方式解决两个问题：（a）有大量的外设，而CPU的引脚资源有限，所以不能满足所有的直连需要；（b）如果设备中断和CPU直连，那么在MP系统中，中断负载等需求就无法实现了。<br>可以看到，在x86_64系统下，local APIC通过I/O APIC接受链接，I/O APIC把中断处理成中断消息，并按照规则转发给local APIC。APIC决定了由哪个CPU来处理中断，为某个引脚产生特定的中断向量（中断投递协议），并把中断请求发送给对应的CPU处理。CPU之间的中断通信，也是通过APIC来完成的。<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/APIC.png?raw=true" alt=""><br>I/O设备通过IRQ线与APIC相连，APIC将信号转化为对应的向量，并把这个向量放在它的I/O端口上，允许CPU通过数据总线来读这个向量；随后它发送一个信息给CPU的INTR引脚，从而触发中断，当CPU通过把中断信号写进APIC的I/O端口时，把INTR线清除。目前，外部中断的编号是从32开始，这是由于0-31号中断是留给异常和内部中断使用的，INTEL手册上也给出了这样一个表，详细说明了中断号的对应关系（新的CPU确实用的编号也变多了，就比如#VE）：<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/table1.png?raw=true" alt=""><br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/table2.png?raw=true" alt=""><br>（2）异常则是由CPU自身产生的中断。那么这种中断是否需要APIC介入呢？除了I/O APIC的中断信号外，local APIC还会接收其他来源的中断，例如CPU LINT0/LINT1中断（本地连接的I/O），性能计数器中断、APIC内部错误中断等。但这不意味着所有异常都需要中断控制器的参与；软件中断的中断号是可以由指令直接给出的，因此是不需要中断控制器的参与的。  </p>
+            <h4 id="中断的发生"><a href="#中断的发生" class="headerlink" title="中断的发生"></a>中断的发生</h4><p>中断指的是CPU在运行时，系统内发生了需要“急需处理”的事件，于是乎CPU暂停了当前正在执行对程序，转而去执行相应的时间处理程序，在处理完之后返回原来的地方执行。那么这些事件包含：（1）外部中断指的是那些CPU外的周边原件引发的中断，例如I/O中断，I/O设备异常（接下来我们把它称为“中断”）；（2）内部中断指的是在CPU内部执行时，由程序自身、异常、陷阱（例如程序中的断点）产生的中断（包括硬件中断和软件中断，其中软件中断是指一系列的指令）（接下来我们把它称作“异常”）。<br>这两种中断类型不同，产生方式也不一样：<br>（1）中断因为是由外设硬件发出的，所以需要由中断控制器（APIC）参与其中。在中断发出后，首先由APIC来进行处理。这种方式解决两个问题：（a）有大量的外设，而CPU的引脚资源有限，所以不能满足所有的直连需要；（b）如果设备中断和CPU直连，那么在MP系统中，中断负载等需求就无法实现了。<br>可以看到，在x86_64系统下，local APIC通过I/O APIC接受链接，I/O APIC把中断处理成中断消息，并按照规则转发给local APIC。APIC决定了由哪个CPU来处理中断，为某个引脚产生特定的中断向量（中断投递协议），并把中断请求发送给对应的CPU处理。CPU之间的中断通信，也是通过APIC来完成的。<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/APIC.png?raw=true" alt=""><br>I/O设备通过IRQ线与APIC相连，APIC将信号转化为对应的向量，并把这个向量放在它的I/O端口上，允许CPU通过数据总线来读这个向量；随后它发送一个信息给CPU的INTR引脚，从而触发中断，当CPU通过把中断信号写进APIC的I/O端口时，把INTR线清除。目前，外部中断的编号是从32开始，这是由于0-31号中断是留给异常和内部中断使用的，INTEL手册上也给出了这样一个表，详细说明了中断号的对应关系（新的CPU确实用的编号也变多了，就比如#VE）：<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/table1.png?raw=true" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure><br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E4%B8%AD%E6%96%AD/table2.png?raw=true" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure><br>（2）异常则是由CPU自身产生的中断。那么这种中断是否需要APIC介入呢？除了I/O APIC的中断信号外，local APIC还会接收其他来源的中断，例如CPU LINT0/LINT1中断（本地连接的I/O），性能计数器中断、APIC内部错误中断等。但这不意味着所有异常都需要中断控制器的参与；软件中断的中断号是可以由指令直接给出的，因此是不需要中断控制器的参与的。  </p>
 <h4 id="中断的屏蔽"><a href="#中断的屏蔽" class="headerlink" title="中断的屏蔽"></a>中断的屏蔽</h4><p>注意，这里的中断屏蔽指的是对外部中断的屏蔽（mask）。CPU内部的中断（异常）是不能屏蔽的。在内核同步中，通常采用这种方式来屏蔽外部的中断；并结合自旋锁来保证中断不被打断。<br>IRQ和NMI分别是可屏蔽和不可屏蔽中断（例子：打印机中断和电源掉电）。CPU在处理NMI中断时，不从外部硬件接收中断向量号，其对应中断向量号固定为2。NMI中断通常用于故障处理（协处理器运算出错、存储器校验出错等危急事件）。NMI处理程序通常应以IRET指令来结束。IRQ则是可以屏蔽的一类中断，通过设置CPU中的IF位，可以对IRQ进行屏蔽，这个标志位可以通过软件来设置。例如在处理某个高优先级中断时，CPU收到了低优先级的中断，那么就会对它进行屏蔽。<br>而对于内核的同步，则是由操作系统内部来实现的。可以说，目前我们讨论的只是中断是如何被送到CPU的，而CPU把中断和异常送给操作系统，并操作系统做出反应的过程，则属于另一个范畴了（在另一片博文<a href="http://sec-lbx.tk/2017/02/15/%E4%B8%AD%E6%96%AD%E7%9B%B8%E5%85%B3/">http://sec-lbx.tk/2017/02/15/中断相关</a>）。  </p>
 <h4 id="异常和中断的处理"><a href="#异常和中断的处理" class="headerlink" title="异常和中断的处理"></a>异常和中断的处理</h4><p>我们可以把内核，理解成一个服务器，它不断处理着用户的各种请求。因此，它需要保证每项服务在处理时，不会互相造成影响；其并发的来源包括内核的抢占和中断处理等。在内核态，中断处理程序也可以嵌套，这种情况下中断处理程序必须永不阻塞，在它运行的期间不能发生进程切换（不过缺页异常是一个例外，它不会引起进一步的异常，所以缺页异常可以切换进程，提高效率）。中断处理程序既可以抢占其他的中断处理程序，也可以抢占异常处理程序。相反的，异常处理程序<strong>从不会</strong>抢占中断处理程序。如果已经在内核态了，就只可能发生缺页异常（当然，也包含有现在的EPT缺页），但它们不会进一步的进行导致缺页的操作。<br>异常处理程序通常包含三个部分：（1）在内核堆栈保存大多数寄存器的内容；（2）用高级的C函数对异常进行处理；（3）通过<code>ret_from_exception()</code>函数，从异常处理程序退出。<br>中断处理程序与异常处理程序不同，因为当下运行的进程可能和中断完全无关。中断可以分为：I/O中断、时钟中断、处理器间中断。这里，以I/O中断为例。I/O中断必须能够为多个设备同时提供服务，而多个设备却可能会共享一个IRQ线。它往往包含四个部分：（1）在内核态堆栈中保存IRQ的值和寄存器的内容；（2）给为IRQ服务的PIC发一个应答，允许PIC进一步发出中断；（3）执行共享这个IRQ的所有设备的中断服务历程（<code>do_IRQ()</code>会执行与一个中断相关的所有中断服务历程，并且验证它的设备是否需要关注，这也与驱动注册相关）；（4）跳转到<code>ret_from_inrt()</code>后终止。<br>IRQ的动态分配：IRQ线可能在最后时刻才和一个设备驱动相关联，这样即使几个硬件设备不共享IRQ，也能够让几个设备在不同时刻使用同一个IRQ向量。  </p>
 <h4 id="处理器间的中断（IPI）"><a href="#处理器间的中断（IPI）" class="headerlink" title="处理器间的中断（IPI）"></a>处理器间的中断（IPI）</h4><p>由某个CPU向系统中的其他CPU发送中断信号，它不由IRQ总线，而是由本地APIC的总线传递。Linux定义了这样几种处理器间中断。<br>CALL_FUNCTION：强制所有剩余CPU执行发送者传递过来的函数<br>RESCHEDULE_VECTOR：让被中断的CPU重新调度<br>INVALIDATE_TLB_VECTOR：强制CPU清洗TLB  </p>
@@ -317,7 +329,7 @@
             
                 <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
             
-            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+            <span>本部落格係採用<a rel="license" href="https://creativecommons.org/licenses/by/4.0/deed.zh_TW">創用 CC 姓名標示 4.0 國際 授權條款授權</a></span>
         </p>
     </div>
     <div class="bottom">

@@ -109,7 +109,7 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="搜尋">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
@@ -331,7 +331,13 @@ unsigned int count;
     } *probes[255];
     struct mutex *lock;
 };
-</code></pre><p><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E7%A3%81%E7%9B%98IO/kobjmap.jpg?raw=true" alt="">  </p>
+</code></pre><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E7%A3%81%E7%9B%98IO/kobjmap.jpg?raw=true" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>  
 <p>不过到现在为止，我们都还没有说明，程序在访问字符设备时，是如何去调用正确的方法的。我们曾提到过，<code>open()</code>系统调用会改变字符文件对象的f_op字段，将默认文件操作替换为驱动的操作。在字符设备文件创建时，会调用<code>init_special_inode</code>来进行索引节点对象的初始化。其inode的操作(def_chr_fops)只包含一个默认的文件打开操作，也即<code>chrdev_open</code>。它会根据inode，首先利用<code>cdev_map</code>，找到对应的kobject，随后再进一步找到cdev，然后从中提取出文件操作的函数<code>fops</code>，并把它填充到file当中去。    </p>
 <pre><code>static int chrdev_open(struct inode *inode, struct file *filp)
 {
@@ -515,7 +521,7 @@ unsigned int count;
             
                 <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
             
-            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+            <span>本部落格係採用<a rel="license" href="https://creativecommons.org/licenses/by/4.0/deed.zh_TW">創用 CC 姓名標示 4.0 國際 授權條款授權</a></span>
         </p>
     </div>
     <div class="bottom">
