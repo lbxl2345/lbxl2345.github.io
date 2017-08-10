@@ -108,7 +108,7 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="搜尋">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
@@ -171,13 +171,7 @@
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <p>虚拟文件系统(VFS)是linux的内核软件层，它能够为各种文件系统提供通用的接口，例如linux，unix，windows系统。它是一个位于应用程序和具体文件之间的中间层。VFS引入了一个通用文件模型，它能够表示所有支持的文件系统，它包含有超级块对象、索引节点对象、文件对象、目录项对象。</p>
-<h3 id="超级块对象"><a href="#超级块对象" class="headerlink" title="超级块对象"></a>超级块对象</h3><p>super_block存放已安装文件系统的有关信息，对基于磁盘的文件系统，它通常对应于存放在磁盘上的文件系统控制块。对于一个特定的文件系统，超级块的格式是固定的。每一个文件系统都对应一个超级块，它们都会链接到一个超级块链表，而文件系统中的每个文件在打开时都需要在内存分配一个inode结构它们都要链接到超级块。<br><figure class="image-bubble">
-                <div class="img-lightbox">
-                    <div class="overlay"></div>
-                    <img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/%E8%B6%85%E7%BA%A7%E5%9D%97.jpg?raw=true" alt="pic" title="">
-                </div>
-                <div class="image-caption">pic</div>
-            </figure></p>
+<h3 id="超级块对象"><a href="#超级块对象" class="headerlink" title="超级块对象"></a>超级块对象</h3><p>super_block存放已安装文件系统的有关信息，对基于磁盘的文件系统，它通常对应于存放在磁盘上的文件系统控制块。对于一个特定的文件系统，超级块的格式是固定的。每一个文件系统都对应一个超级块，它们都会链接到一个超级块链表，而文件系统中的每个文件在打开时都需要在内存分配一个inode结构它们都要链接到超级块。<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/%E8%B6%85%E7%BA%A7%E5%9D%97.jpg?raw=true" alt="pic"></p>
 <h3 id="索引节点对象"><a href="#索引节点对象" class="headerlink" title="索引节点对象"></a>索引节点对象</h3><p>文件系统处理文件所需要的所有信息，都放在索引节点的数据结构中。对于每个文件来说，索引节点对文件是唯一的,其数据结构是inode。要访问一个文件时，一定要通过它的索引才知道它是什么类型的文件(inode有一个union包含了这个信息)。inode包含了文件的各种信息。它还包含一个dentry结构的队列，可以通过它找到与这个文件相联系的所有dentry结构，指向超级块的指针等。每个索引节点对象也包含在文件系统的双向循环链表中，这个链表的头保存在超级块对象中。同时，inodes也存放在一个散列表中，用来加快对索引对象的搜索。</p>
 <h3 id="文件对象"><a href="#文件对象" class="headerlink" title="文件对象"></a>文件对象</h3><p>文件对象用来描述一个进程怎样与一个打开的文件进行交互，它是在文件被打开的时候创建的，由一个file数据结构来描述。其存放的主要信息是文件指针，即文件中当前的位置。使用中的文件对象，包含在超级块所确立的链表中。其中的f_list字段包含了前一个/后一个对象的指针。</p>
 <h3 id="目录项对象"><a href="#目录项对象" class="headerlink" title="目录项对象"></a>目录项对象</h3><p>VFS把每个目录看作由若干子目录和文件组成的一个普通文件。在目录项被读入内存后，VFS就用一个dentry结构来表示它。对于进程查找路径中的每一个分量，都为其创建一个目录项分量。每个分量都和其对应的索引节点相联系。由于目录项对象可能会经常使用，因此linux使用目录项高速缓存，它包含一个不同状态的目录项对象集合，以及一个用于快速的散列表。</p>
@@ -331,7 +325,7 @@ struct files_struct *files;
             
                 <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
             
-            <span>本部落格係採用<a rel="license" href="https://creativecommons.org/licenses/by/4.0/deed.zh_TW">創用 CC 姓名標示 4.0 國際 授權條款授權</a></span>
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
         </p>
     </div>
     <div class="bottom">

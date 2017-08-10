@@ -109,7 +109,7 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="搜尋">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
@@ -288,13 +288,7 @@ if (q) {
     signal_setup_done(failed, ksig, stepping);
 }
 </code></pre><p>这里存在一个问题：<code>handle_signal()</code>处于内核态中，但信号处理程序是在用户态定义的，因此这里存在着堆栈转换的问题。linux采用的方法是：把内核态堆栈中的硬件上下文，拷贝到当前进程的用户态堆栈中。而当信号处理程序完成时，会自动调用<code>sigreturn()</code>把硬件上下文拷贝回内核态堆栈中，并且恢复用户态堆栈中的内容。这里需要构造一个用户态栈帧：</p>
-<figure class="image-bubble">
-                <div class="img-lightbox">
-                    <div class="overlay"></div>
-                    <img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E8%BF%9B%E7%A8%8B/%E6%A0%88.gif?raw=true" alt="" title="">
-                </div>
-                <div class="image-caption"></div>
-            </figure>  
+<p><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E8%BF%9B%E7%A8%8B/%E6%A0%88.gif?raw=true" alt="">  </p>
 <p>首先内核需要把内核栈中的内容复制到用户态堆栈中去，把内核态堆栈的返回地址修改为信号处理程序的入口。注意，为了让信号处理程序结束时，能够清除栈上的内容，用户态堆栈还应该放入一个信号处理程序的返回地址，它指向<code>__kernel_sigreturn()</code>，把硬件上下文拷贝到内核态堆栈，然后把这个栈帧删除，随后从内核态返回到用户态继续执行。</p>
 <h4 id="信号的接口"><a href="#信号的接口" class="headerlink" title="信号的接口"></a>信号的接口</h4><p><code>kill</code>/<code>tkill</code>/<code>kgill</code>系统调用分别用来给某个进程、线程组发送信号。其中，<code>kill(pid, sig)</code>分别接受一个进程的pid号，以及一个所发送的信号。<br>实时信号的发送则应该使用<code>rt_sigqueueinfo()</code>来进行发送。如果用户需要为信号指定一个操作，那么则应该使用<code>sigaction(sig, &amp;act, &amp;oact)</code>系统调用，<code>act</code>为指定的操作，而<code>old_act</code>用来记录以前的信号。  </p>
 
@@ -436,7 +430,7 @@ if (q) {
             
                 <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
             
-            <span>本部落格係採用<a rel="license" href="https://creativecommons.org/licenses/by/4.0/deed.zh_TW">創用 CC 姓名標示 4.0 國際 授權條款授權</a></span>
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
         </p>
     </div>
     <div class="bottom">

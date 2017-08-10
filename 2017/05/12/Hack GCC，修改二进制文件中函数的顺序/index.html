@@ -19,9 +19,9 @@
     <meta name="theme-color" content="#3F51B5">
     
     
-    <meta name="keywords" content="GCC,编译安全">
+    <meta name="keywords" content="编译安全,GCC">
     <meta name="description" content="GCC的函数输出直观的来看，在cgraphunit.c当中，expand_all_functions()被用来输出所有需要输出的函数。这里，它首先进行了一次拓扑排序，在ipa_reverse_postorder()中完成。这样做的好处是，当一个函数被输出时，它所调用的所有函数都已经被输出了。这个函数还会先把内联的情况给处理掉。在expand_all_functions()中，随后在允许函数重排列的">
-<meta name="keywords" content="GCC,编译安全">
+<meta name="keywords" content="编译安全,GCC">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hack GCC，改变函数的顺序">
 <meta property="og:url" content="http://sec-lbx.tk/2017/05/12/Hack GCC，修改二进制文件中函数的顺序/index.html">
@@ -106,7 +106,7 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="搜尋">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
@@ -326,7 +326,7 @@ else{
             
                 <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
             
-            <span>本部落格係採用<a rel="license" href="https://creativecommons.org/licenses/by/4.0/deed.zh_TW">創用 CC 姓名標示 4.0 國際 授權條款授權</a></span>
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
         </p>
     </div>
     <div class="bottom">
