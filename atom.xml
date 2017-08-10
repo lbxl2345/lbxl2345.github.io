@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://sec-lbx.tk/"/>
-  <updated>2017-08-10T09:12:49.000Z</updated>
+  <updated>2017-08-10T09:31:42.000Z</updated>
   <id>http://sec-lbx.tk/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://sec-lbx.tk/2017/07/30/%E8%AF%A6%E8%A7%A3%E4%B8%AD%E6%96%AD%E8%99%9A%E6%8B%9F%E5%8C%96/"/>
     <id>http://sec-lbx.tk/2017/07/30/详解中断虚拟化/</id>
     <published>2017-07-30T13:40:00.000Z</published>
-    <updated>2017-08-10T09:12:49.000Z</updated>
+    <updated>2017-08-10T09:31:42.000Z</updated>
     
     <content type="html"><![CDATA[<h4 id="中断虚拟化做了什么？"><a href="#中断虚拟化做了什么？" class="headerlink" title="中断虚拟化做了什么？"></a>中断虚拟化做了什么？</h4><p>我们首先回忆一下中断的过程：中断由设备发送给了I/O APIC，随后交给CPU本地的LAPIC进行处理。LAPIC把它交给CPU，然后由操作系统根据相应的IDT表进行处理。<br>很明显，如果虚拟机内的操作系统，要正常的去处理中断，就必须要由VMM来完成这两个部分：<br>（1）虚拟化LAPIC，并虚拟化客户机对APIC寄存器的访问<br>（2）虚拟化到达客户机的所有中断   </p>
 <h4 id="APIC的虚拟化"><a href="#APIC的虚拟化" class="headerlink" title="APIC的虚拟化"></a>APIC的虚拟化</h4><p>当虚拟机访问local APIC寄存器时，最终同样会对物理上的local APIC进行读写。那么VMM该如何对它进行控制，防止其干扰宿主机的环境呢？VMM有两种方式，来对local APIC进行限制：<br>（1）通过EPT来进行保护，处理对local APIC的读写，但这样每次都会触发EPT violation，无疑会引入开销；<br>（2）利用Virtual-APIC机制，guest对local APIC的访问实际上是对virtual-APIC页进行访问。  </p>
@@ -33,7 +33,7 @@
 <li>直接访问virtual-APIC page中的数据（某些寄存器）</li>
 </ol>
 <p><code>virtual-APIC page</code>是什么？当“use TPR shadow”为1时，会引入<code>virtual-APIC page</code>，它是local APIC的影子页面，其地址保存在VMCS的<code>virtual-APIC address</code>当中。它保存了一份TPR数据，也即virtual TPR寄存器。实际上，<code>virtual-APIC page</code>的唯一用处就是对寄存器进行虚拟化，这样每个VCPU都能够有不同的<code>TPR、VEOI、VLDR等寄存器</code>，其中TPR寄存器保存在<code>virtual-APIC page</code>的80H位置。  </p>
-<p>那么<code>APIC-access page</code>和<code>virtual-APIC page</code>之间是什么关系呢？实际上是一种类似映射的关系，当guest尝试线性访问（注意，只有线性访问）APIC-access page页面时，会实际上访问vritual-APIC page页面中的数据：<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/VT-x/APIC.png?raw=true =400x300" alt="">  </p>
+<p>那么<code>APIC-access page</code>和<code>virtual-APIC page</code>之间是什么关系呢？实际上是一种类似映射的关系，当guest尝试线性访问（注意，只有线性访问）APIC-access page页面时，会实际上访问vritual-APIC page页面中的数据。 </p>
 <p>在虚拟机访问<code>APIC access page</code>时：<br>（1）如果线性访问了没有虚拟化支持的offset位置，会产生APIC-access VM-exit<br>（2）采用guest-physical方式访问<code>APIC-access page</code>页中的任何offset位置，都会发生APIC-access VM-exit<br>（3）采用physical方式访问<code>APIC-access page</code>，可能发生APIC-access VM-exit  </p>
 <p>这里我们主要关注线性访问的情况，来具体说明<code>APIC-access page</code>和<code>virtual-APIC page</code>的工作原理。<br><strong>读APIC-access page</strong><br>在如下情况时，访问<code>APIC-access page</code>时，都会产生<code>APIC-access VM-exit</code>:<br>（1）“use TPR shadow”为0<br>（2）尝试执行APIC-access page<br>（3）访问数据超过32位<br>（4）访问APIC-access page的动作发生在虚拟化写APIC-access page过程中<br>（5）尝试进行跨过local APIC寄存器边界的访问<br>在除上述原因之外的情况下，读取时，会根据<code>APIC-register virtualizaion</code>位的设置，来进行读取：<br>（1）如果<code>APIC-register virtualization</code>为0，则如果线性读取TPR，直接从<code>virtual-APIC page</code>返回；否则直接产生APIC-access VM-exit<br>（2）如果<code>APIC-register virtualization</code>为1，如果访问的是某些特定的偏移量，那么就会返回virtual-APIC page中的数据；否则直接产生APIC-access VM-exit<br><strong>写APIC-access page</strong><br>在如下情况时，访问<code>APIC-access page</code>时，都会产生<code>APIC access VM-exit</code>：<br>（1）“use TPR shadow”为0<br>（2）访问数据超过32位<br>（3）访问APIC-access page的动作发生在虚拟化写APIC-access page过程中<br>（4）尝试进行跨过local APIC寄存器边界的访问<br>在除上述原因之外的情况下，读取时，会根据<code>APIC-register virtualizaion</code>和<code>virtual-interrupt delivery</code>位的设置，来进行写入：<br>（1）如果<code>APIC-register virtualization</code>和<code>virtual-interrupt deliverty</code>都为0，那么如果线性写TPR时，会写入VTPR中（virtual-APIC page），其他位置都会产生APIC-access VM-exit<br>（2）如果<code>APIC-register virtualization</code>为0，但<code>virtual-interrupt deliverty</code>为1，那么线性写TPR、EOI、ICR时，会写入virtual-APIC page中对应的虚拟寄存器当中，其他位置都会产生APIC-access VM-exit<br>（3）如果<code>APIC-register virtualization</code>为1，则会允许更多的虚拟寄存器写入virtual APIC，其他位置则产生APIC-access VM-exit<br>但是写入是一个更为复杂的过程，在写入对应的虚拟寄存器之后，处理器还要进行后续的处理，也即APIC-write emulation：根据<code>virtual-interrupt deliverty</code>的设置，产生APIC-write VM-exit，或者对local APIC进行虚拟化操作（TPR、EOI、Self-IPI等）。<br><strong>小结</strong><br>APIC虚拟化的过程，实际上也是借助了硬件的力量。根据CPU的设置，可以把不同VCPU的虚拟寄存器保存在不同的页中。这样不仅避免了虚拟机对素主机的污染，还能够减少VM-exit的发生，并且能够让每个VCPU拥有独立的寄存器，对性能是有极大提高的。  </p>
 <h4 id="中断的evaluation和delivery"><a href="#中断的evaluation和delivery" class="headerlink" title="中断的evaluation和delivery"></a>中断的evaluation和delivery</h4><p>现在，我们来看看VMM是如何判断一个中断是否应该交给虚拟机进行处理，并且将它转交给虚拟机的。<br>VMCS中有一个<code>External-interrupt exiting</code>位。当这个位设置为1时，如果CPU处于<code>non-root</code>模式，那么所有中断都会产生VM-exit；如果设置为0，则所有中断都会直接交给虚拟机进行处理。这无疑是很不安全的，所以一般情况下外部中断都会造成VM-exit，并且在虚拟化层处理完反回虚拟机（VM-entry）时，就需要做中断的evaluation（判断是否有中断要交给虚拟机处理）和delivery（将中断交给IDT处理）了。<br>在这几种情况下，会引发中断的evaluation和delivery：  </p>
@@ -486,9 +486,9 @@ DECL_ARGUMENTS(fndecl) = t;
     </summary>
     
     
-      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
-    
       <category term="GCC" scheme="http://sec-lbx.tk/tags/GCC/"/>
+    
+      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
     
   </entry>
   
@@ -533,9 +533,9 @@ emit_insn(BNDmode == BND64mode ? gen_bnd64_cu(op1, op0):gen_bnd32_cu(op1, op0));
     </summary>
     
     
-      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
-    
       <category term="GCC" scheme="http://sec-lbx.tk/tags/GCC/"/>
+    
+      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
     
   </entry>
   
@@ -574,9 +574,9 @@ else{
     </summary>
     
     
-      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
-    
       <category term="GCC" scheme="http://sec-lbx.tk/tags/GCC/"/>
+    
+      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
     
   </entry>
   
@@ -650,9 +650,9 @@ else{
     </summary>
     
     
-      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
-    
       <category term="GCC" scheme="http://sec-lbx.tk/tags/GCC/"/>
+    
+      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
     
   </entry>
   
@@ -717,9 +717,9 @@ rtx: mov ax, 8
     </summary>
     
     
-      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
-    
       <category term="GCC" scheme="http://sec-lbx.tk/tags/GCC/"/>
+    
+      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
     
   </entry>
   
@@ -775,9 +775,9 @@ register_callback(&quot;myplugin&quot;, PLUGIN_INFO, NULL, &amp;myplugin_info);
     </summary>
     
     
-      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
-    
       <category term="GCC" scheme="http://sec-lbx.tk/tags/GCC/"/>
+    
+      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
     
   </entry>
   
@@ -802,9 +802,9 @@ register_callback(&quot;myplugin&quot;, PLUGIN_INFO, NULL, &amp;myplugin_info);
     </summary>
     
     
-      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
-    
       <category term="GCC" scheme="http://sec-lbx.tk/tags/GCC/"/>
+    
+      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
     
   </entry>
   
