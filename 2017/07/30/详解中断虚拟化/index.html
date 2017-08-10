@@ -19,9 +19,9 @@
     <meta name="theme-color" content="#3F51B5">
     
     
-    <meta name="keywords" content="linux,操作系统">
+    <meta name="keywords" content="intel,虚拟化">
     <meta name="description" content="中断虚拟化做了什么？我们首先回忆一下中断的过程：中断由设备发送给了I/O APIC，随后交给CPU本地的LAPIC进行处理。LAPIC把它交给CPU，然后由操作系统根据相应的IDT表进行处理。很明显，如果虚拟机内的操作系统，要正常的去处理中断，就必须要由VMM来完成这两个部分：（1）虚拟化LAPIC，并虚拟化客户机对APIC寄存器的访问（2）虚拟化到达客户机的所有中断    APIC的虚拟化当虚拟">
-<meta name="keywords" content="linux,操作系统">
+<meta name="keywords" content="intel,虚拟化">
 <meta property="og:type" content="article">
 <meta property="og:title" content="关于中断虚拟化">
 <meta property="og:url" content="http://sec-lbx.tk/2017/07/30/详解中断虚拟化/index.html">
@@ -30,7 +30,7 @@
 <meta property="og:image" content="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/VT-x/APIC.png?raw=true =400x300">
 <meta property="og:image" content="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/VT-x/PI.png?raw=true =500x200">
 <meta property="og:image" content="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/VT-x/posted-interrupt.jpg?raw=true">
-<meta property="og:updated_time" content="2017-08-10T09:02:23.000Z">
+<meta property="og:updated_time" content="2017-08-10T09:03:18.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="关于中断虚拟化">
 <meta name="twitter:description" content="中断虚拟化做了什么？我们首先回忆一下中断的过程：中断由设备发送给了I/O APIC，随后交给CPU本地的LAPIC进行处理。LAPIC把它交给CPU，然后由操作系统根据相应的IDT表进行处理。很明显，如果虚拟机内的操作系统，要正常的去处理中断，就必须要由VMM来完成这两个部分：（1）虚拟化LAPIC，并虚拟化客户机对APIC寄存器的访问（2）虚拟化到达客户机的所有中断    APIC的虚拟化当虚拟">
@@ -222,7 +222,7 @@
 
         <div class="post-footer">
             
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/intel/">intel</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/虚拟化/">虚拟化</a></li></ul>
 
 
             
