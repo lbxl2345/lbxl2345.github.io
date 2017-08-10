@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://sec-lbx.tk/"/>
-  <updated>2017-08-10T09:03:18.000Z</updated>
+  <updated>2017-08-10T09:07:37.000Z</updated>
   <id>http://sec-lbx.tk/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://sec-lbx.tk/2017/07/30/%E8%AF%A6%E8%A7%A3%E4%B8%AD%E6%96%AD%E8%99%9A%E6%8B%9F%E5%8C%96/"/>
     <id>http://sec-lbx.tk/2017/07/30/详解中断虚拟化/</id>
     <published>2017-07-30T13:40:00.000Z</published>
-    <updated>2017-08-10T09:03:18.000Z</updated>
+    <updated>2017-08-10T09:07:37.000Z</updated>
     
     <content type="html"><![CDATA[<h4 id="中断虚拟化做了什么？"><a href="#中断虚拟化做了什么？" class="headerlink" title="中断虚拟化做了什么？"></a>中断虚拟化做了什么？</h4><p>我们首先回忆一下中断的过程：中断由设备发送给了I/O APIC，随后交给CPU本地的LAPIC进行处理。LAPIC把它交给CPU，然后由操作系统根据相应的IDT表进行处理。<br>很明显，如果虚拟机内的操作系统，要正常的去处理中断，就必须要由VMM来完成这两个部分：<br>（1）虚拟化LAPIC，并虚拟化客户机对APIC寄存器的访问<br>（2）虚拟化到达客户机的所有中断   </p>
 <h4 id="APIC的虚拟化"><a href="#APIC的虚拟化" class="headerlink" title="APIC的虚拟化"></a>APIC的虚拟化</h4><p>当虚拟机访问local APIC寄存器时，最终同样会对物理上的local APIC进行读写。那么VMM该如何对它进行控制，防止其干扰宿主机的环境呢？VMM有两种方式，来对local APIC进行限制：<br>（1）通过EPT来进行保护，处理对local APIC的读写，但这样每次都会触发EPT violation，无疑会引入开销；<br>（2）利用Virtual-APIC机制，guest对local APIC的访问实际上是对virtual-APIC页进行访问。  </p>
@@ -40,14 +40,7 @@
 <p>（1）TPR虚拟化、EOI虚拟化、Self-IPI虚拟化。<br>（2）在VM-entry操作时引发。<br>（3）在利用“post-interrupt processing”机制处理外部中断时引发。  </p>
 <p>中断的注入，是通过由VMM将中断写入VMCS对应的信息位来实现的，当中断完成后，通过读取中断的返回信息，来分析中断是否正确。在中断注入之后，处理器会完成evaluation和delivery的工作（还有另一种方式是posted interrupt 处理）<br>那么evalutaion会根据什么来判断一个虚拟中断是否应该pending呢？处理器首先根据虚拟中断的优先级别进行判断，只有在<code>RVI[7:4]</code>大于<code>VPPR[7:4]</code>时，处理器才会组织一次虚拟中断pending。随后处理器还要检查虚拟中断是否被阻塞，只有不被阻塞打时候，会通过guest-IDT来进行deliver执行。<br>在evaluation之后，虚拟中断就会通过guest-IDT进行delivery。这时处理器将会更新virtual-APIC的状态，包括VIRR、VISR、RVI、SVI状态等，随后处理器根据虚拟中断向量号，通过guest-IDT表进行deliver执行。  </p>
 <h4 id="posted-interrupt处理"><a href="#posted-interrupt处理" class="headerlink" title="posted interrupt处理"></a>posted interrupt处理</h4><p>前面我们也提到了，外部中断通常都会造成VM-exit的下陷。posted interrupt处理，能够直接把中断注入到guest当中去，而不需要产生VM-exit。<br>假如启用了posted interrupt处理，那么处理器对外部中断的处理就不同了：<br>（1）一般情况下，如果external-interrupt exiting为1，那么外部中断产生VM-exit；否则直接通过guest IDT表处理；<br>（2）在posted interrupt机制下，如果处理器接收到的外部中断向量号是预先定义的通知向量号时，不会产生VM-exit，而是通过PIR的pending处理。<br>那么这个不产生VM-exit的过程是如何发生的呢？<br>VMM会在<code>posted-interrupt notification vector</code>当中设置通知向量号，一旦local APIC接到对应的外部中断，那么就会通知guest进行post-interrupt处理。此时posted interrupt描述符内的PIR请求列表会复制到VIRR（virtual-APIC页的另一个用途），形成新的虚拟中断请求列表，然后再对这个虚拟中断请求表中的中断请求进行evaluation和delivery。<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/VT-x/PI.png?raw=true =500x200" alt=""><br>而如果外部中断向量号不等于通告的向量，那么依然会触发VM-exit，处理器获取外部中断的信息，通过VMCS中的字段来进行注入中断。  </p>
-<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><figure class="image-bubble">
-                <div class="img-lightbox">
-                    <div class="overlay"></div>
-                    <img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/VT-x/posted-interrupt.jpg?raw=true" alt="" title="">
-                </div>
-                <div class="image-caption"></div>
-            </figure>
-<p>可以看到，中断虚拟化方式的改变，是随着硬件特性的改变而改变的。硬件的支持，主要就是为了<del>提升效率</del>。我们知道，VM-exit无疑会给虚拟机的性能带来损耗，而中断的特殊性，又使得它极有可能造成VM-exit。所以intel的工作，一直都致力于减少VM-exit的发生，提升虚拟机的性能。让虚拟机直接接管硬件一直是虚拟化中极为重要的一种思想，不论是IO还是中断，或者是内存，都是如此。    </p>
+<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><p>可以看到，中断虚拟化方式的改变，是随着硬件特性的改变而改变的。硬件的支持，主要就是为了<del>提升效率</del>。我们知道，VM-exit无疑会给虚拟机的性能带来损耗，而中断的特殊性，又使得它极有可能造成VM-exit。所以intel的工作，一直都致力于减少VM-exit的发生，提升虚拟机的性能。让虚拟机直接接管硬件一直是虚拟化中极为重要的一种思想，不论是IO还是中断，或者是内存，都是如此。<br><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/VT-x/posted-interrupt.jpg?raw=true" alt=""></p>
 ]]></content>
     
     <summary type="html">
