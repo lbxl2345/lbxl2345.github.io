@@ -27,7 +27,7 @@
 <meta property="og:url" content="http://sec-lbx.tk/2017/06/19/编译链中的一环，静态链接详解/index.html">
 <meta property="og:site_name" content="Benxi&#39;s blog">
 <meta property="og:description" content="GCC的工作，到生成汇编代码为止。剩下的工作，交给了Binutils来完成：assembler和static linker。最近详细地研究了一下linker的工作过程。linker主要完成的是静态链接，目标文件合并的工作。例如，把多个.o文件合并成一个可执行文件。   两步链接两步链接指的是：    空间与地址的分配链接器会首先扫描所有的输入文件，获得各个段的长度、属性和位置，将段合并；并将输入目">
-<meta property="og:updated_time" content="2017-07-28T09:04:47.000Z">
+<meta property="og:updated_time" content="2017-08-11T11:37:11.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="编译链中的一环，静态链接详解">
 <meta name="twitter:description" content="GCC的工作，到生成汇编代码为止。剩下的工作，交给了Binutils来完成：assembler和static linker。最近详细地研究了一下linker的工作过程。linker主要完成的是静态链接，目标文件合并的工作。例如，把多个.o文件合并成一个可执行文件。   两步链接两步链接指的是：    空间与地址的分配链接器会首先扫描所有的输入文件，获得各个段的长度、属性和位置，将段合并；并将输入目">
@@ -106,7 +106,7 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="搜尋">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
@@ -185,7 +185,7 @@ typedef struct{
     Elf64_Xword r_info;
     ELF64_Sxword r_addend;
 }Elf64_Rela
-</code></pre><p>这里，<code>r_offset</code>是重定位入口，相对于段起始的偏移；<code>r_info</code>则是重定位入口的类型和符号。其低位表示重定位入口的类型；高位表示重定位入口的符号，在符号表中的下标。（不同处理器的格式不一样）<br>符号解析则是为符号的重定位提供帮助，根据多个目标文件中的符号表，生成全局符号表，找到相应的符号并进行重定位。对于未定义的符号，链接器都应该能在全局符号表中找到，否则就报出符号未定义的错误。<br>PS：x86_64只使用Elf64_Rela。  </p>
+</code></pre><p>这里，<code>r_offset</code>指定应用重定位操作的位置；<code>r_info</code>则指定必须对其进行重定位的符号表索引以及要应用的重定位类型。其低位表示重定位入口的类型；高位表示重定位入口的符号，在符号表中的下标。（不同处理器的格式不一样）<br>符号解析则是为符号的重定位提供帮助，根据多个目标文件中的符号表，生成全局符号表，找到相应的符号并进行重定位。对于未定义的符号，链接器都应该能在全局符号表中找到，否则就报出符号未定义的错误。<br>PS：x86_64只使用Elf64_Rela。  </p>
 <h4 id="指令修正"><a href="#指令修正" class="headerlink" title="指令修正"></a>指令修正</h4><p>在x86_64中，call、jmp、mov、lea等指令的寻址方式千差万别。对于重定位来说，修正指令的寻址方式定义在binutils/elfcpp/x86_64.h当中。这其中主要包括：<code>R_X86_64_64</code>和<code>R_X86_64_PC32</code>两种。这是因为X86_64上，相对寻址依然只支持32位（实际上这也很科学；因为一个可执行文件通常不会有4G那么大）。<br>两种寻址方式的修正方法分别为：<code>符号地址 + 保存在被修正位置的值</code>和<code>符号地址 + 保存在被修正位置的值  - 被修正的位置相对于段开始的偏移量</code>  </p>
 <h4 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h4><h6 id="第一步：初始化，parsing-command-line-amp-script-file"><a href="#第一步：初始化，parsing-command-line-amp-script-file" class="headerlink" title="第一步：初始化，parsing command line &amp; script file"></a>第一步：初始化，parsing command line &amp; script file</h6><p>linker的入口，在ldmain.c当中(通常在链接的时候，通过编译器内部直接进行调用)。首先，linker会调用bfd库，识别二进制文件的格式，生成各个段的描述符，并且转换为<code>canonical form</code>。（例如linker中的符号表识别工作，就是首先由BFD来进行分析和转化，然后linker直接在<code>canonical form</code>上进行操作，再由BFD来进行输出）因此在ldmain.c的<code>main</code>中，首先进行的也是bfd的初始化<code>bfd_init</code>。随后linker进行了一系列的设置，包括路径，回调函数、初始化，加载插件、读取命令、linker script等。  </p>
 <h6 id="第二步：文件和符号的加载"><a href="#第二步：文件和符号的加载" class="headerlink" title="第二步：文件和符号的加载"></a>第二步：文件和符号的加载</h6><p>随后，<code>lang_process</code>中，linker会对每个输入文件进行处理。对于每个输入文件，linker都会分配一个bfd，对输入文件进行扫描，识别出其中的符号。首先<code>open_input_bfds</code>为所有文件建立了bfd，随后载入文件中的所有符号。每个符号对应一个<code>bfd_link_hash_entry</code>，它们保存在<code>bfd_link_hash_table</code>当中。<code>bfd_link_add_symbols</code>将符号添加到hash_table当中。  </p>
@@ -331,7 +331,7 @@ typedef struct{
             
                 <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
             
-            <span>本部落格係採用<a rel="license" href="https://creativecommons.org/licenses/by/4.0/deed.zh_TW">創用 CC 姓名標示 4.0 國際 授權條款授權</a></span>
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
         </p>
     </div>
     <div class="bottom">
