@@ -135,6 +135,51 @@
     <ul class="post-list">
     
         <li class="post-list-item fade">
+            <article id="post-Intel：针对ROP攻击的特性"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2016-06-13 17:40:00" datetime="2016-06-13T09:40:00.000Z"  itemprop="datePublished">2016-06-13</time>
+
+        
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2016/06/13/Intel：针对ROP攻击的特性/">Intel:针对ROP攻击的新硬件特性</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        1 针对ROP/JOP/COP的intel特性ROP/JOP/COP攻击通常有两个特性：第一是包含执行特权命令的代码片段，至少包含一条控制流转移指令，其转移目的由返回stack或者寄存器中的目标地址决定；第二是它们将控制流指令(RET，CALL，JMP)的地址修改到新的目标地址。intel提供Shadow Stack和Indirect branch tracking两种功能，来防御这一类攻击...
+    
+
+        <a href="/2016/06/13/Intel：针对ROP攻击的特性/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/intel/">intel</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/硬件/">硬件</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
             <article id="post-I:O与page cache"
   class="article-card article-type-post" itemprop="blogPost">
 
@@ -546,56 +591,6 @@ tips...
     <div class="post-footer">
         
 	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/x64-assembly/">x64 assembly</a></li></ul>
-
-    </div>
-    
-</article>
-
-        </li>
-    
-        <li class="post-list-item fade">
-            <article id="post-x64函数参数的传递"
-  class="article-card article-type-post" itemprop="blogPost">
-
-    <div class="post-meta">
-        <time class="post-time" title="2016-03-21 17:40:00" datetime="2016-03-21T09:40:00.000Z"  itemprop="datePublished">2016-03-21</time>
-
-        
-
-
-    </div>
-
-    
-
-
-  
-    <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2016/03/21/x64函数参数的传递/">64bit-linux系统函数参数的传递</a>
-    </h3>
-  
-
-
-
-
-    <div class="post-content" id="post-content" itemprop="postContent">
-
-    
-        x64寄存器x64体系提供了16个通用寄存器，以及16个通用寄存器，以及16个浮点寄存器XMM/YMM寄存器。这些寄存器分为两类： 
-
-易失寄存器：由调用方假想的临时寄存器，并要在调用过程中销毁。
-非易失寄存器：需要在整个函数调用过程中保留其值，一旦使用，必须由调用方保存。
-
-也就是说，易失寄存器被定义为随时会改变，不用恢复它的初始值。但是如果要嵌入一些汇编语句，还是要对它们进行保护和恢复。...
-    
-
-        <a href="/2016/03/21/x64函数参数的传递/" class="post-more waves-effect waves-button">
-            Continue reading...
-        </a>
-    </div>
-    
-    <div class="post-footer">
-        
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/x86-64/">x86-64</a></li></ul>
 
     </div>
     

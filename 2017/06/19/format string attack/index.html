@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <title>Format string attack | Benxi&#39;s blog | 心如止水，乱则不明</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="系统安全">
+    <meta name="description" content="Format String VulnerabilityFSV（格式字符串漏洞）是一类特殊的漏洞，它是由对格式化输出函数（例如C语言中的printf函数家族）的不当使用而造成的。如果攻击者能够控制格式化输出函数的输入，并且应用程序没有进行适当的验证，那么攻击者就能：通过把格式化参数（例如’%x’）插入到数据中，来改变格式化输出函数的行为，让它误认为有更多的参数。而这些参数却并不存在，于是乎攻击者就能">
+<meta name="keywords" content="系统安全">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Format string attack">
+<meta property="og:url" content="http://sec-lbx.tk/2017/06/19/format string attack/index.html">
+<meta property="og:site_name" content="Benxi&#39;s blog">
+<meta property="og:description" content="Format String VulnerabilityFSV（格式字符串漏洞）是一类特殊的漏洞，它是由对格式化输出函数（例如C语言中的printf函数家族）的不当使用而造成的。如果攻击者能够控制格式化输出函数的输入，并且应用程序没有进行适当的验证，那么攻击者就能：通过把格式化参数（例如’%x’）插入到数据中，来改变格式化输出函数的行为，让它误认为有更多的参数。而这些参数却并不存在，于是乎攻击者就能">
+<meta property="og:image" content="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E5%AE%89%E5%85%A8/FSV.png?raw=true">
+<meta property="og:updated_time" content="2018-03-08T11:41:31.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Format string attack">
+<meta name="twitter:description" content="Format String VulnerabilityFSV（格式字符串漏洞）是一类特殊的漏洞，它是由对格式化输出函数（例如C语言中的printf函数家族）的不当使用而造成的。如果攻击者能够控制格式化输出函数的输入，并且应用程序没有进行适当的验证，那么攻击者就能：通过把格式化参数（例如’%x’）插入到数据中，来改变格式化输出函数的行为，让它误认为有更多的参数。而这些参数却并不存在，于是乎攻击者就能">
+<meta name="twitter:image" content="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E5%AE%89%E5%85%A8/FSV.png?raw=true">
+    
+        <link rel="alternate" type="application/atom+xml" title="Benxi&#39;s blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/back.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Benxi Liu</h5>
+          <a href="mailto:lbxhust@163.com" title="lbxhust@163.com" class="mail">lbxhust@163.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/lbxl2345" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Format string attack</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Format string attack</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-06-19T13:40:00.000Z" itemprop="datePublished" class="page-time">
+  2017-06-19
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Format-String-Vulnerability"><span class="post-toc-number">1.</span> <span class="post-toc-text">Format String Vulnerability</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Capability"><span class="post-toc-number">2.</span> <span class="post-toc-text">Capability</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#information-leakage"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">information leakage</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#overwrite-memory"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">overwrite memory</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+    
+<article id="post-format string attack"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Format string attack</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-06-19 21:40:00" datetime="2017-06-19T13:40:00.000Z"  itemprop="datePublished">2017-06-19</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h4 id="Format-String-Vulnerability"><a href="#Format-String-Vulnerability" class="headerlink" title="Format String Vulnerability"></a>Format String Vulnerability</h4><p>FSV（格式字符串漏洞）是一类特殊的漏洞，它是由对格式化输出函数（例如C语言中的printf函数家族）的不当使用而造成的。如果攻击者能够控制格式化输出函数的输入，并且应用程序没有进行适当的验证，那么攻击者就能：通过把格式化参数（例如’%x’）插入到数据中，来改变格式化输出函数的行为，让它误认为有更多的参数。而这些参数却并不存在，于是乎攻击者就能够对栈上的数据进行读写了。</p>
+<h4 id="Capability"><a href="#Capability" class="headerlink" title="Capability"></a>Capability</h4><p>格式化输出函数本身并没有漏洞，但FSV给了攻击者控制它们的能力。那么攻击者能够通过FSV做些什么呢？最简单的攻击就是利用FSV让程序崩溃，例如<code>printf (&quot;%s%s%s%s%s%s%s%s%s%s%s%s&quot;);</code>极有可能读取到没有映射的地址，造成程序崩溃。再者，攻击者也可以通过<code>%n</code>来篡改栈上的地址来达到同样的效果。</p>
+<h5 id="information-leakage"><a href="#information-leakage" class="headerlink" title="information leakage"></a>information leakage</h5><p>如果格式化字符串的输出是可见的（或者间接可见的，例如返回给一个字符串给remote attacker），那么FSV就可能导致信息的泄露。和前面所说的类似，<code>printf (&quot;%08x.%08x.%08x.%08x.%08x\n&quot;);</code>能够揭露栈上的一部分数据（在64位下揭露的是寄存器和栈中的数据）。但某些情况下，FSV能够被用来揭露任何地址的数据，而不仅仅是栈上的数据。<br><!--要做到这一点，攻击者需要具备两个条件：（1）有一个能够用来揭露内存的格式符号，例如"%s"；（2）把要揭露的地址放在栈（或者寄存器）中去。  --><br>通常，格式化字符串被放在栈上，而格式化输出函数内部通常会有一个<strong>内部指针</strong>，它指向当前的格式化字符串参数。如果能够把目标地址嵌入到格式化字符串当中去，那么目标地址就会被保存在栈上了，这样一来就可以通过操纵<strong>内部指针</strong>的方式，把目标地址的数据给输出。下面这个例子中，<code>user_input</code>保存了一个格式化字符串。在32位下，<code>printf (&quot;\x10\x01\x48\x08 %x %x %x %x %s&quot;);</code>能够揭露0x10014808地址的值。</p>
+<pre><code>int main(int argc, char *argv[])
+{
+    char user_input[100];
+    ... ... /* other variable definitions and statements */
+    scanf(&quot;%s&quot;, user_input); /* getting a string from user */
+    printf(user_input); /* Vulnerable place */
+    return 0;
+}
+</code></pre><p><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E5%AE%89%E5%85%A8/FSV.png?raw=true" alt="fsv1"></p>
+<p>那么64-bit下有什么区别呢？我也自己做了一个实验。与32-bit不同的是，只有第七个之后的参数会被放在栈上，而前六个参数是保存在栈中的。但类似的攻击依然可以成功。<code>printf(%p.%p.%p.%p.%p.%p)</code>会输出0x70252e70252e7025（也即user_input），这说明用户的输入自身也被输出了。那么如何实现一个任意的读呢？值得注意的是在64-bit下，地址不可避免的含有\x00，所以这里我把<code>\x00</code>放在字符串的最后。例如，<code>printf(&quot;%7s$lx\x00\x00\x00\x00\x00\x40\x00\x00&quot;);</code>输出的结果是400000。如果要输出任意地址的数据，就要注意对齐：<code>printf(&quot;%7$s\x00\x00\x00\x00\x00\x00\x40\x00\x00\x00\x00\x00&quot;)</code>会按照%s输出地址0x400000地址的内容。</p>
+<h5 id="overwrite-memory"><a href="#overwrite-memory" class="headerlink" title="overwrite memory"></a>overwrite memory</h5><p>FSV不仅能够用来泄露内存中的信息，还能被攻击者用来篡改内存中的数据。要达到这个目标，需要借助较为特殊的格式指定符号<code>%n</code>。它并不会打印任何东西，但它会存储它之前所打印的所有字符数。因此只要采用和information leakage相似的方法，只需要把%s替换为%n，就能够实现对任意地址的读写。例如在32-bit下，printf (“\x10\x01\x48\x08 %x %x %x %x %n”)就能够覆写0x10014808中的地址。然而，这个值是由%n之前的打印的字符数来决定的，那么用这种方法能够写一个任意值到指定的地址中去吗？通过指定宽度，可以节省字符串的长度，但是如果要设置一个较大的值，就需要进行多次写操作，例如利用％hn把一次%n分解成两次，这样一来printf就只用输出一小部分数据了。在64-bit下，我也做了一个类似的试验，<code>printf(&quot;123%7$s\x00\x50\x10\x60\x00\x00\x00\x00\x00&quot;)</code>会把123写到0x605010处。如果要写多个数，则需要按照从小到大的顺序进行输入，因为%n获取的值是累加的。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    <div class="content">
+        
+
+        
+        欢迎转载我的文章，本文链接：<a href="/2017/06/19/format string attack/" target="_blank" rel="external">http://sec-lbx.tk/2017/06/19/format string attack/</a>
+        
+    </div>
+    <footer>
+        <a href="http://sec-lbx.tk">
+            <img src="/img/avatar.jpg" alt="Benxi Liu">
+            Benxi Liu
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/系统安全/">系统安全</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/06/19/format string attack/&title=《Format string attack》 — Benxi's blog&pic=http://sec-lbx.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/06/19/format string attack/&title=《Format string attack》 — Benxi's blog&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://sec-lbx.tk/2017/06/19/format string attack/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Format string attack》 — Benxi's blog&url=http://sec-lbx.tk/2017/06/19/format string attack/&via=http://sec-lbx.tk" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://sec-lbx.tk/2017/06/19/format string attack/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2017/06/27/虚函数，原理和攻击方式/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">从虚函数的实现，到虚表劫持攻击</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/06/19/编译链中的一环，静态链接详解/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">编译链中的一环，静态链接详解</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Benxi Liu &copy; 2015 - 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://sec-lbx.tk/2017/06/19/format string attack/&title=《Format string attack》 — Benxi's blog&pic=http://sec-lbx.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://sec-lbx.tk/2017/06/19/format string attack/&title=《Format string attack》 — Benxi's blog&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://sec-lbx.tk/2017/06/19/format string attack/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Format string attack》 — Benxi's blog&url=http://sec-lbx.tk/2017/06/19/format string attack/&via=http://sec-lbx.tk" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://sec-lbx.tk/2017/06/19/format string attack/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://sec-lbx.tk/2017/06/19/format string attack/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
