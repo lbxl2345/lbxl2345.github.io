@@ -135,6 +135,84 @@
     <ul class="post-list">
     
         <li class="post-list-item fade">
+            <article id="post-关于uefi，安全启动"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2018-03-04 19:05:53" datetime="2018-03-04T11:05:53.000Z"  itemprop="datePublished">2018-03-04</time>
+
+        
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2018/03/04/关于uefi，安全启动/">No title</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        关于UEFI，安全启动UEFI是什么？Unified Extensible Firmware Interface，统一可扩展固件接口。它是操作系统和平台固件之间的接口，是一个标准。和BIOS相比，它（1）不需要使用平台相关的汇编语言，而可以通过C/C++语言来进行编写（这样就能够进行上层的复用）;（2）支持模块化的驱动（动态加载），包含版本信息，升级更方便；（3）性能更好（不使用中断，而是使...
+    
+
+        <a href="/2018/03/04/关于uefi，安全启动/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-多进程调试Tips"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2017-09-11 09:23:50" datetime="2017-09-11T01:23:50.000Z"  itemprop="datePublished">2017-09-11</time>
+
+        
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2017/09/11/多进程调试Tips/">No title</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        ####如果gdb没有对多进程调试的支持，gdb会在fork的时候继续调试parent进程；如果在子进程中设置了断点，会直接造成子进程终止（个人理解是无法处理SIGTRAP信号）。有一种绕弯子的方式能够去调试子进程：那就是在fork子进程之后，进行睡眠。在子进程睡眠的时候，就可以利用gdb进行attach，从而调试子进程。第二种方法是利用set detach-on-fork off来让父、子...
+    
+
+        <a href="/2017/09/11/多进程调试Tips/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
             <article id="post-详解中断虚拟化"
   class="article-card article-type-post" itemprop="blogPost">
 
@@ -505,100 +583,6 @@ Side Effect 表达式之前所说的表达式代码，通常表示的是值，�
 
         </li>
     
-        <li class="post-list-item fade">
-            <article id="post-gcc rtx"
-  class="article-card article-type-post" itemprop="blogPost">
-
-    <div class="post-meta">
-        <time class="post-time" title="2017-05-07 21:40:00" datetime="2017-05-07T13:40:00.000Z"  itemprop="datePublished">2017-05-07</time>
-
-        
-
-
-    </div>
-
-    
-
-
-  
-    <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/05/07/gcc rtx/">RTL，类型和操作数</a>
-    </h3>
-  
-
-
-
-
-    <div class="post-content" id="post-content" itemprop="postContent">
-
-    
-        RTXrtx(RTL expression)，也即一个RTL的表达式。在coretypes.h中，其被定义为struct rtx_def *rtx，也即一个指向rtx_def的指针。那么rtx_def是一个什么结构呢？它同样定义在rtl.h当中：
-struct GTY((chain_next (&quot;RTX_NEXT (&amp;%h)&quot;),
-    chain_prev (...
-    
-
-        <a href="/2017/05/07/gcc rtx/" class="post-more waves-effect waves-button">
-            Continue reading...
-        </a>
-    </div>
-    
-    <div class="post-footer">
-        
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译安全/">编译安全</a></li></ul>
-
-    </div>
-    
-</article>
-
-        </li>
-    
-        <li class="post-list-item fade">
-            <article id="post-GCC插件编写"
-  class="article-card article-type-post" itemprop="blogPost">
-
-    <div class="post-meta">
-        <time class="post-time" title="2017-05-05 21:40:00" datetime="2017-05-05T13:40:00.000Z"  itemprop="datePublished">2017-05-05</time>
-
-        
-
-
-    </div>
-
-    
-
-
-  
-    <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/05/05/GCC插件编写/">GCC插件：注册、编译和使用</a>
-    </h3>
-  
-
-
-
-
-    <div class="post-content" id="post-content" itemprop="postContent">
-
-    
-        GCC插件:注册、编译、和使用GCC 4.5版本后，为用户提供了接口，允许用户去编写额外的代码优化过程、改造代码形式、对代码进行分析。在GCC中，插件是以共享库的形式工作的。在安装好GCC之后，如果想编写插件，首先可以确定API的位置：
-gcc -print-file-name=plugin
-在gcc-plugin.h中，提供了以下的结构：struct plugin_name_args包含了...
-    
-
-        <a href="/2017/05/05/GCC插件编写/" class="post-more waves-effect waves-button">
-            Continue reading...
-        </a>
-    </div>
-    
-    <div class="post-footer">
-        
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译安全/">编译安全</a></li></ul>
-
-    </div>
-    
-</article>
-
-        </li>
-    
     </ul>
 
     
@@ -632,7 +616,7 @@ gcc -print-file-name=plugin
         </p>
     </div>
     <div class="bottom">
-        <p><span>Benxi Liu &copy; 2015 - 2017</span>
+        <p><span>Benxi Liu &copy; 2015 - 2018</span>
             <span>
                 
                 Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>

@@ -135,6 +135,96 @@
     <ul class="post-list">
     
         <li class="post-list-item fade">
+            <article id="post-I:O与page cache"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2016-06-08 17:40:00" datetime="2016-06-08T09:40:00.000Z"  itemprop="datePublished">2016-06-08</time>
+
+        
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2016/06/08/I:O与page cache/">详解页缓存page cache</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        buffer cache/page cachelinux中存在有两个缓存，buffer cache是针对设备的缓存，而page cache是针对文件的缓存。对于一个ext4文件系统来说，每个文件都有一棵radix树管理文件的缓存页，这些缓存页就是page cache；而对于每个块设备来说，都有一棵radix树来管理数据的缓存块，这些缓存块被称为buffer cache。在常见的linux系统...
+    
+
+        <a href="/2016/06/08/I:O与page cache/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/I-O/">I/O</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-详解virtio"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2016-05-26 17:40:00" datetime="2016-05-26T09:40:00.000Z"  itemprop="datePublished">2016-05-26</time>
+
+        
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2016/05/26/详解virtio/">vring前端</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        biobi_next其实只是用在request queue当中的，作为一个指向下一个bio结构体的指针。bi_bdev指向了设备。bi_iter的作用是用来对这个bio中的bio_vec进行迭代，这个bio_vec以数组的形式进行存放。每个bio都包含一个磁盘存储区标识符(存储区中的起始扇区号和扇区数目)和一个或多个描述与I/O操作相关的内存区的段。其中bvec_iter bi_iter包含...
+    
+
+        <a href="/2016/05/26/详解virtio/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/虚拟化/">虚拟化</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
             <article id="post-爬虫入门"
   class="article-card article-type-post" itemprop="blogPost">
 
@@ -513,102 +603,6 @@ tips...
 
         </li>
     
-        <li class="post-list-item fade">
-            <article id="post-nginx笔记2"
-  class="article-card article-type-post" itemprop="blogPost">
-
-    <div class="post-meta">
-        <time class="post-time" title="2016-03-14 17:40:00" datetime="2016-03-14T09:40:00.000Z"  itemprop="datePublished">2016-03-14</time>
-
-        
-
-
-    </div>
-
-    
-
-
-  
-    <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2016/03/14/nginx笔记2/">nginx笔记2.md</a>
-    </h3>
-  
-
-
-
-
-    <div class="post-content" id="post-content" itemprop="postContent">
-
-    
-        nginx多站点配置nginx提供了一个配置文件:./nginx/cosnf/nginx.conf。在启动时，nginx也只能使用一个配置文件。那么如何把多个站点的配置文件分开呢？对于不同的站点，可以对每个站点分别编写一个conf文件，然后在nginx.conf中，用include命令把它们包含起来。通常将其放在两个文件夹下:  
-mkdir ./nginx/sites-available/...
-    
-
-        <a href="/2016/03/14/nginx笔记2/" class="post-more waves-effect waves-button">
-            Continue reading...
-        </a>
-    </div>
-    
-    <div class="post-footer">
-        
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/">nginx</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/server/">server</a></li></ul>
-
-    </div>
-    
-</article>
-
-        </li>
-    
-        <li class="post-list-item fade">
-            <article id="post-nginx笔记1"
-  class="article-card article-type-post" itemprop="blogPost">
-
-    <div class="post-meta">
-        <time class="post-time" title="2016-03-11 17:40:00" datetime="2016-03-11T09:40:00.000Z"  itemprop="datePublished">2016-03-11</time>
-
-        
-
-
-    </div>
-
-    
-
-
-  
-    <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2016/03/11/nginx笔记1/">nginx笔记1.md</a>
-    </h3>
-  
-
-
-
-
-    <div class="post-content" id="post-content" itemprop="postContent">
-
-    
-        nginx 启动/终止/重载入启动:运行主程序即启动控制:
-nginx -s [signal]
-signal:stop, quit, reload, ropen
-应用新的配置:
-nginx -s reload
-配置文件nginx包含由配置文件中的directives（simple, block）来控制的模块。包含其他directives的block被称为context。不被任何context...
-    
-
-        <a href="/2016/03/11/nginx笔记1/" class="post-more waves-effect waves-button">
-            Continue reading...
-        </a>
-    </div>
-    
-    <div class="post-footer">
-        
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/">nginx</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/server/">server</a></li></ul>
-
-    </div>
-    
-</article>
-
-        </li>
-    
     </ul>
 
     
@@ -642,7 +636,7 @@ nginx -s reload
         </p>
     </div>
     <div class="bottom">
-        <p><span>Benxi Liu &copy; 2015 - 2017</span>
+        <p><span>Benxi Liu &copy; 2015 - 2018</span>
             <span>
                 
                 Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>

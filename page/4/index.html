@@ -135,6 +135,100 @@
     <ul class="post-list">
     
         <li class="post-list-item fade">
+            <article id="post-Chrome浏览器安全"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2016-12-27 21:00:00" datetime="2016-12-27T13:00:00.000Z"  itemprop="datePublished">2016-12-27</time>
+
+        
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2016/12/27/Chrome浏览器安全/">Chrome隔离/SOP策略</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        The “Web/Local” Boundary is FuzzyProcess-based隔离，是浏览器安全的基础。Chrome的设计，并不隔离每个web源，而是主要保证“本地系统”和“web”，但是由于Dropbox，Google Drive这样的web端云服务(这些服务和本地系统一体化了)，浏览器不再能保证web和本地系统的隔离了。这篇文章提出了chrome中存在的一个问题，如果pro...
+    
+
+        <a href="/2016/12/27/Chrome浏览器安全/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/chrome/">chrome</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/浏览器安全/">浏览器安全</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-memory-war"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2016-12-05 17:40:00" datetime="2016-12-05T09:40:00.000Z"  itemprop="datePublished">2016-12-05</time>
+
+        
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2016/12/05/memory-war/">内存攻击与保护</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        memory corruptionStep 1: 一个指针变成非法的指针第一种:越过它所引用的对象的边界(out-of-bounds pointer)，spatial error第二种:它所指向的对象已经被释放(dangling pointer)，temporal error  
+
+Bugs lead to Out-of-bounds:  
+
+allocation failure –&gt;...
+    
+
+        <a href="/2016/12/05/memory-war/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/二进制/">二进制</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/底层安全/">底层安全</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
             <article id="post-linux-sgx-sdk"
   class="article-card article-type-post" itemprop="blogPost">
 
@@ -504,96 +598,6 @@ Trusted Run-Time System:在SGX enclave内部执行的部分，...
 
         </li>
     
-        <li class="post-list-item fade">
-            <article id="post-I:O与page cache"
-  class="article-card article-type-post" itemprop="blogPost">
-
-    <div class="post-meta">
-        <time class="post-time" title="2016-06-08 17:40:00" datetime="2016-06-08T09:40:00.000Z"  itemprop="datePublished">2016-06-08</time>
-
-        
-
-
-    </div>
-
-    
-
-
-  
-    <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2016/06/08/I:O与page cache/">详解页缓存page cache</a>
-    </h3>
-  
-
-
-
-
-    <div class="post-content" id="post-content" itemprop="postContent">
-
-    
-        buffer cache/page cachelinux中存在有两个缓存，buffer cache是针对设备的缓存，而page cache是针对文件的缓存。对于一个ext4文件系统来说，每个文件都有一棵radix树管理文件的缓存页，这些缓存页就是page cache；而对于每个块设备来说，都有一棵radix树来管理数据的缓存块，这些缓存块被称为buffer cache。在常见的linux系统...
-    
-
-        <a href="/2016/06/08/I:O与page cache/" class="post-more waves-effect waves-button">
-            Continue reading...
-        </a>
-    </div>
-    
-    <div class="post-footer">
-        
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/I-O/">I/O</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
-
-    </div>
-    
-</article>
-
-        </li>
-    
-        <li class="post-list-item fade">
-            <article id="post-详解virtio"
-  class="article-card article-type-post" itemprop="blogPost">
-
-    <div class="post-meta">
-        <time class="post-time" title="2016-05-26 17:40:00" datetime="2016-05-26T09:40:00.000Z"  itemprop="datePublished">2016-05-26</time>
-
-        
-
-
-    </div>
-
-    
-
-
-  
-    <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2016/05/26/详解virtio/">vring前端</a>
-    </h3>
-  
-
-
-
-
-    <div class="post-content" id="post-content" itemprop="postContent">
-
-    
-        biobi_next其实只是用在request queue当中的，作为一个指向下一个bio结构体的指针。bi_bdev指向了设备。bi_iter的作用是用来对这个bio中的bio_vec进行迭代，这个bio_vec以数组的形式进行存放。每个bio都包含一个磁盘存储区标识符(存储区中的起始扇区号和扇区数目)和一个或多个描述与I/O操作相关的内存区的段。其中bvec_iter bi_iter包含...
-    
-
-        <a href="/2016/05/26/详解virtio/" class="post-more waves-effect waves-button">
-            Continue reading...
-        </a>
-    </div>
-    
-    <div class="post-footer">
-        
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/虚拟化/">虚拟化</a></li></ul>
-
-    </div>
-    
-</article>
-
-        </li>
-    
     </ul>
 
     
@@ -627,7 +631,7 @@ Trusted Run-Time System:在SGX enclave内部执行的部分，...
         </p>
     </div>
     <div class="bottom">
-        <p><span>Benxi Liu &copy; 2015 - 2017</span>
+        <p><span>Benxi Liu &copy; 2015 - 2018</span>
             <span>
                 
                 Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>

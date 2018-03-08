@@ -135,6 +135,100 @@
     <ul class="post-list">
     
         <li class="post-list-item fade">
+            <article id="post-gcc rtx"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2017-05-07 21:40:00" datetime="2017-05-07T13:40:00.000Z"  itemprop="datePublished">2017-05-07</time>
+
+        
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2017/05/07/gcc rtx/">RTL，类型和操作数</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        RTXrtx(RTL expression)，也即一个RTL的表达式。在coretypes.h中，其被定义为struct rtx_def *rtx，也即一个指向rtx_def的指针。那么rtx_def是一个什么结构呢？它同样定义在rtl.h当中：
+struct GTY((chain_next (&quot;RTX_NEXT (&amp;%h)&quot;),
+    chain_prev (...
+    
+
+        <a href="/2017/05/07/gcc rtx/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译安全/">编译安全</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-GCC插件编写"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2017-05-05 21:40:00" datetime="2017-05-05T13:40:00.000Z"  itemprop="datePublished">2017-05-05</time>
+
+        
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2017/05/05/GCC插件编写/">GCC插件：注册、编译和使用</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        GCC插件:注册、编译、和使用GCC 4.5版本后，为用户提供了接口，允许用户去编写额外的代码优化过程、改造代码形式、对代码进行分析。在GCC中，插件是以共享库的形式工作的。在安装好GCC之后，如果想编写插件，首先可以确定API的位置：
+gcc -print-file-name=plugin
+在gcc-plugin.h中，提供了以下的结构：struct plugin_name_args包含了...
+    
+
+        <a href="/2017/05/05/GCC插件编写/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译安全/">编译安全</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
             <article id="post-GCC overview"
   class="article-card article-type-post" itemprop="blogPost">
 
@@ -499,98 +593,6 @@ $ ls | more
 
         </li>
     
-        <li class="post-list-item fade">
-            <article id="post-IDAPython"
-  class="article-card article-type-post" itemprop="blogPost">
-
-    <div class="post-meta">
-        <time class="post-time" title="2017-04-05 21:40:00" datetime="2017-04-05T13:40:00.000Z"  itemprop="datePublished">2017-04-05</time>
-
-        
-
-
-    </div>
-
-    
-
-
-  
-    <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/04/05/IDAPython/">IDAPython：入门</a>
-    </h3>
-  
-
-
-
-
-    <div class="post-content" id="post-content" itemprop="postContent">
-
-    
-        取地址ScreenEA()和here()是最常用的取地址函数，它们会返回一个整数值。MaxEA()和MinxEA()可以用来取最大和最小地址。GetDisasm() GetMnem() GetOpand() 可以用来取某个地址中的指令、操作符、操作数等。  
-遍历：Segments，Functions,and InstructionsIDAPython的强大之处在于迭代。从Segments(...
-    
-
-        <a href="/2017/04/05/IDAPython/" class="post-more waves-effect waves-button">
-            Continue reading...
-        </a>
-    </div>
-    
-    <div class="post-footer">
-        
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IDA-pro/">IDA pro</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/静态分析/">静态分析</a></li></ul>
-
-    </div>
-    
-</article>
-
-        </li>
-    
-        <li class="post-list-item fade">
-            <article id="post-IDAPython-advance1"
-  class="article-card article-type-post" itemprop="blogPost">
-
-    <div class="post-meta">
-        <time class="post-time" title="2017-04-05 21:40:00" datetime="2017-04-05T13:40:00.000Z"  itemprop="datePublished">2017-04-05</time>
-
-        
-
-
-    </div>
-
-    
-
-
-  
-    <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/04/05/IDAPython-advance1/">IDAPython:进阶（一）</a>
-    </h3>
-  
-
-
-
-
-    <div class="post-content" id="post-content" itemprop="postContent">
-
-    
-        IDAPython:进阶（一）Instruction feature在IDAPython中，时常可以看到使用insn.get_canon_feature()来获取指令“特性”。这里，instruc_t类中包含有两个变量，name和feature，其中feature是一系列的指令特征位。 
-IDA SDKIDA SDK分为很多hpp，不过它的文档不是特别友好，这里我把比较重要的header的作...
-    
-
-        <a href="/2017/04/05/IDAPython-advance1/" class="post-more waves-effect waves-button">
-            Continue reading...
-        </a>
-    </div>
-    
-    <div class="post-footer">
-        
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/系统安全/">系统安全</a></li></ul>
-
-    </div>
-    
-</article>
-
-        </li>
-    
     </ul>
 
     
@@ -624,7 +626,7 @@ IDA SDKIDA SDK分为很多hpp，不过它的文档不是特别友好，这里我
         </p>
     </div>
     <div class="bottom">
-        <p><span>Benxi Liu &copy; 2015 - 2017</span>
+        <p><span>Benxi Liu &copy; 2015 - 2018</span>
             <span>
                 
                 Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>

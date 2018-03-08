@@ -135,6 +135,102 @@
     <ul class="post-list">
     
         <li class="post-list-item fade">
+            <article id="post-nginx笔记2"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2016-03-14 17:40:00" datetime="2016-03-14T09:40:00.000Z"  itemprop="datePublished">2016-03-14</time>
+
+        
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2016/03/14/nginx笔记2/">nginx笔记2.md</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        nginx多站点配置nginx提供了一个配置文件:./nginx/cosnf/nginx.conf。在启动时，nginx也只能使用一个配置文件。那么如何把多个站点的配置文件分开呢？对于不同的站点，可以对每个站点分别编写一个conf文件，然后在nginx.conf中，用include命令把它们包含起来。通常将其放在两个文件夹下:  
+mkdir ./nginx/sites-available/...
+    
+
+        <a href="/2016/03/14/nginx笔记2/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/">nginx</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/server/">server</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-nginx笔记1"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2016-03-11 17:40:00" datetime="2016-03-11T09:40:00.000Z"  itemprop="datePublished">2016-03-11</time>
+
+        
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2016/03/11/nginx笔记1/">nginx笔记1.md</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        nginx 启动/终止/重载入启动:运行主程序即启动控制:
+nginx -s [signal]
+signal:stop, quit, reload, ropen
+应用新的配置:
+nginx -s reload
+配置文件nginx包含由配置文件中的directives（simple, block）来控制的模块。包含其他directives的block被称为context。不被任何context...
+    
+
+        <a href="/2016/03/11/nginx笔记1/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/">nginx</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/server/">server</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
             <article id="post-寒假小结"
   class="article-card article-type-post" itemprop="blogPost">
 
@@ -219,7 +315,7 @@ glibc：程序的入口glibc中的csu/libc-start.c中，完成了从动态链接
         </p>
     </div>
     <div class="bottom">
-        <p><span>Benxi Liu &copy; 2015 - 2017</span>
+        <p><span>Benxi Liu &copy; 2015 - 2018</span>
             <span>
                 
                 Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
