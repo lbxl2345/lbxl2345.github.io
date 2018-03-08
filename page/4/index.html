@@ -135,101 +135,6 @@
     <ul class="post-list">
     
         <li class="post-list-item fade">
-            <article id="post-kvm-sgx笔记"
-  class="article-card article-type-post" itemprop="blogPost">
-
-    <div class="post-meta">
-        <time class="post-time" title="2017-01-17 12:00:00" datetime="2017-01-17T04:00:00.000Z"  itemprop="datePublished">2017-01-17</time>
-
-        
-
-
-    </div>
-
-    
-
-
-  
-    <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/01/17/kvm-sgx笔记/">SGX虚拟化相关</a>
-    </h3>
-  
-
-
-
-
-    <div class="post-content" id="post-content" itemprop="postContent">
-
-    
-        KVM-SGX虚拟机中的epc，使用sgx_vm_epc_buffer结构来管理的。其数据结构如下：  
-  struct sgx_vm_epc_buffer {
-    struct list_head buf_list;
-    struct list_head page_list;
-    unsigned int nr_pages;
-    unsigned long userspa...
-    
-
-        <a href="/2017/01/17/kvm-sgx笔记/" class="post-more waves-effect waves-button">
-            Continue reading...
-        </a>
-    </div>
-    
-    <div class="post-footer">
-        
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/KVM/">KVM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/QEMU/">QEMU</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SGX/">SGX</a></li></ul>
-
-    </div>
-    
-</article>
-
-        </li>
-    
-        <li class="post-list-item fade">
-            <article id="post-Chrome浏览器安全"
-  class="article-card article-type-post" itemprop="blogPost">
-
-    <div class="post-meta">
-        <time class="post-time" title="2016-12-27 21:00:00" datetime="2016-12-27T13:00:00.000Z"  itemprop="datePublished">2016-12-27</time>
-
-        
-
-
-    </div>
-
-    
-
-
-  
-    <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2016/12/27/Chrome浏览器安全/">Chrome隔离/SOP策略</a>
-    </h3>
-  
-
-
-
-
-    <div class="post-content" id="post-content" itemprop="postContent">
-
-    
-        The “Web/Local” Boundary is FuzzyProcess-based隔离，是浏览器安全的基础。Chrome的设计，并不隔离每个web源，而是主要保证“本地系统”和“web”，但是由于Dropbox，Google Drive这样的web端云服务(这些服务和本地系统一体化了)，浏览器不再能保证web和本地系统的隔离了。这篇文章提出了chrome中存在的一个问题，如果pro...
-    
-
-        <a href="/2016/12/27/Chrome浏览器安全/" class="post-more waves-effect waves-button">
-            Continue reading...
-        </a>
-    </div>
-    
-    <div class="post-footer">
-        
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/chrome/">chrome</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/浏览器安全/">浏览器安全</a></li></ul>
-
-    </div>
-    
-</article>
-
-        </li>
-    
-        <li class="post-list-item fade">
             <article id="post-memory-war"
   class="article-card article-type-post" itemprop="blogPost">
 
@@ -596,6 +501,96 @@ Trusted Run-Time System:在SGX enclave内部执行的部分，...
     <div class="post-footer">
         
 	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/intel/">intel</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/虚拟化/">虚拟化</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-Intel：针对ROP攻击的特性"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2016-06-13 17:40:00" datetime="2016-06-13T09:40:00.000Z"  itemprop="datePublished">2016-06-13</time>
+
+        
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2016/06/13/Intel：针对ROP攻击的特性/">Intel:针对ROP攻击的新硬件特性</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        1 针对ROP/JOP/COP的intel特性ROP/JOP/COP攻击通常有两个特性：第一是包含执行特权命令的代码片段，至少包含一条控制流转移指令，其转移目的由返回stack或者寄存器中的目标地址决定；第二是它们将控制流指令(RET，CALL，JMP)的地址修改到新的目标地址。intel提供Shadow Stack和Indirect branch tracking两种功能，来防御这一类攻击...
+    
+
+        <a href="/2016/06/13/Intel：针对ROP攻击的特性/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/intel/">intel</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/硬件/">硬件</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-I:O与page cache"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2016-06-08 17:40:00" datetime="2016-06-08T09:40:00.000Z"  itemprop="datePublished">2016-06-08</time>
+
+        
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2016/06/08/I:O与page cache/">详解页缓存page cache</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        buffer cache/page cachelinux中存在有两个缓存，buffer cache是针对设备的缓存，而page cache是针对文件的缓存。对于一个ext4文件系统来说，每个文件都有一棵radix树管理文件的缓存页，这些缓存页就是page cache；而对于每个块设备来说，都有一棵radix树来管理数据的缓存块，这些缓存块被称为buffer cache。在常见的linux系统...
+    
+
+        <a href="/2016/06/08/I:O与page cache/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/I-O/">I/O</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
 
     </div>
     

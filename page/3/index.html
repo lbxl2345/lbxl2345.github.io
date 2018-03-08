@@ -135,97 +135,6 @@
     <ul class="post-list">
     
         <li class="post-list-item fade">
-            <article id="post-深入理解I:O体系结构（一）"
-  class="article-card article-type-post" itemprop="blogPost">
-
-    <div class="post-meta">
-        <time class="post-time" title="2017-04-10 11:40:00" datetime="2017-04-10T03:40:00.000Z"  itemprop="datePublished">2017-04-10</time>
-
-        
-
-
-    </div>
-
-    
-
-
-  
-    <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/04/10/深入理解I:O体系结构（一）/">深入理解I/O体系结构（一）</a>
-    </h3>
-  
-
-
-
-
-    <div class="post-content" id="post-content" itemprop="postContent">
-
-    
-        I/O体系结构虚拟文件系统利用底层函数，调用每个设备的操作，那么这些操作是如何在设备上执行的，操作系统又是如何知道设备的操作是什么的呢？这些是由操作系统决定的。我们知道，操作系统的工作，是依赖于数据通路的，它们让信息得以在CPU、RAM、I/O设备之间传递。这些数据通路称为总线。这就包括数据总线（PCI、ISA、EISA、SCSI等）、地址总线、控制总线。I/O总线，指的就是用于CPU和I/...
-    
-
-        <a href="/2017/04/10/深入理解I:O体系结构（一）/" class="post-more waves-effect waves-button">
-            Continue reading...
-        </a>
-    </div>
-    
-    <div class="post-footer">
-        
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
-
-    </div>
-    
-</article>
-
-        </li>
-    
-        <li class="post-list-item fade">
-            <article id="post-IDAPython"
-  class="article-card article-type-post" itemprop="blogPost">
-
-    <div class="post-meta">
-        <time class="post-time" title="2017-04-05 21:40:00" datetime="2017-04-05T13:40:00.000Z"  itemprop="datePublished">2017-04-05</time>
-
-        
-
-
-    </div>
-
-    
-
-
-  
-    <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/04/05/IDAPython/">IDAPython：入门</a>
-    </h3>
-  
-
-
-
-
-    <div class="post-content" id="post-content" itemprop="postContent">
-
-    
-        取地址ScreenEA()和here()是最常用的取地址函数，它们会返回一个整数值。MaxEA()和MinxEA()可以用来取最大和最小地址。GetDisasm() GetMnem() GetOpand() 可以用来取某个地址中的指令、操作符、操作数等。  
-遍历：Segments，Functions,and InstructionsIDAPython的强大之处在于迭代。从Segments(...
-    
-
-        <a href="/2017/04/05/IDAPython/" class="post-more waves-effect waves-button">
-            Continue reading...
-        </a>
-    </div>
-    
-    <div class="post-footer">
-        
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IDA-pro/">IDA pro</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/静态分析/">静态分析</a></li></ul>
-
-    </div>
-    
-</article>
-
-        </li>
-    
-        <li class="post-list-item fade">
             <article id="post-IDAPython-advance1"
   class="article-card article-type-post" itemprop="blogPost">
 
@@ -591,6 +500,101 @@ l...
     <div class="post-footer">
         
 	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/系统安全/">系统安全</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-kvm-sgx笔记"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2017-01-17 12:00:00" datetime="2017-01-17T04:00:00.000Z"  itemprop="datePublished">2017-01-17</time>
+
+        
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2017/01/17/kvm-sgx笔记/">SGX虚拟化相关</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        KVM-SGX虚拟机中的epc，使用sgx_vm_epc_buffer结构来管理的。其数据结构如下：  
+  struct sgx_vm_epc_buffer {
+    struct list_head buf_list;
+    struct list_head page_list;
+    unsigned int nr_pages;
+    unsigned long userspa...
+    
+
+        <a href="/2017/01/17/kvm-sgx笔记/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/KVM/">KVM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/QEMU/">QEMU</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SGX/">SGX</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-Chrome浏览器安全"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2016-12-27 21:00:00" datetime="2016-12-27T13:00:00.000Z"  itemprop="datePublished">2016-12-27</time>
+
+        
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2016/12/27/Chrome浏览器安全/">Chrome隔离/SOP策略</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        The “Web/Local” Boundary is FuzzyProcess-based隔离，是浏览器安全的基础。Chrome的设计，并不隔离每个web源，而是主要保证“本地系统”和“web”，但是由于Dropbox，Google Drive这样的web端云服务(这些服务和本地系统一体化了)，浏览器不再能保证web和本地系统的隔离了。这篇文章提出了chrome中存在的一个问题，如果pro...
+    
+
+        <a href="/2016/12/27/Chrome浏览器安全/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/chrome/">chrome</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/浏览器安全/">浏览器安全</a></li></ul>
 
     </div>
     

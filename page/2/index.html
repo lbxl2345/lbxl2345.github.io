@@ -135,99 +135,6 @@
     <ul class="post-list">
     
         <li class="post-list-item fade">
-            <article id="post-RTL详解"
-  class="article-card article-type-post" itemprop="blogPost">
-
-    <div class="post-meta">
-        <time class="post-time" title="2017-05-10 21:40:00" datetime="2017-05-10T13:40:00.000Z"  itemprop="datePublished">2017-05-10</time>
-
-        
-
-
-    </div>
-
-    
-
-
-  
-    <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/05/10/RTL详解/">RTL，指令和运算，识别特定指令</a>
-    </h3>
-  
-
-
-
-
-    <div class="post-content" id="post-content" itemprop="postContent">
-
-    
-        运算RTL中的运算，采用一种很直观、简单的方式来进行描述。通常，表达式都会借助于m mode。运算包含有算术、比较、向量操作、Bit域、类型转换等。  
-Side Effect 表达式之前所说的表达式代码，通常表示的是值，而非某种行为。但机器指令，只有在对机器的状态产生了改变时，才会有意义；因此对于这些对寄存器、执行状态产生影响的过程，是有对应的表达式的，被称为side effect表达式。...
-    
-
-        <a href="/2017/05/10/RTL详解/" class="post-more waves-effect waves-button">
-            Continue reading...
-        </a>
-    </div>
-    
-    <div class="post-footer">
-        
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译安全/">编译安全</a></li></ul>
-
-    </div>
-    
-</article>
-
-        </li>
-    
-        <li class="post-list-item fade">
-            <article id="post-gcc rtx"
-  class="article-card article-type-post" itemprop="blogPost">
-
-    <div class="post-meta">
-        <time class="post-time" title="2017-05-07 21:40:00" datetime="2017-05-07T13:40:00.000Z"  itemprop="datePublished">2017-05-07</time>
-
-        
-
-
-    </div>
-
-    
-
-
-  
-    <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/05/07/gcc rtx/">RTL，类型和操作数</a>
-    </h3>
-  
-
-
-
-
-    <div class="post-content" id="post-content" itemprop="postContent">
-
-    
-        RTXrtx(RTL expression)，也即一个RTL的表达式。在coretypes.h中，其被定义为struct rtx_def *rtx，也即一个指向rtx_def的指针。那么rtx_def是一个什么结构呢？它同样定义在rtl.h当中：
-struct GTY((chain_next (&quot;RTX_NEXT (&amp;%h)&quot;),
-    chain_prev (...
-    
-
-        <a href="/2017/05/07/gcc rtx/" class="post-more waves-effect waves-button">
-            Continue reading...
-        </a>
-    </div>
-    
-    <div class="post-footer">
-        
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCC/">GCC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译安全/">编译安全</a></li></ul>
-
-    </div>
-    
-</article>
-
-        </li>
-    
-        <li class="post-list-item fade">
             <article id="post-GCC插件编写"
   class="article-card article-type-post" itemprop="blogPost">
 
@@ -587,6 +494,97 @@ $ ls | more
     <div class="post-footer">
         
 	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-深入理解I:O体系结构（一）"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2017-04-10 11:40:00" datetime="2017-04-10T03:40:00.000Z"  itemprop="datePublished">2017-04-10</time>
+
+        
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2017/04/10/深入理解I:O体系结构（一）/">深入理解I/O体系结构（一）</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        I/O体系结构虚拟文件系统利用底层函数，调用每个设备的操作，那么这些操作是如何在设备上执行的，操作系统又是如何知道设备的操作是什么的呢？这些是由操作系统决定的。我们知道，操作系统的工作，是依赖于数据通路的，它们让信息得以在CPU、RAM、I/O设备之间传递。这些数据通路称为总线。这就包括数据总线（PCI、ISA、EISA、SCSI等）、地址总线、控制总线。I/O总线，指的就是用于CPU和I/...
+    
+
+        <a href="/2017/04/10/深入理解I:O体系结构（一）/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-IDAPython"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2017-04-05 21:40:00" datetime="2017-04-05T13:40:00.000Z"  itemprop="datePublished">2017-04-05</time>
+
+        
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2017/04/05/IDAPython/">IDAPython：入门</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        取地址ScreenEA()和here()是最常用的取地址函数，它们会返回一个整数值。MaxEA()和MinxEA()可以用来取最大和最小地址。GetDisasm() GetMnem() GetOpand() 可以用来取某个地址中的指令、操作符、操作数等。  
+遍历：Segments，Functions,and InstructionsIDAPython的强大之处在于迭代。从Segments(...
+    
+
+        <a href="/2017/04/05/IDAPython/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IDA-pro/">IDA pro</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/静态分析/">静态分析</a></li></ul>
 
     </div>
     
