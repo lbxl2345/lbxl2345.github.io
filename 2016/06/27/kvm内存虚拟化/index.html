@@ -19,9 +19,9 @@
     <meta name="theme-color" content="#3F51B5">
     
     
-    <meta name="keywords" content="虚拟化,kvm">
+    <meta name="keywords" content="kvm,虚拟化">
     <meta name="description" content="EPT Violation与操作系统当中的缺页中断类似，EPT中的缺页被称为“EPT violation”。当GPA-&amp;gt;HPA的映射不存在时，就会触发VM-EXIT，由KVM来捕获异常，并进行异常处理。   1 vmx.c当中，handle_ept_violation是EPT缺页中断的入口，其参数只有一个，struct kvm_vcpu *vcpu。它从VMCS中读取数据，判断OS能否解决这">
-<meta name="keywords" content="虚拟化,kvm">
+<meta name="keywords" content="kvm,虚拟化">
 <meta property="og:type" content="article">
 <meta property="og:title" content="EPT缺页异常源码分析">
 <meta property="og:url" content="http://sec-lbx.tk/2016/06/27/kvm内存虚拟化/index.html">
@@ -106,7 +106,7 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
@@ -364,7 +364,7 @@ link_shadow_page(iterator.sptep, sp, true);
             
                 <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
             
-            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
         </p>
     </div>
     <div class="bottom">

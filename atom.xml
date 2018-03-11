@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://sec-lbx.tk/"/>
-  <updated>2018-03-10T11:02:41.000Z</updated>
+  <updated>2018-03-11T06:09:45.000Z</updated>
   <id>http://sec-lbx.tk/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://sec-lbx.tk/2018/03/10/format%20string%20attack/"/>
     <id>http://sec-lbx.tk/2018/03/10/format string attack/</id>
     <published>2018-03-10T13:40:00.000Z</published>
-    <updated>2018-03-10T11:02:41.000Z</updated>
+    <updated>2018-03-11T06:09:45.000Z</updated>
     
     <content type="html"><![CDATA[<h4 id="Format-String-Vulnerability"><a href="#Format-String-Vulnerability" class="headerlink" title="Format String Vulnerability"></a>Format String Vulnerability</h4><p>FSV（格式字符串漏洞）是一类特殊的漏洞，它是由对格式化输出函数（例如C语言中的printf函数家族）的不当使用而造成的。如果攻击者能够控制格式化输出函数的输入，并且应用程序没有进行适当的验证，那么攻击者就能：通过把格式化参数（例如’%x’）插入到数据中，来改变格式化输出函数的行为，让它误认为有更多的参数。而这些参数却并不存在，于是乎攻击者就能够对栈上的数据进行读写了。</p>
 <h4 id="Capability"><a href="#Capability" class="headerlink" title="Capability"></a>Capability</h4><p>格式化输出函数本身并没有漏洞，但FSV给了攻击者控制它们的能力。那么攻击者能够通过FSV做些什么呢？最简单的攻击就是利用FSV让程序崩溃，例如<code>printf (&quot;%s%s%s%s%s%s%s%s%s%s%s%s&quot;);</code>极有可能读取到没有映射的地址，造成程序崩溃。再者，攻击者也可以通过<code>%n</code>来篡改栈上的地址来达到同样的效果。</p>
@@ -35,7 +35,7 @@
 }
 </code></pre><p><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E5%AE%89%E5%85%A8/FSV.png?raw=true" alt="fsv1"></p>
 <p>那么64-bit下有什么区别呢？我也自己做了一个实验。与32-bit不同的是，只有第七个之后的参数会被放在栈上，而前六个参数是保存在栈中的。但类似的攻击依然可以成功。<code>printf(%p.%p.%p.%p.%p.%p)</code>会输出0x70252e70252e7025（也即user_input），这说明用户的输入自身也被输出了。那么如何实现一个任意的读呢？值得注意的是在64-bit下，地址不可避免的含有\x00，所以这里我把<code>\x00</code>放在字符串的最后。例如，<code>printf(&quot;%7s$lx\x00\x00\x00\x00\x00\x40\x00\x00&quot;);</code>输出的结果是400000。如果要输出任意地址的数据，就要注意对齐：<code>printf(&quot;%7$s\x00\x00\x00\x00\x00\x00\x40\x00\x00\x00\x00\x00&quot;)</code>会按照%s输出地址0x400000地址的内容。</p>
-<h5 id="overwrite-memory"><a href="#overwrite-memory" class="headerlink" title="overwrite memory"></a>overwrite memory</h5><p>FSV不仅能够用来泄露内存中的信息，还能被攻击者用来篡改内存中的数据。要达到这个目标，需要借助较为特殊的格式指定符号<code>%n</code>。它并不会打印任何东西，但它会存储它之前所打印的所有字符数。因此只要采用和information leakage相似的方法，只需要把%s替换为%n，就能够实现对任意地址的读写。例如在32-bit下，printf (“\x10\x01\x48\x08 %x %x %x %x %n”)就能够覆写0x10014808中的地址。然而，这个值是由%n之前的打印的字符数来决定的，那么用这种方法能够写一个任意值到指定的地址中去吗？通过指定宽度，可以节省字符串的长度，但是如果要设置一个较大的值，就需要进行多次写操作，例如利用％hn把一次%n分解成两次，这样一来printf就只用输出一小部分数据了。在64-bit下，我也做了一个类似的试验，<code>printf(&quot;123%7$n\x00\x50\x10\x60\x00\x00\x00\x00\x00&quot;)</code>会把123写到0x605010处。如果要写多个数，则需要按照从小到大的顺序进行输入，因为%n获取的值是累加的。</p>
+<h5 id="overwrite-memory"><a href="#overwrite-memory" class="headerlink" title="overwrite memory"></a>overwrite memory</h5><p>FSV不仅能够用来泄露内存中的信息，还能被攻击者用来篡改内存中的数据。要达到这个目标，需要借助较为特殊的格式指定符号<code>%n</code>。它并不会打印任何东西，但它会存储它之前所打印的所有字符数。因此只要采用和information leakage相似的方法，只需要把%s替换为%n，就能够实现对任意地址的读写。例如在32-bit下，printf (“\x10\x01\x48\x08 %x %x %x %x %n”)就能够覆写0x10014808中的地址。然而，这个值是由%n之前的打印的字符数来决定的，那么用这种方法能够写一个任意值到指定的地址中去吗？通过指定宽度，可以节省字符串的长度，但是如果要设置一个较大的值，就需要进行多次写操作，例如利用％hn把一次%n分解成两次，这样一来printf就只用输出一小部分数据了。在64-bit下，我也做了一个类似的试验，<code>printf(&quot;123%7$n\x00\x50\x10\x60\x00\x00\x00\x00\x00&quot;)</code>会把123写到0x605010处。如果要写多个数，则需要按照从小到大的顺序进行输入，因为%n获取的值是累加的。值得注意的是，64-bit下地址会不可避免的包含\x00，它同时也是print家族函数的终止符，所以\x00只能放在最后。这也同时限制了64-bit下FSV的能力，使其在许多情况下并不能实现指定地址的读写了。</p>
 ]]></content>
     
     <summary type="html">
@@ -407,9 +407,9 @@ B1   B2
     </summary>
     
     
-      <category term="虚函数" scheme="http://sec-lbx.tk/tags/%E8%99%9A%E5%87%BD%E6%95%B0/"/>
-    
       <category term="内存安全" scheme="http://sec-lbx.tk/tags/%E5%86%85%E5%AD%98%E5%AE%89%E5%85%A8/"/>
+    
+      <category term="虚函数" scheme="http://sec-lbx.tk/tags/%E8%99%9A%E5%87%BD%E6%95%B0/"/>
     
       <category term="C++" scheme="http://sec-lbx.tk/tags/C/"/>
     
@@ -520,9 +520,9 @@ DECL_ARGUMENTS(fndecl) = t;
     </summary>
     
     
-      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
-    
       <category term="GCC" scheme="http://sec-lbx.tk/tags/GCC/"/>
+    
+      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
     
   </entry>
   
@@ -567,9 +567,9 @@ emit_insn(BNDmode == BND64mode ? gen_bnd64_cu(op1, op0):gen_bnd32_cu(op1, op0));
     </summary>
     
     
-      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
-    
       <category term="GCC" scheme="http://sec-lbx.tk/tags/GCC/"/>
+    
+      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
     
   </entry>
   
@@ -608,9 +608,9 @@ else{
     </summary>
     
     
-      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
-    
       <category term="GCC" scheme="http://sec-lbx.tk/tags/GCC/"/>
+    
+      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
     
   </entry>
   
@@ -684,9 +684,9 @@ else{
     </summary>
     
     
-      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
-    
       <category term="GCC" scheme="http://sec-lbx.tk/tags/GCC/"/>
+    
+      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
     
   </entry>
   
@@ -751,9 +751,9 @@ rtx: mov ax, 8
     </summary>
     
     
-      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
-    
       <category term="GCC" scheme="http://sec-lbx.tk/tags/GCC/"/>
+    
+      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
     
   </entry>
   
@@ -809,9 +809,9 @@ register_callback(&quot;myplugin&quot;, PLUGIN_INFO, NULL, &amp;myplugin_info);
     </summary>
     
     
-      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
-    
       <category term="GCC" scheme="http://sec-lbx.tk/tags/GCC/"/>
+    
+      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
     
   </entry>
   
@@ -836,9 +836,9 @@ register_callback(&quot;myplugin&quot;, PLUGIN_INFO, NULL, &amp;myplugin_info);
     </summary>
     
     
-      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
-    
       <category term="GCC" scheme="http://sec-lbx.tk/tags/GCC/"/>
+    
+      <category term="编译安全" scheme="http://sec-lbx.tk/tags/%E7%BC%96%E8%AF%91%E5%AE%89%E5%85%A8/"/>
     
   </entry>
   
@@ -1858,48 +1858,54 @@ unsigned int count;
   </entry>
   
   <entry>
-    <title>IDAPython:进阶（一）</title>
-    <link href="http://sec-lbx.tk/2017/04/05/IDAPython-advance1/"/>
-    <id>http://sec-lbx.tk/2017/04/05/IDAPython-advance1/</id>
+    <title>IDAPython：入门</title>
+    <link href="http://sec-lbx.tk/2017/04/05/IDAPython/"/>
+    <id>http://sec-lbx.tk/2017/04/05/IDAPython/</id>
     <published>2017-04-05T13:40:00.000Z</published>
     <updated>2017-07-28T09:04:47.000Z</updated>
     
-    <content type="html"><![CDATA[<h4 id="IDAPython-进阶（一）"><a href="#IDAPython-进阶（一）" class="headerlink" title="IDAPython:进阶（一）"></a>IDAPython:进阶（一）</h4><h4 id="Instruction-feature"><a href="#Instruction-feature" class="headerlink" title="Instruction feature"></a>Instruction feature</h4><p>在IDAPython中，时常可以看到使用<code>insn.get_canon_feature()</code>来获取指令“特性”。这里，<code>instruc_t</code>类中包含有两个变量，<code>name</code>和<code>feature</code>，其中<code>feature</code>是一系列的指令特征位。 </p>
-<h4 id="IDA-SDK"><a href="#IDA-SDK" class="headerlink" title="IDA SDK"></a>IDA SDK</h4><p>IDA SDK分为很多hpp，不过它的文档不是特别友好，这里我把比较重要的header的作用给列出来，方便日后进行分析和使用：  </p>
-<ul>
-<li>area:程序中地址范围的集合，它表示一段连续的地址范围，由起始地址和终止地址来表示，例如程序中的segments就是用area来表示的，它在IDA的数据库当中，是采用B树的形式来保存的。  </li>
-<li>bitrange:用来管理一段连续bits的容器，类似一个数组。  </li>
-<li>bytes:处理byte特性的函数，在程序中，每个byte都被识别成一个32-bit的值，他被IDA称为<code>flags</code>。对于bits和flags，都只能通过特定的函数去修改、访问。flags被保存在*.id1这样的文件当中。  </li>
-<li>diskio:IDA的文件IO函数，通常不使用标准的C来进行I/O，而使用这个hpp当中的函数。  </li>
-<li>entry:处理entry入口的函数，每个entry包含有地址、名称、序号。  </li>
-<li>fixup:处理地址、偏移量的修正等。  </li>
-<li>frame:处理栈桢，包括参数、返回值、保存的寄存器和局部变量等。  </li>
-<li>funcs:处理反汇编程序的函数，函数由多个chunk组成。  </li>
-<li>idp:包含IDP模块的接口，包括有目标的汇编器，以及当前处理器的信息。例如判断一条指令是否为jmp、ret等，都可以使用这种方式。</li>
-<li>lines:处理反汇编text line的生成。</li>
-<li>name:处理命名，给一个特定地址命名等，但是指令和数据的中间是不能命名的。  </li>
-<li>netnode:database的底层接口，程序被以B树的形式保存，而B树的信息则是存放在netnode当中的。  </li>
-<li>offset:用来处理offset的函数，一个操作数可能自身，或者一部分表示了程序中的偏移量。  </li>
-<li>search:中间层的搜索函数，包括寻找数据、代码等。  </li>
-<li>segments:用来和程序中段进行交互的函数，IDA需要程序中的所有地址，属于一个segment(每个地址都必须属于一个segment)，如果地址不属于一个segment，那么这些bytes不能被转换为指令、不能用有名字、不能拥有注释。每个segment都有一个selector。  </li>
-<li>ua:处理程序指令的反汇编。它包含两种函数，第一类是通过kernel来反汇编，第二类是通过IDP模块来反汇编，它们是“helper”。反汇编可以分为三步：分析、仿真、转化为文字。  </li>
-<li>xref:处理交叉引用的情况。包括有CODE和DATA的引用。  </li>
-</ul>
-<h4 id="获取文件名"><a href="#获取文件名" class="headerlink" title="获取文件名"></a>获取文件名</h4><p>SDK提供了两个api，idaapi.get_root_filename能够用来获取当前的文件名，而idaapi.get_input_file_path能够用来获取包含路径的文件名。这两个函数定义在nalt当中。  </p>
+    <content type="html"><![CDATA[<h4 id="取地址"><a href="#取地址" class="headerlink" title="取地址"></a>取地址</h4><p><code>ScreenEA()</code>和<code>here()</code>是最常用的取地址函数，它们会返回一个整数值。<br><code>MaxEA()</code>和<code>MinxEA()</code>可以用来取最大和最小地址。<br><code>GetDisasm()</code> <code>GetMnem()</code> <code>GetOpand()</code> 可以用来取某个地址中的指令、操作符、操作数等。  </p>
+<h4 id="遍历：Segments，Functions-and-Instructions"><a href="#遍历：Segments，Functions-and-Instructions" class="headerlink" title="遍历：Segments，Functions,and Instructions"></a>遍历：Segments，Functions,and Instructions</h4><p>IDAPython的强大之处在于迭代。从<code>Segments()</code>开始是一个好的选择。这段代码能够遍历所有的segments。</p>
+<pre><code>for seg in idautils.Segments():
+    print idc.SegName(seg),    idc.SegStart(seg),    idc.SegEnd(seg)
+</code></pre><p>同理的，对于Functions的遍历，可以有：</p>
+<pre><code>for func in idautils.Functions():
+    print hex(func), idc.GetFunctionName(func)
+</code></pre><p>这里，<code>Functions()</code>是可以添加范围的，例如<code>Functions(start_addr, end_addr)</code>，而<code>get_func()</code>返回的函数，则还具有<code>startEA</code>和<code>endEA</code>属性，也即起起始和结束地址。这里，<code>get_func()</code>实际上是返回了一个类。<code>dir(class)</code>能够返回这个类中的成员。<br><code>idc.NextFunction(ea)</code>和<code>idc.PrevFunction(ea)</code>能够用来访问毗邻的两个函数。这里，<code>ea</code>只要是某个函数边界中的任何一个地址就可以了。利用这种方式来遍历也存在问题，如果不是函数的话，那么代码块会被IDA跳过。那么如果想在函数中遍历指令怎么办呢？<code>idc.NextHead</code>会帮你找到下一条指令。但这依赖于函数的边界，而且可能被jump影响。更好的方式是使用<code>idautils.FuncItems(ea)</code>，来遍历function当中的地址。<br>一旦知道了一个function，就可以遍历其中的指令。idautils.FuncItems(ea)返回的是一个指向<code>list</code>的迭代器。这个<code>list</code>包含了每一条指令的起始地址。以下是一个综合的应用，它输出一段代码中的非直接跳转。    </p>
+<pre><code>for func in idautils.Functions():
+    flags = idc.GetFunctionFlags(func)
+    if flags &amp; FUNC_LIB or flags &amp; FUNC_THUNK:
+        continue
+    dism_addr = list(idautils.FuncItems(func)) 
+    for line in dism_addr:
+        m = idc.GetMnem(line)
+        if m == &apos;call&apos; or m == &apos;jmp&apos;:
+            op = idc.GetOpType(line, 0) 
+            if op == o_reg:
+                print &quot;0x%x %s&quot; % (line, idc.GetDisasm(line))
+</code></pre><p>这里，<code>GetOpType</code>会返回一个整型值，它能被用来查看一个操作数是否为寄存器，内存引用。  </p>
+<h4 id="Operands"><a href="#Operands" class="headerlink" title="Operands"></a>Operands</h4><p>前面也有提到，<code>GetOpType</code>能够用来获取操作数的类型。一共有这些类型：<br><code>o_void</code>表示不包含操作数<br><code>o_reg</code>表示一个通用寄存器<br><code>o_mem</code>表示直接内存引用<br><code>o_phrase</code>操作数包含基址寄存器+偏移寄存器<br><code>o_displ</code>操作数是由一个寄存器和一个偏移量组成的<br><code>o_imm</code>操作数直接是一个整型数<br><code>o_far</code>和<code>o_near</code>在x86和x86_64下均不常见。指用立即数表示的far/near地址<br><code>idaapi.decode_insn()</code>可用来对某个地址的指令进行解码。而<code>idaapi.cmd</code>则能用来提取指令中的各部分结构。  </p>
+<h4 id="Searching"><a href="#Searching" class="headerlink" title="Searching"></a>Searching</h4><p>前文已经提到了一些搜索的方式，但有些时候可能会需要搜索一些特定的bytes序列，比如<code>0x55 0x8b 0xec</code>，这时就需要利用到<code>FindBinary</code>，对对应的格式进行搜索。其具体形式为<code>FindBinary(ea, flag, searchstr, radix)</code>。这其中，searchstr也即所搜索的pattern。radix是和CPU相关的，可以不写。  </p>
+<pre><code>addr = MinEA()
+for x in range(0,5):
+    addr = idc.FindBinary(addr, SEARCH_DOWN|SEARCH_NEXT, pattern);
+    if addr != idc.BADADDR:
+        print hex(addr), idc.Getdisasm(addr)
+</code></pre><p>与之类似的，还有<code>FindText(ea, flag, y, x, searchstr)</code>，这个函数可以用来搜索一些字符串，例如一些变量中的内容可能是一些特定的字符串，就可以利用这个函数进行搜索。此外，还有<code>isCode()</code>和<code>isData()</code>，<code>isTail()</code>，<code>isUnknown()</code>等函数，来判断一个地址的属性。<code>FindCode()</code>能够找到下一个被标记为代码的地址；而<code>FindData()</code>则能够返回下一个被标记为数据的地址。与之类似的<code>FindUnexplored()</code>，<code>FindExplored()</code>则是搜索下一个未识别／识别的地址。<code>FindImmediate()</code>则是找到特定的立即数。<br>不过，并不是每一次都需要对data/code进行搜索的。有时候，我们已经知道了code或者data的位置了，只是需要选择对应的内容进行分析。这时就可以用<code>SelStart()``SelEnd()</code>等一系列的函数。<br>对于数据、代码，还可以对其原始格式进行访问，也即它们的二进制形式。这些数据可以用<code>Byte()``Word()``Dword()``Qword()``GetFloat()``GetDouble()</code>来获取。</p>
 ]]></content>
     
     <summary type="html">
     
-      &lt;h4 id=&quot;IDAPython-进阶（一）&quot;&gt;&lt;a href=&quot;#IDAPython-进阶（一）&quot; class=&quot;headerlink&quot; title=&quot;IDAPython:进阶（一）&quot;&gt;&lt;/a&gt;IDAPython:进阶（一）&lt;/h4&gt;&lt;h4 id=&quot;Instruction-f
+      &lt;h4 id=&quot;取地址&quot;&gt;&lt;a href=&quot;#取地址&quot; class=&quot;headerlink&quot; title=&quot;取地址&quot;&gt;&lt;/a&gt;取地址&lt;/h4&gt;&lt;p&gt;&lt;code&gt;ScreenEA()&lt;/code&gt;和&lt;code&gt;here()&lt;/code&gt;是最常用的取地址函数，它们会返回一个整数值。&lt;
     
     </summary>
     
     
-      <category term="linux" scheme="http://sec-lbx.tk/tags/linux/"/>
+      <category term="IDA pro" scheme="http://sec-lbx.tk/tags/IDA-pro/"/>
     
-      <category term="操作系统" scheme="http://sec-lbx.tk/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+      <category term="python" scheme="http://sec-lbx.tk/tags/python/"/>
     
-      <category term="系统安全" scheme="http://sec-lbx.tk/tags/%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/"/>
+      <category term="静态分析" scheme="http://sec-lbx.tk/tags/%E9%9D%99%E6%80%81%E5%88%86%E6%9E%90/"/>
     
   </entry>
   

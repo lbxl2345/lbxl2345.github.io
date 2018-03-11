@@ -28,7 +28,7 @@
 <meta property="og:site_name" content="Benxi&#39;s blog">
 <meta property="og:description" content="Format String VulnerabilityFSV（格式字符串漏洞）是一类特殊的漏洞，它是由对格式化输出函数（例如C语言中的printf函数家族）的不当使用而造成的。如果攻击者能够控制格式化输出函数的输入，并且应用程序没有进行适当的验证，那么攻击者就能：通过把格式化参数（例如’%x’）插入到数据中，来改变格式化输出函数的行为，让它误认为有更多的参数。而这些参数却并不存在，于是乎攻击者就能">
 <meta property="og:image" content="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E5%AE%89%E5%85%A8/FSV.png?raw=true">
-<meta property="og:updated_time" content="2018-03-10T11:02:41.000Z">
+<meta property="og:updated_time" content="2018-03-11T06:09:45.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Format string attack">
 <meta name="twitter:description" content="Format String VulnerabilityFSV（格式字符串漏洞）是一类特殊的漏洞，它是由对格式化输出函数（例如C语言中的printf函数家族）的不当使用而造成的。如果攻击者能够控制格式化输出函数的输入，并且应用程序没有进行适当的验证，那么攻击者就能：通过把格式化参数（例如’%x’）插入到数据中，来改变格式化输出函数的行为，让它误认为有更多的参数。而这些参数却并不存在，于是乎攻击者就能">
@@ -108,7 +108,7 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
@@ -183,7 +183,7 @@
 }
 </code></pre><p><img src="https://github.com/lbxl2345/blogbackup/blob/master/source/pics/%E5%AE%89%E5%85%A8/FSV.png?raw=true" alt="fsv1"></p>
 <p>那么64-bit下有什么区别呢？我也自己做了一个实验。与32-bit不同的是，只有第七个之后的参数会被放在栈上，而前六个参数是保存在栈中的。但类似的攻击依然可以成功。<code>printf(%p.%p.%p.%p.%p.%p)</code>会输出0x70252e70252e7025（也即user_input），这说明用户的输入自身也被输出了。那么如何实现一个任意的读呢？值得注意的是在64-bit下，地址不可避免的含有\x00，所以这里我把<code>\x00</code>放在字符串的最后。例如，<code>printf(&quot;%7s$lx\x00\x00\x00\x00\x00\x40\x00\x00&quot;);</code>输出的结果是400000。如果要输出任意地址的数据，就要注意对齐：<code>printf(&quot;%7$s\x00\x00\x00\x00\x00\x00\x40\x00\x00\x00\x00\x00&quot;)</code>会按照%s输出地址0x400000地址的内容。</p>
-<h5 id="overwrite-memory"><a href="#overwrite-memory" class="headerlink" title="overwrite memory"></a>overwrite memory</h5><p>FSV不仅能够用来泄露内存中的信息，还能被攻击者用来篡改内存中的数据。要达到这个目标，需要借助较为特殊的格式指定符号<code>%n</code>。它并不会打印任何东西，但它会存储它之前所打印的所有字符数。因此只要采用和information leakage相似的方法，只需要把%s替换为%n，就能够实现对任意地址的读写。例如在32-bit下，printf (“\x10\x01\x48\x08 %x %x %x %x %n”)就能够覆写0x10014808中的地址。然而，这个值是由%n之前的打印的字符数来决定的，那么用这种方法能够写一个任意值到指定的地址中去吗？通过指定宽度，可以节省字符串的长度，但是如果要设置一个较大的值，就需要进行多次写操作，例如利用％hn把一次%n分解成两次，这样一来printf就只用输出一小部分数据了。在64-bit下，我也做了一个类似的试验，<code>printf(&quot;123%7$n\x00\x50\x10\x60\x00\x00\x00\x00\x00&quot;)</code>会把123写到0x605010处。如果要写多个数，则需要按照从小到大的顺序进行输入，因为%n获取的值是累加的。</p>
+<h5 id="overwrite-memory"><a href="#overwrite-memory" class="headerlink" title="overwrite memory"></a>overwrite memory</h5><p>FSV不仅能够用来泄露内存中的信息，还能被攻击者用来篡改内存中的数据。要达到这个目标，需要借助较为特殊的格式指定符号<code>%n</code>。它并不会打印任何东西，但它会存储它之前所打印的所有字符数。因此只要采用和information leakage相似的方法，只需要把%s替换为%n，就能够实现对任意地址的读写。例如在32-bit下，printf (“\x10\x01\x48\x08 %x %x %x %x %n”)就能够覆写0x10014808中的地址。然而，这个值是由%n之前的打印的字符数来决定的，那么用这种方法能够写一个任意值到指定的地址中去吗？通过指定宽度，可以节省字符串的长度，但是如果要设置一个较大的值，就需要进行多次写操作，例如利用％hn把一次%n分解成两次，这样一来printf就只用输出一小部分数据了。在64-bit下，我也做了一个类似的试验，<code>printf(&quot;123%7$n\x00\x50\x10\x60\x00\x00\x00\x00\x00&quot;)</code>会把123写到0x605010处。如果要写多个数，则需要按照从小到大的顺序进行输入，因为%n获取的值是累加的。值得注意的是，64-bit下地址会不可避免的包含\x00，它同时也是print家族函数的终止符，所以\x00只能放在最后。这也同时限制了64-bit下FSV的能力，使其在许多情况下并不能实现指定地址的读写了。</p>
 
         </div>
 
@@ -316,7 +316,7 @@
             
                 <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
             
-            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
         </p>
     </div>
     <div class="bottom">
